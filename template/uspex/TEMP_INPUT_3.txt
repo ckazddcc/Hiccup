@@ -1,0 +1,48 @@
+PARAMETERS EVOLUTIONARY ALGORITHM
+******************************************
+*      TYPE OF RUN AND SYSTEM            *
+******************************************
+USPEX : calculationMethod (USPEX, VCNEB, META)
+300   : calculationType (dimension: 0-3; molecule: 0/1; varcomp: 0/1)
+1     : optType (1=enthalpy, 2=volume, 3=hardness, 4=struc_order,...)
+
+% numbers of specices (ions/molecules/blocks) of each type
+% numSpecices
+{}
+% EndNumSpecices
+%%%%%%%%%%%%%%%%%%%%
+% Here come the atomic numbers of the atoms involved
+% atomType
+{}
+% EndAtomType
+
+******************************************
+*               POPULATION               *
+******************************************
+{}    : populationSize (how many individuals per generation)
+{}    : initialPopSize (how many individuals in the first generation)
+{}    : numGenerations (how many generations shall be calculated)
+1000  : stopCrit
+0.6   : bestFrac
+******************************************
+*          VARIATION OPERATORS           *
+******************************************
+0.60  : fracGene (fraction of generation produced by heredity)
+0.00  : fracRand (fraction of generation produced by symmetric random)
+0.25  : fracAtomsMut (fraction of the generation produced by softmutation)
+0.15  : fracLatMut (fraction of the generation produced by latmutation)
+
+*****************************************
+*   DETAILS OF AB INITIO CALCULATIONS   * 
+*****************************************
+%abinitioCode (which code from CommandExecutable shall be used for calculation? )
+15
+%ENDabinit
+
+% commandExecutable
+bash {}
+
+% EndExecutable
+
+1     : numParallelCalcs (how many parallel calculations shall be performed)
+0       : whichCluster (0: no-job-script, 1: local submission, 2: remote submission)

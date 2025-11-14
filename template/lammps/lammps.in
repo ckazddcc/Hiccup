@@ -1,0 +1,37 @@
+# -------- Initialization --------
+units           metal
+boundary        p p p
+atom_style      atomic
+
+# -------- Data Reading --------
+read_data       lammps.data
+
+# -------- Group --------
+region          fixed block INF INF INF INF INF 4.5 units box
+group           fixed region fixed
+region          relaxed block INF INF INF INF 4.5 INF units box
+group           relaxed region relaxed
+
+# -------- Atom Setting --------
+pair_style	deepmd frozen_model.pb
+pair_coeff	*        *	
+
+${mass_block}
+
+neighbor        2.0 bin
+neigh_modify    every 10 delay 0 check no
+
+# -------- System Setting -------- 
+timestep        0.001
+velocity        fixed set 0 0 0
+fix             1 fixed setforce 0 0 0
+fix             2 relaxed nvt temp 800 800 0.1
+
+dump            1 all xyz 100 out_new.xyz
+dump_modify     1 append yes
+
+thermo          100
+thermo_style    custom step temp pe fmax
+
+dump            2 all atom 100 dump_new.tio2
+run             1000000

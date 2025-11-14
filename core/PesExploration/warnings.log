@@ -1,0 +1,904 @@
+2025-05-20 19:18:42,726 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 19:18:42,730 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 19:18:43,140 - DEBUG - Creating converter from 7 to 5
+2025-05-20 19:18:43,140 - DEBUG - Creating converter from 5 to 7
+2025-05-20 19:18:43,140 - DEBUG - Creating converter from 7 to 5
+2025-05-20 19:18:43,140 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,134 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 21:17:11,134 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 21:17:11,136 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 21:17:11,138 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 21:17:11,138 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 21:17:11,143 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 21:17:11,144 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 21:17:11,146 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 21:17:11,148 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 21:17:11,150 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 21:17:11,911 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,911 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,911 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,911 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,912 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,912 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,912 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,912 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,914 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,914 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,915 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,915 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,929 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,930 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,930 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,930 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,932 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,932 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:11,932 - DEBUG - Creating converter from 7 to 5
+2025-05-20 21:17:11,932 - DEBUG - Creating converter from 5 to 7
+2025-05-20 21:17:12,874 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 21:17:12,920 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 21:17:12,961 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 21:17:12,992 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 21:17:13,064 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 21:17:14,106 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:17:14,106 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:17:14,106 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:17:14,106 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 21:17:14,114 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:17:14,114 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:17:14,114 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:17:14,114 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 21:17:14,209 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:17:14,210 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:17:14,210 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:17:14,210 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 21:17:14,284 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 21:17:14,316 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 21:17:14,367 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:17:14,367 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:17:14,367 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:17:14,367 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 21:17:14,460 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 21:17:14,591 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 21:17:14,630 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:17:14,631 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:17:14,631 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:17:14,631 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 21:17:14,980 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 21:35:42,982 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 21:35:42,983 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 21:35:42,983 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 21:35:42,998 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 22:13:54,840 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 22:13:54,844 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 22:13:55,619 - DEBUG - Creating converter from 7 to 5
+2025-05-20 22:13:55,619 - DEBUG - Creating converter from 5 to 7
+2025-05-20 22:13:55,620 - DEBUG - Creating converter from 7 to 5
+2025-05-20 22:13:55,620 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:53,773 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 23:45:53,777 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 23:45:54,552 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:54,552 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:54,552 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:54,552 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:55,254 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 23:45:55,258 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 23:45:55,454 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 23:45:55,457 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 23:45:55,475 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-20 23:45:55,478 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-20 23:45:55,644 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 23:45:56,110 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,112 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,112 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,112 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,312 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,312 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,312 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,312 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,372 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,372 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,372 - DEBUG - Creating converter from 7 to 5
+2025-05-20 23:45:56,372 - DEBUG - Creating converter from 5 to 7
+2025-05-20 23:45:56,771 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 23:45:56,771 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 23:45:56,771 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 23:45:56,771 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 23:45:56,985 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 23:45:57,052 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 23:45:57,142 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 23:45:57,239 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-20 23:45:58,061 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 23:45:58,062 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 23:45:58,062 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 23:45:58,062 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 23:45:58,196 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 23:45:58,257 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 23:45:58,257 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 23:45:58,258 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 23:45:58,258 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 23:45:58,317 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-20 23:45:58,317 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-20 23:45:58,317 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-20 23:45:58,317 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-20 23:45:58,515 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-20 23:45:58,590 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-21 00:01:34,303 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 00:01:34,304 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 00:01:34,304 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 00:01:34,304 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-21 10:08:33,101 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-21 10:08:33,103 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-21 10:08:33,435 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:08:33,435 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:08:33,435 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:08:33,436 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,290 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-21 10:12:55,292 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-21 10:12:55,375 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-21 10:12:55,377 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-21 10:12:55,381 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-21 10:12:55,384 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-21 10:12:55,566 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-21 10:12:55,568 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-21 10:12:55,625 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,625 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,626 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,626 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,783 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,783 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,783 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,783 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,817 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,818 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,818 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,818 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,912 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,912 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:55,912 - DEBUG - Creating converter from 7 to 5
+2025-05-21 10:12:55,912 - DEBUG - Creating converter from 5 to 7
+2025-05-21 10:12:56,060 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-21 10:12:56,331 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-21 10:12:56,331 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-21 10:12:56,408 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-21 10:12:56,658 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 10:12:56,658 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 10:12:56,658 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 10:12:56,658 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-21 10:12:56,748 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-21 10:12:56,942 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 10:12:56,942 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 10:12:56,943 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 10:12:56,943 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-21 10:12:56,963 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 10:12:56,964 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 10:12:56,964 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 10:12:56,964 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-21 10:12:56,986 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 10:12:56,986 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 10:12:56,986 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 10:12:56,986 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-21 10:12:57,029 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-21 10:12:57,052 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-21 10:12:57,088 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-21 10:15:50,338 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-21 10:15:50,339 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-21 10:15:50,339 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-21 10:15:50,339 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:35:57,027 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:35:57,030 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:35:57,534 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:35:57,535 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:35:57,535 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:35:57,535 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:54,674 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:40:54,678 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:40:55,240 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:40:55,244 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:40:55,604 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:40:55,608 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:40:55,727 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:55,727 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:55,727 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:55,727 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:55,888 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:55,888 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:55,888 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:55,888 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:55,916 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:40:55,919 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:40:56,345 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:56,345 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:56,345 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:56,345 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:56,520 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 21:40:56,556 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:56,556 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:56,556 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:40:56,556 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:40:56,674 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 21:40:57,134 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 21:40:57,229 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 21:40:57,464 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 21:40:57,464 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 21:40:57,464 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 21:40:57,464 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:40:57,505 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 21:40:57,505 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 21:40:57,505 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 21:40:57,505 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:40:57,742 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 21:40:57,782 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 21:40:58,166 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 21:40:58,166 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 21:40:58,166 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 21:40:58,166 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:40:58,268 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 21:40:58,269 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 21:40:58,269 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 21:40:58,269 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:40:58,424 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 21:40:58,469 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 21:48:29,964 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 21:48:29,965 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 21:48:29,965 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 21:48:29,965 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 21:51:15,009 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 21:51:15,023 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 21:51:15,883 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:51:15,883 - DEBUG - Creating converter from 5 to 7
+2025-05-22 21:51:15,883 - DEBUG - Creating converter from 7 to 5
+2025-05-22 21:51:15,883 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:48,551 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 23:42:48,563 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 23:42:48,761 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 23:42:48,775 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 23:42:50,288 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:50,289 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:50,289 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:50,289 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:50,449 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:50,450 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:50,450 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:50,450 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:50,762 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 23:42:50,778 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 23:42:51,809 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-22 23:42:51,814 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-22 23:42:52,737 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 23:42:52,794 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 23:42:52,877 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:52,877 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:52,877 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:52,885 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:54,371 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 23:42:54,372 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 23:42:54,372 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 23:42:54,372 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 23:42:54,514 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:54,514 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:54,514 - DEBUG - Creating converter from 7 to 5
+2025-05-22 23:42:54,514 - DEBUG - Creating converter from 5 to 7
+2025-05-22 23:42:54,574 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 23:42:54,574 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 23:42:54,574 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 23:42:54,574 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 23:42:54,660 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 23:42:54,947 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 23:42:55,790 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 23:42:56,911 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-22 23:42:57,283 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 23:42:57,283 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 23:42:57,283 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 23:42:57,283 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 23:42:57,747 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-22 23:42:58,444 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-22 23:42:58,445 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-22 23:42:58,445 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-22 23:42:58,445 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-22 23:42:58,801 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 00:18:18,643 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 00:18:18,643 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 00:18:18,643 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 00:18:18,643 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 16:46:43,484 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 16:46:43,486 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 16:46:43,819 - DEBUG - Creating converter from 7 to 5
+2025-05-23 16:46:43,820 - DEBUG - Creating converter from 5 to 7
+2025-05-23 16:46:43,820 - DEBUG - Creating converter from 7 to 5
+2025-05-23 16:46:43,820 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:34,733 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:34,737 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:34,796 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:34,799 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:34,810 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:34,813 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:34,862 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:34,865 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:34,909 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:34,911 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:35,081 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:35,085 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:35,124 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-23 17:45:35,127 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-23 17:45:35,164 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,164 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,164 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,164 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,244 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,244 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,245 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,245 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,246 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,246 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,246 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,247 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,272 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,273 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,273 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,273 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,334 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,334 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,334 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,334 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,543 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,543 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,543 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,544 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,625 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:35,667 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,667 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,667 - DEBUG - Creating converter from 7 to 5
+2025-05-23 17:45:35,667 - DEBUG - Creating converter from 5 to 7
+2025-05-23 17:45:35,752 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:35,836 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:35,871 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:35,937 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:36,160 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:36,165 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-23 17:45:36,382 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:36,382 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:36,382 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:36,382 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:36,441 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:36,441 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:36,441 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:36,441 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:36,468 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:36,536 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:36,590 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:36,590 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:36,590 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:36,590 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:36,661 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:36,661 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:36,661 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:36,662 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:36,689 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:36,749 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:36,811 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:36,811 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:36,811 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:36,812 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:36,896 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:37,025 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:37,025 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:37,025 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:37,025 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:37,104 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:45:37,107 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:45:37,107 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:45:37,107 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:45:37,107 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-23 17:45:37,181 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-23 17:57:44,701 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-23 17:57:44,701 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-23 17:57:44,701 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-23 17:57:44,701 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-27 21:16:19,743 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-27 21:16:19,746 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-27 21:16:20,254 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:16:20,254 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:16:20,254 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:16:20,254 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:07,995 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-27 21:59:07,997 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-27 21:59:08,084 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-27 21:59:08,086 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-27 21:59:08,125 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-27 21:59:08,127 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-27 21:59:08,152 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-27 21:59:08,154 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-27 21:59:08,359 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,359 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,359 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,359 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,483 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,483 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,483 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,483 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,501 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,501 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,501 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,501 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,506 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,506 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,506 - DEBUG - Creating converter from 7 to 5
+2025-05-27 21:59:08,506 - DEBUG - Creating converter from 5 to 7
+2025-05-27 21:59:08,800 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-27 21:59:08,958 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-27 21:59:09,006 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-27 21:59:09,046 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-27 21:59:09,586 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-27 21:59:09,586 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-27 21:59:09,587 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-27 21:59:09,587 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-27 21:59:09,594 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-27 21:59:09,594 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-27 21:59:09,594 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-27 21:59:09,595 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-27 21:59:09,649 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-27 21:59:09,649 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-27 21:59:09,649 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-27 21:59:09,649 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-27 21:59:09,672 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-27 21:59:09,673 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-27 21:59:09,673 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-27 21:59:09,673 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-27 21:59:09,681 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-27 21:59:09,689 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-27 21:59:09,729 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-27 21:59:09,751 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-27 22:19:07,390 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-27 22:19:07,390 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-27 22:19:07,390 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-27 22:19:07,390 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 09:54:29,585 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 09:54:29,590 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 09:54:30,153 - DEBUG - Creating converter from 7 to 5
+2025-05-31 09:54:30,153 - DEBUG - Creating converter from 5 to 7
+2025-05-31 09:54:30,153 - DEBUG - Creating converter from 7 to 5
+2025-05-31 09:54:30,153 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,346 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,348 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,355 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,357 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,449 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,451 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,494 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,496 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,553 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,555 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,573 - DEBUG - CACHEDIR=/home/cchen/.cache/matplotlib
+2025-05-31 12:08:09,576 - DEBUG - Using fontManager instance from /home/cchen/.cache/matplotlib/fontlist-v390.json
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,698 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,794 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,794 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,794 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,794 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,839 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,839 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,839 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,839 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,904 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,904 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,904 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,904 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,971 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,972 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:09,972 - DEBUG - Creating converter from 7 to 5
+2025-05-31 12:08:09,972 - DEBUG - Creating converter from 5 to 7
+2025-05-31 12:08:10,135 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:10,182 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:10,249 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:10,293 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:10,384 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:10,429 - WARNING - 'model_path' argument is deprecated, please use 'model_paths' in the future.
+2025-05-31 12:08:11,068 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,068 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,069 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,069 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,174 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:08:11,182 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,183 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,183 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,183 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,244 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,244 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,244 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,244 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,266 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:08:11,286 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,286 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,287 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,287 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,342 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:08:11,381 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:08:11,403 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,403 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,403 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,404 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,405 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:08:11,405 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:08:11,405 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:08:11,405 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
+2025-05-31 12:08:11,496 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:08:11,496 - INFO - CUDA version: 12.0, CUDA device: 0
+2025-05-31 12:20:55,325 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:110: UserWarning: 'has_cuda' is deprecated, please use 'torch.backends.cuda.is_built()'
+  torch.has_cuda,
+
+2025-05-31 12:20:55,326 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:111: UserWarning: 'has_cudnn' is deprecated, please use 'torch.backends.cudnn.is_available()'
+  torch.has_cudnn,
+
+2025-05-31 12:20:55,326 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:117: UserWarning: 'has_mps' is deprecated, please use 'torch.backends.mps.is_built()'
+  torch.has_mps,
+
+2025-05-31 12:20:55,326 - WARNING - /home/cchen/apps/deepmd-kit/lib/python3.11/site-packages/torch/overrides.py:118: UserWarning: 'has_mkldnn' is deprecated, please use 'torch.backends.mkldnn.is_available()'
+  torch.has_mkldnn,
+
