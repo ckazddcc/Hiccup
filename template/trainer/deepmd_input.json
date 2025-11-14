@@ -1,0 +1,74 @@
+{
+    "model":{
+        "type_map":[
+            "Cu",
+            "O"
+        ],
+        "descriptor":{
+            "type":"se_e2_a",
+            "sel":[
+                200,
+                200,
+                300
+            ],
+            "rcut_smth":0.5,
+            "rcut":6.0,
+            "neuron":[
+                25,
+                50,
+                100
+            ],
+            "resnet_dt":false,
+            "axis_neuron":12,
+            "seed":4009108875
+        },
+        "fitting_net":{
+            "neuron":[
+                120,
+                120,
+                120
+            ],
+            "resnet_dt":true,
+            "seed":1339901701
+        }
+    },
+    "loss":{
+        "start_pref_e":0.02,
+        "limit_pref_e":1,
+        "start_pref_f":1000,
+        "limit_pref_f":1,
+        "start_pref_v":0,
+        "limit_pref_v":0
+    },
+    "learning_rate":{
+        "type":"exp",
+        "start_lr":0.001,
+        "decay_steps":2000,
+        "stop_lr":4.317124741065782e-08
+    },
+    "training":{
+        "numb_steps":100000,
+        "seed":2995107704,
+        "_comment":"frequencies counted in batch",
+        "disp_file":"lcurve.out",
+        "disp_freq":1000,
+        "save_freq":10000,
+        "validation_data":{
+            "systems":[
+
+            ],
+            "batch_size":[
+
+            ],
+            "numb_btch":4
+        },
+        "training_data":{
+            "systems":[
+
+            ],
+            "batch_size":[
+
+            ]
+        }
+    }
+}
