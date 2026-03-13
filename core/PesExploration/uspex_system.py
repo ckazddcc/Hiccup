@@ -41,7 +41,7 @@ class UspexSystem:
                  init_seeds_path=None,
                  multi_substrates=False,
                  opt_method="BFGS",
-                 ediffg=0.2,
+                 ediffg=0.1,
                  nsw=200,
                  gpu=0
                  ):
@@ -267,10 +267,13 @@ class UspexSystem:
         # 生成POSCARS1：如果有指定的初始种子，直接使用，否则从随机种子中选取最稳定的结构作为初始种子
         selected_atoms = []
         if not self.init_seeds_path:
-            self.init_seeds_path = self.random_seeds_path
-            selected_atoms = self.random_seeds_selection(self.ini_pop_size * 0.1)
-            POSCARS_1 = os.path.join(seeds_dir, 'POSCARS_1')
-            self.write_poscars(selected_atoms, POSCARS_1)
+            if self.random_seeds_path is None:
+                pass
+            else:
+                self.init_seeds_path = self.random_seeds_path
+                selected_atoms = self.random_seeds_selection(self.ini_pop_size * 0.2)
+                POSCARS_1 = os.path.join(seeds_dir, 'POSCARS_1')
+                self.write_poscars(selected_atoms, POSCARS_1)
 
         elif "POSCARS" in os.path.basename(self.init_seeds_path):
             # 重新编号
@@ -288,15 +291,15 @@ class UspexSystem:
                 compos = Counter(atoms.get_chemical_symbols())
                 if compos == target_compos:
                     selected_atoms.append(row.toatoms())
-            if len(selected_atoms) > self.ini_pop_size * 0.2:
-                num = int(math.ceil(self.ini_pop_size * 0.1))
+            if len(selected_atoms) > self.ini_pop_size * 0.5:
+                num = int(math.ceil(self.ini_pop_size * 0.5))
                 selected_atoms = random.sample(selected_atoms, num)
             POSCARS_1 = os.path.join(seeds_dir, 'POSCARS_1')
             self.write_poscars(selected_atoms, POSCARS_1)
 
         # 产生POSCAR_2 3 4
         for i in range(2, self.generation_num + 1):
-            seeds_num = math.ceil(0.1 * self.pop_size)
+            seeds_num = math.ceil(0.2 * self.pop_size)
             if self.random_seeds_path:
                 selected_atoms = self.random_seeds_selection(seeds_num)
             else:
@@ -350,7 +353,7 @@ class UspexSystem:
                 elif calc_tag == "mace":
                     if "model_path =" in line and "#" not in line:
                         script_directory = Path(__file__).parent
-                        model_path = os.path.join(script_directory, f"tools/mace-mpa-0-medium.model")
+                        model_path = os.path.join(script_directory, f"tools/mace-mpa-0-medium-float32.model")
                         content[i] = f"model_path = \"{model_path}\"\n"
 
                 if "dimension =" in line and "#" not in line:
@@ -449,9 +452,9 @@ def pick_individuals(individuals_path):
     # 去重
     unique_fits = set(fits)
     # 返回unique_fits的索引在原its中的位置
-    unique_ids = [ids[fits.index(u)] for u in unique_fits]
+    unique_ids = [(ids[fits.index(u)], float(u.split("_")[2])) for u in unique_fits]
     # 将字符串转化为整数
-    unique_ids = [int(ii) - 1 for ii in unique_ids]
+    unique_ids = [(int(ii[0]), ii[1]) for ii in unique_ids]
     return unique_ids
 
 
@@ -460,6 +463,7 @@ def write_to_db(work_dir, constraint_z=0):
     将简单去重后的结构写入gathered.db文件
     """
     subdirectories = []
+    fix_num = []
     for root, dirs, files in os.walk(work_dir):
         # 获取子目录名，只返回当前目录的子目录，避免递归深度遍历
         subdirectories.extend(dirs)
@@ -486,29 +490,58 @@ def write_to_db(work_dir, constraint_z=0):
         length_poscar = len(contents) // num_poscar
         unique_ids = pick_individuals(os.path.join(results_path, "Individuals"))
         all_db = connect(alls_db_path)
-        for i in unique_ids:
+        for (i, fit) in unique_ids:
             try:
                 poscar_dir = os.path.join(results_path, "POSCAR")
-                poscar_content = contents[i * length_poscar:(i + 1) * length_poscar]
+                poscar_content = contents[(i-1) * length_poscar:i * length_poscar]
                 with open(poscar_dir, 'w') as poscar_file:
                     poscar_file.writelines(poscar_content)
                 atoms = read(poscar_dir)
                 # 添加原子的固定信息
                 if constraint_z > 0:
                     fix_indexs = [atom.index for atom in atoms if atom.position[2] < constraint_z]
+                    fix_num.append(len(fix_indexs))
                     c = FixAtoms(indices=[atom.index for atom in atoms if atom.index in fix_indexs])
                     atoms.set_constraint(c)
-                all_db.write(atoms)
+                all_db.write(atoms, data={'fitness': fit, "Individual": i})
             except:
                 print(f"{i} Error")
                 continue
-        print(f"{work_dir}/gathered.db has been created successfully.")
+
+    # 防止有不合理结构存在
+    if constraint_z != 0:
+        counter = Counter(fix_num)
+        most_common_fix_num = counter.most_common(1)[0][0]
+        for row in all_db.select():
+            atoms = row.toatoms()
+            fix_indexs = [atom.index for atom in atoms if atom.position[2] < constraint_z]
+            if abs(len(fix_indexs) - most_common_fix_num) > 2:
+                all_db.delete([row.id])
+    print(f"{work_dir}/gathered.db has been created successfully.")
     return alls_db_path
 
 
 if __name__ == '__main__':
-    # write_to_db("/home/cchen/CuY/round1/Cu5Y/ga/2_O3Cu52Y10", 6.5)
-    merged_db_path = "/home/cchen/CuY/round1/Cu5Y/ga/2_O3Cu52Y10/gathered.db"
+    def find_db_files(root_dir):
+        root = Path(root_dir)
+        return [root for root in root.iterdir() if root.is_dir()]
 
+
+    alls_2 = connect("/home/cchen/CuY/hiccup2/s4_3/alls.db")
+    dirs = find_db_files("/home/cchen/CuY/hiccup2/s4_3")
+
+
+    for dir in dirs:
+        gather_db_path = os.path.join(dir, "gathered.db")
+        # if os.path.exists(gather_db_path):
+        #     continue
+        write_to_db(str(dir), 0.5)
+        print(f"{dir} has been created successfully.")
+        db = connect(gather_db_path)
+        for row in db.select():
+            atoms = row.toatoms()
+            alls_2.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
+        print(f"{gather_db_path} has been written to alls_2.db successfully.")
+        print(alls_2.count())
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

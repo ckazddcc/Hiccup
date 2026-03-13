@@ -38,14 +38,14 @@ def split_list(data, n):
 
 def optimizer(model_path, seeds_db_path, seeds_ids, gpu_i):
     db = connect(seeds_db_path)
-    calculator = MACECalculator(model_path=model_path, device=f'cuda:{gpu_i}', default_dtype='float64')
+    calculator = MACECalculator(model_path=model_path, device=f'cuda:{gpu_i}', default_dtype='float32')
     results = []
     for id in seeds_ids:
         row = db.get(id=id)
         atoms = row.toatoms()
         atoms.calc = calculator
         dyn = BFGS(atoms, logfile=None, trajectory=None)
-        dyn.run(fmax=0.1, steps=50)
+        dyn.run(fmax=0.1, steps=100)
         energy = atoms.get_potential_energy()
         forces = atoms.get_forces()
         data = row.data
@@ -66,11 +66,11 @@ def seeds_optimizer(seeds_db_path, gpus):
     ids = [row.id for row in db.select()]
     split_ids = split_list(ids, len(gpus))
     script_directory = Path(__file__).parent
-    model_path = os.path.join(script_directory, "mace-mpa-0-medium.model")
+    model_path = os.path.join(script_directory, "mace-mpa-0-medium-float32.model")
     model_path_i = []
     cwd = os.getcwd()
     for i, gpu in enumerate(gpus):
-        model_i = os.path.join(cwd, f"mace-mpa-0-medium_{gpu}.model")
+        model_i = os.path.join(cwd, f"mace-mpa-0-medium-float32_{gpu}.model")
         if not os.path.exists(model_i):
             shutil.copy(model_path, model_i)
             model_path_i.append(model_i)

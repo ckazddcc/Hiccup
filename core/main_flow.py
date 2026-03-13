@@ -22,9 +22,10 @@ from PesExploration.nn_deviation import NNDeviation
 from PesExploration.tools.energy_structure_filter import energy_structure_filter
 from PesExploration.tools.calculator_select import calculator_select
 from PesExploration.tools.mace_optimizer import seeds_optimizer
+from PesExploration.tools.md_sample import run_md_parallel, gather_md_traj
+
 from ase.io import read
 import torch.multiprocessing as mp
-from pathlib import Path
 
 
 class Hiccup:
@@ -56,9 +57,11 @@ class Hiccup:
             self.best_model = self.trainer_config["Initial Model"]
 
         # 采样器配置接口，创建seeds目录，ga目录
-        self.sampling_config = config["SAMPLING"]["GA"]
-        self.seeds_config = self.sampling_config["RANDOMSEEDS"]
-        self.uspex_config = self.sampling_config["USPEX"]
+        self.sampler_ga = config["SAMPLER"]["GA"]
+        self.seeds_config = self.sampler_ga["RANDOMSEEDS"]
+        self.uspex_config = self.sampler_ga["USPEX"]
+        self.dimension = self.uspex_config["Dimension"]
+        self.constraint_z = self.uspex_config.get("Constraint z", 0)
         self.ga_dir = os.path.join(self.pes_dir, "ga")
         if not os.path.exists(self.ga_dir):
             os.makedirs(self.ga_dir)
@@ -66,23 +69,33 @@ class Hiccup:
         if not os.path.exists(self.seeds_dir):
             os.makedirs(self.seeds_dir)
         if not self.seeds_config.get("Activate", False):
-            if self.seeds_config["Random Seeds Path"] != os.path.join(self.seeds_dir, "random_seeds.db"):
+            if (self.seeds_config.get("Random Seeds Path", None) is not None
+                    and self.seeds_config.get("Random Seeds Path", None) != os.path.join(self.seeds_dir, "random_seeds.db")):
                 shutil.copy(self.seeds_config["Random Seeds Path"], os.path.join(self.seeds_dir, "random_seeds.db"))
         self.random_seeds_db = os.path.join(self.seeds_dir, "random_seeds.db")
+        self.nnmd_config = config["SAMPLER"]["NNMD"]
 
         # 初始种子
         self.init_seeds_db = self.seeds_config.get("Init Seeds Path", None)
 
         # postprocess
-        self.postprocess_config = self.sampling_config["POSTPROCESSING"]
+        self.postprocess_config = self.config["POSTPROCESSING"]
 
         # tag_flag
         self.model_tag = self.uspex_config.get("Calculator", "MACE")  # 优化模型默认MACE
 
+        # 收敛标准
+        self.accuracy_threshold = self.base_config.get("Accuracy Threshold", 0.95)
+        self.stall_iterations = self.base_config.get("Stall Iterations", 3)
+        self.accurate_ratio = 0
+        self.failed_ratio = 1
+        self.best_model_info = None
+        self.converge_count = 0
+
         # 日志文件
         self.log = os.path.join(self.workdir, "hiccup-log.txt")
-        # if os.path.exists(self.log):
-        #     os.remove(self.log)
+        if os.path.exists(self.log):
+            os.remove(self.log)
 
     @staticmethod
     def update_composition(elements, target_composition):
@@ -219,6 +232,7 @@ class Hiccup:
         fail = [str(i) for i, j in enumerate(frozen_state) if not j]
         best_model_path, best_model_id, models_info = trainer.get_best_model()
         self.best_model = best_model_path
+        self.best_model_info = models_info[best_model_id]
 
         # 写入日志 NN_1 Training Results
         with open(self.log, "a") as f:
@@ -275,7 +289,6 @@ class Hiccup:
                     break
 
         # 生成GA输入文件
-
         ga_system = UspexSystem(elements=self.elements,
                                 target_composition=composition,
                                 dimension=self.uspex_config["Dimension"],
@@ -300,8 +313,8 @@ class Hiccup:
         uspex_env_path = os.path.expanduser(uspex_env)
         env = os.environ.copy()
         env["PATH"] = f"{uspex_env_path}:{env['PATH']}"
-        cmd = f"cd {compos_dir} && nohup USPEX -r > uspex.log 2>&1 &"
-        subprocess.run(cmd, shell=True, env=env, check=True)
+        cmd = "nohup USPEX -r > uspex.log 2>&1 & echo $! > uid"
+        subprocess.run(cmd, shell=True, cwd=compos_dir, env=env, check=True)
 
         # 写入日志 GA
         with open(self.log, "a") as f:
@@ -322,33 +335,36 @@ class Hiccup:
             f.write(self.create_separator_line("GA_0", total_length=100, separator='-'))
 
         gpus = []
-        for i, c in enumerate(self.compositions):
-            ii = i % len(self.gpu)
-            gpus.append(self.gpu[ii])
+        n = len(self.gpu) * 3
+        compos_batch = [self.compositions[i:i+n] for i in range(0, len(self.compositions), n)]
+        for compos in compos_batch:
+            for i, c in enumerate(compos):
+                ii = i % len(self.gpu)
+                gpus.append(self.gpu[ii])
 
-        ga0_systems = []
-        processes = []
-        result_queue = mp.Queue()
-        for i, c in enumerate(self.compositions):
-            p = mp.Process(target=self.run_ga, args=(0, gpus[i], c, result_queue))
-            p.start()
-            processes.append(p)
-        for p in processes:
-            p.join()
-        while not result_queue.empty():
-            ga0_systems.append(result_queue.get())
+            ga0_systems = []
+            processes = []
+            result_queue = mp.Queue()
+            for i, c in enumerate(compos):
+                p = mp.Process(target=self.run_ga, args=(0, gpus[i], c, result_queue))
+                p.start()
+                processes.append(p)
+            for p in processes:
+                p.join()
+            while not result_queue.empty():
+                ga0_systems.append(result_queue.get())
 
-        time.sleep(180)
-        GA0_IS_FINISH = False
-        ga0_states = []
-        while not GA0_IS_FINISH:
+            time.sleep(180)
+            GA0_IS_FINISH = False
             ga0_states = []
-            for ga in ga0_systems:
-                ga0_states.append(ga.uspex_monitor())
-            if not "RUNNING" in ga0_states:
-                GA0_IS_FINISH = True
-            else:
-                time.sleep(180)
+            while not GA0_IS_FINISH:
+                ga0_states = []
+                for ga in ga0_systems:
+                    ga0_states.append(ga.uspex_monitor())
+                if not "RUNNING" in ga0_states:
+                    GA0_IS_FINISH = True
+                else:
+                    time.sleep(180)
 
         # 提取GA0的结果
         with open(self.log, "a") as f:
@@ -364,20 +380,46 @@ class Hiccup:
         # 提取GA0的结果
         gathered_db_path = self.postprocess(0)
 
-        # 提交进行dft计算
+        # 提交 sp + opt 作业， 在初始化阶段充分生成数据
+        # 提交 sp 作业
         dft_sp = VaspjetRun(db_path=gathered_db_path,
                             cpu_config=self.cpu_config,
                             cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"], "iter0/sp"),
                             vaspjet_yml=os.path.join(self.templates, "vaspjet/pure_vasp_sp.yml"))
+        # ！！！没有开启 vasp ! ！！!
         dft_sp.run_vaspjet()
+
+        # 筛选出一批最稳定的结构进行 opt -> alls_1.db
+        energy_structure_filter(db_path=gathered_db_path,
+                                dimension=self.dimension,
+                                max_filter_ratio=self.postprocess_config["Max Filter Ratio"],
+                                max_filter_num=self.postprocess_config["Max Filter Num"],
+                                similarity_threshold=0.95,
+                                output_mode="split",
+                                constraint_z=self.constraint_z)
+
         with open(self.log, "a") as f:
-            f.write(f"GA_0 results have been submitted to the cpu for dft calculation !!!\n")
-        time.sleep(180)
+            f.write(f"GA_0 results have been submitted to the cpu for sp-dft calculation !!!\n")
+        time.sleep(120)
+
+        alls_1 = gathered_db_path.replace(".db", "_1.db")
+        dft_opt = VaspjetRun(db_path=alls_1,
+                            cpu_config=self.cpu_config,
+                            cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"], "iter0/opt"),
+                            vaspjet_yml=os.path.join(self.templates, "vaspjet/pure_vasp_opt.yml"))
+        dft_opt.run_vaspjet()
+
+        with open(self.log, "a") as f:
+            f.write(f"GA_0 results have been submitted to the cpu for opt-dft calculation !!!\n")
+        time.sleep(120)
+
         # 监控dft计算状态
         ga_dir_iter = os.path.join(self.ga_dir, "ga0")
         sp_results_db = os.path.join(ga_dir_iter, "sp.db")
-        sp_results = False
-        while not sp_results:
+        opt_results_db = os.path.join(ga_dir_iter, "opt.db")
+        next_iter_db = os.path.join(ga_dir_iter, "next_iter.db")
+        sp_opt_results = False
+        while not sp_opt_results:
             time.sleep(180)
             sp_state, sp_download = vaspjet_monitor(cpu_config=self.cpu_config,
                                                     cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"],
@@ -386,13 +428,38 @@ class Hiccup:
                                                     local_path=sp_results_db,
                                                     traj_process_mode=None
                                                     )
+            opt_states, opt_download = vaspjet_monitor(cpu_config=self.cpu_config,
+                                                       cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"],
+                                                                                "iter0/opt"),
+                                                       download_results=False,
+                                                       local_path=opt_results_db,
+                                                       traj_process_mode=None
+                                                       )
             if sp_state == "DONE" and sp_download:
-                sp_results = True
+                if opt_states == "DONE":
+                    sp_opt_results = True
             print("sp_state: ", sp_state)
-        with open(self.log, "a") as f:
-            f.write(f"GA_0 dft calculation has been completed successfully !!!\n")
+            print("opt_states: ", opt_states)
+
+        opt_states, opt_download = vaspjet_monitor(cpu_config=self.cpu_config,
+                                                   cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"],
+                                                                            "iter0/opt"),
+                                                   download_results=True,
+                                                   local_path=opt_results_db,
+                                                   traj_process_mode="filter"
+                                                   )
+        if opt_download:
+            next_iter = connect(next_iter_db)
+            for row in connect(sp_results_db):
+                atoms = row.toatoms()
+                next_iter.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
+            for row in connect(opt_results_db):
+                atoms = row.toatoms()
+                next_iter.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
+            with open(self.log, "a") as f:
+                f.write(f"GA_0 dft calculation has been completed successfully !!!\n")
         # 提取dft计算结果，更新database
-        self.db_path = sp_results_db
+        self.db_path = next_iter_db
         return
 
     def initialize(self):
@@ -411,7 +478,7 @@ class Hiccup:
             cell = sub.get_cell()
             cell_x = cell[0][0] * 1.4
             cell_y = cell[1][1] * 1.4
-            cell_z = cell[2][2] + 13
+            cell_z = cell[2][2] + 20
             for row in connect(self.init_seeds_db).select():
                 atoms = row.toatoms()
                 seeds_cell = atoms.get_cell()
@@ -430,7 +497,7 @@ class Hiccup:
             cell = sub.get_cell()
             cell_x = cell[0][0] * 1.4
             cell_y = cell[1][1] * 1.4
-            cell_z = cell[2][2] + 13
+            cell_z = cell[2][2] + 20
             for row in connect(self.random_seeds_db).select():
                 atoms = row.toatoms()
                 seeds_cell = atoms.get_cell()
@@ -453,6 +520,9 @@ class Hiccup:
         return
 
     def postprocess(self, iter_id):
+        """
+        回收USPEX运行结果 -> 对回收结果进行去冗余 -> 用4个模型综合评估结构是否学会
+        """
         with open(self.log, "a") as f:
             f.write(self.create_separator_line(f"Postprocessing", total_length=100, separator='-'))
         ga_dir_iter = os.path.join(self.ga_dir, f"ga{iter_id}")
@@ -470,38 +540,21 @@ class Hiccup:
             f.write(f"Started screening structures based on energy and similarity...\n")
 
         for subdir in subdirectories:
-            # 简单去重得到ga/ga1/2_O2Cu18/gathered.db
-            # subdir:"ga/ga1/2_O2Cu18"
-            subdir = os.path.join(ga_dir_iter, subdir)
-            if os.path.basename(subdir)[0] == "2":
-                input_txt = os.path.join(subdir, "INPUT.txt")
-                if not os.path.exists(input_txt):
-                    input_txt = os.path.join(subdir, "BACKUP_INPUT.txt")
-                try:
-                    with open(input_txt, "r") as f:
-                        content_input = f.readlines()
-                        for i, line in enumerate(content_input):
-                            if "thicknessB" in line:
-                                constraint_z = float(line.split(" ")[0])
-                except:
-                    print(f"Error reading {input_txt}.")
-                    constraint_z = 4
-            else:
-                constraint_z = 0
-
-            gathered_db_path = write_to_db(subdir, constraint_z)
+            # # 简单去重得到ga/ga1/2_O2Cu18/gathered.db
+            gathered_db_path = write_to_db(os.path.join(ga_dir_iter, subdir), self.constraint_z)
 
             # 若uspex失败，无gathered.db，则跳过
             if not os.path.exists(gathered_db_path):
+                print(f"Warning: {gathered_db_path} does not exist.")
                 continue
-            # 能量和力筛选，得到ga/1/O2Cu18_2/filtered.db
+            # 能量和力筛选，得到去重后的 ga/1/O2Cu18_2/gathered.db
             gathered_count = connect(gathered_db_path).count()
-            if self.best_model:
-                energy_structure_filter(db_path=gathered_db_path,
-                                        best_model_path=self.best_model,
-                                        max_filter_ratio=0.9,
-                                        similarity_threshold=0.95,
-                                        output_mode="delete")
+            energy_structure_filter(db_path=gathered_db_path,
+                                    dimension=self.dimension,
+                                    max_filter_ratio=0.9,
+                                    similarity_threshold=0.95,
+                                    output_mode="delete",
+                                    constraint_z=self.constraint_z)
             filtered_db_path = gathered_db_path
             filtered_count = connect(filtered_db_path).count()
             with open(self.log, "a") as f:
@@ -520,10 +573,18 @@ class Hiccup:
         # 用训练好的模型对GA搜索结果进行评估
         with open(self.log, "a") as f:
             f.write(f"Start wrong atom identification of the structure based on NN_{iter_id} evaluation...\n")
+
+        force_deviation_lower = self.postprocess_config.get("Force Deviation Lower", "Auto")
+        force_deviation_upper = self.postprocess_config.get("Force Deviation Upper", "Auto")
+        if force_deviation_lower == "Auto":
+            force_deviation_lower = float(self.best_model_info[5]) # validation RMSEf
+        if force_deviation_upper == "Auto":
+            force_deviation_upper = force_deviation_lower + 0.15
+
         nn_deviation = NNDeviation(model_dir=os.path.join(self.dp_dir, f"nn{iter_id}"),
                                    ga_db_path=alls_db_path,
-                                   force_err_lower=self.postprocess_config.get("Force Error Lower", 0.1),
-                                   force_err_upper=self.postprocess_config.get("Force Error Upper", 0.2),
+                                   force_err_lower=force_deviation_lower,
+                                   force_err_upper=force_deviation_upper,
                                    type=self.postprocess_config.get("Type", "slab"),
                                    lcs_radius=self.postprocess_config.get("LCS Radius", 5.0),
                                    lcs_layers_num=self.postprocess_config.get("LCS Layers Num", 3)
@@ -535,6 +596,8 @@ class Hiccup:
             f.write(f"Candidate: {nn_dev_result['Candidate'][0]}  {nn_dev_result['Candidate'][1]}\n")
             f.write(f"Failed:    {nn_dev_result['Failed'][0]}  {nn_dev_result['Failed'][1]}\n")
             f.write("\n")
+        self.accurate_ratio = float(nn_dev_result['Accurate'][1])
+        self.failed_ratio = float(nn_dev_result['Failed'][1])
 
         # 判断是否需要进行lcs处理
         lcs_flag = self.postprocess_config.get("LCS Process", False)
@@ -574,7 +637,7 @@ class Hiccup:
         for iter_id in range(1, self.base_config["Iterations"] + 1):
             # 分batch
             seeds_compositions = self.compositions
-            b1 = (len(self.gpu) - 4) * 4
+            b1 = (len(self.gpu) - 4) * 3
             batch1 = seeds_compositions[:b1]
             batch2 = seeds_compositions[b1:]
 
@@ -691,10 +754,74 @@ class Hiccup:
                 start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 f.write(f"{start_time} All GA tasks have been completed successfully !!!\n")
                 compos_str = " ".join(
-                    ["".join([f"{ele}{num}" for ele, num in zip(self.elements, c)]) for c in self.compositions])
+                 ["".join([f"{ele}{num}" for ele, num in zip(self.elements, c)]) for c in self.compositions])
                 f.write(f"Compositions: {compos_str}\n")
                 state_str = "  ".join(state)
                 f.write(f"GA state: {state_str}\n")
+
+            # ----------------------------------- MD Sampling -----------------------------------
+            # force 在训练集和验证集上的表现都达标后才能进行 MD 采样
+            ga_dir_iter = os.path.join(self.ga_dir, f"ga{iter_id}")
+            alls_db_path = os.path.join(ga_dir_iter, "alls.db")
+            alls_db = connect(alls_db_path)
+            if self.best_model_info is not None:
+                if (self.best_model_info[4] <= self.nnmd_config.get('NN Force Accuracy', 0.15)
+                        and self.best_model_info[5] <= self.nnmd_config.get('NN Force Accuracy', 0.15)):
+                    # 最终要汇入 alls_db_path
+                    md_dir = os.path.join(ga_dir_iter, "MD")
+                    if not os.path.exists(md_dir):
+                        os.makedirs(md_dir)
+                    to_md_db_path = os.path.join(md_dir, "to_md.db")
+                    to_md_db = connect(to_md_db_path)
+                    to_md_atoms = []
+                    ga_compositions_dir = [os.path.join(ga_dir_iter, d) for d in os.listdir(ga_dir_iter)
+                                if os.path.isdir(os.path.join(ga_dir_iter, d)) and not d.startswith("new") and not d.startswith("MD")]
+                    for ga_compos in ga_compositions_dir:
+                        gathered_db = connect(os.path.join(ga_compos, "gathered.db"))
+                        if gathered_db.count() == 0:
+                            continue
+                        _infos = []
+                        for row in gathered_db.select():
+                            fitness = row.data['fitness']
+                            _infos.append((row.id, fitness))
+                        _infos.sort(key=lambda x: x[1])
+                        stable_row = gathered_db.get(_infos[0][0])
+                        stable_atoms = stable_row.toatoms()
+                        to_md_atoms.append(stable_atoms)
+                        to_md_db.write(stable_atoms, data=stable_row.data, key_value_pairs=stable_row.key_value_pairs)
+
+                    # 生成 MD 任务
+                    with open(self.log, "a") as f:
+                        start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                        f.write(self.create_separator_line(f"MD_{iter_id} Sampling", total_length=100, separator='-'))
+                        f.write(f"Number of structures to be sampled: {len(to_md_atoms)}\n")
+                        f.write(f"{start_time} Start sampling...\n")
+                    run_md_parallel(
+                        atoms_list=to_md_atoms,
+                        type_map=self.elements,
+                        dp_model_path=self.best_model,
+                        base_workdir=md_dir,
+                        nproc=len(self.gpu)*2,
+                        nsteps=self.nnmd_config.get('MD Steps', 20000),
+                        timestep_fs=self.nnmd_config.get('MD Timestep', 0.5),
+                        dump_interval=self.nnmd_config.get('MD Dump Interval', 100),
+                        cpu_only_inference=False,
+                        temperature_K=self.nnmd_config.get('MD Temperature K', 500),
+                        gpu_ids=self.gpu,
+                    )
+                    with open(self.log, "a") as f:
+                        end_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                        f.write(f"{end_time} MD sampling completed.\n")
+
+                    # 回收 md 轨迹，并写入 alls.db
+                    gathered_md_traj_path = gather_md_traj(md_dir, self.best_model, self.gpu[0])
+                    gathered_md_traj = connect(gathered_md_traj_path)
+                    for row in gathered_md_traj.select():
+                        atoms = row.toatoms()
+                        alls_db.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
+                    with open(self.log, "a") as f:
+                        f.write(f"A total of {gathered_md_traj.count()} MD trajectories have been written to {alls_db_path} !\n")
+
             # -----------------------------------PostProcessing-----------------------------------
             candidates_db_path = self.postprocess(iter_id)
             candidates_count = connect(candidates_db_path).count()
@@ -712,6 +839,18 @@ class Hiccup:
                                    log_path=self.log,
                                    is_last_iter=IS_LAST_ITER)
                 self.db_path = new_database
+
+            if self.accurate_ratio > self.accuracy_threshold:
+                self.converge_count += 1
+            else:
+                self.converge_count = 0
+
+            if self.converge_count >= self.stall_iterations:
+                with open(self.log, "a") as f:
+                    f.write(f"Accurate ratio: {self.accurate_ratio}\n")
+                    f.write(f"Failed ratio: {self.failed_ratio}\n")
+                    f.write(f"Convergence criteria met. Iteration: {iter_id}\n")
+                break
         # ==================================Main Loop Finish==================================
         # 最后一次训练，更新best_model
         self.update()
@@ -719,13 +858,11 @@ class Hiccup:
 
 
 if __name__ == '__main__':
-    with open("/home/cchen/CuY/hiccup/config.yml") as file:
+    with open("/home/cchen/CuY/hiccup3/config.yml") as file:
         dict_value = yaml.load(file.read(), Loader=yaml.FullLoader)
     config = dict_value
-    test = Hiccup(config)
-    # test.postprocess(1)
-    # test.initialize()
-    # test.randomseeds_generator()
-    test.run_dp_GA()
+    hiccup = Hiccup(config)
+    hiccup.run_dp_GA()
+
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

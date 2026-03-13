@@ -15,22 +15,7 @@ class VaspjetRun:
         self.vaspjet_yml = vaspjet_yml
         self.cpu_workdir = cpu_workdir
 
-    @staticmethod
-    def update_db(_db_path):
-        db = connect(_db_path)
-        new_db = os.path.dirname(_db_path) + "/new_" + os.path.basename(_db_path)
-        new = connect(new_db)
-        for row in db.select():
-            atoms = row.toatoms()
-            atoms.set_tags([1] * len(atoms))
-            data = row.data
-            kvp = row.key_value_pairs
-            new.write(atoms, data=data, key_value_pairs=kvp)
-        os.remove(_db_path)
-        os.rename(new_db, _db_path)
-
     def run_vaspjet(self):
-        self.update_db(self.db_path)
         # 与cpu服务器建立远程连接
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -48,10 +33,9 @@ class VaspjetRun:
             sftp.mkdir(self.cpu_workdir)
         except IOError:
             pass
+
         # 上传模型文件，数据文件，配置文件
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        # local_pt = os.path.join(script_dir, "mlp_direct_h512_all.pt")
-        local_py = os.path.join(script_dir, "pure_vasp.py")
         local_db = self.db_path
         local_yml = self.vaspjet_yml
         db_name = os.path.basename(self.db_path)
@@ -63,12 +47,10 @@ class VaspjetRun:
                 break
         with open(local_yml, "w") as f:
             f.writelines(content)
-        # sftp.put(local_pt, os.path.join(self.cpu_workdir, "mlp_direct_h512_all.pt"))
-        sftp.put(local_py, os.path.join(self.cpu_workdir, "pure_vasp.py"))
         sftp.put(local_db, os.path.join(self.cpu_workdir, os.path.basename(self.db_path)))
         sftp.put(local_yml, os.path.join(self.cpu_workdir, os.path.basename(self.vaspjet_yml)))
         command = """
-        source ~/.zshrc && conda activate vaspjet && cd {0} && nohup python pure_vasp.py run -yml *.yml -r 1 1>./out.log 2>./err.log & echo $!
+        source ~/.zshrc && conda activate vaspjet && cd {0} && nohup vaspjet run -yml *.yml 1>out.log 2>err.log & & echo $!
         """.format(self.cpu_workdir)
         ssh.exec_command(command)
         sftp.close()
@@ -95,7 +77,7 @@ def vaspjet_monitor(cpu_config,
                 username=cpu_config["CPU Username"],
                 password=cpu_config["CPU Password"])
     sftp = ssh.open_sftp()
-    command = f"ls {os.path.join(cpu_workdir, 'results')}"
+    command = f"ls {os.path.join(cpu_workdir, 'workdir')}"
     stdin, stdout, stderr = ssh.exec_command(command)
     files = stdout.read().decode().split("\n")
     if "KILLED" in files:
@@ -111,13 +93,13 @@ def vaspjet_monitor(cpu_config,
             current_file_path = os.path.abspath(__file__)
             process_traj_path = os.path.join(os.path.dirname(current_file_path), "process_traj.py")
             sftp.put(process_traj_path,
-                     os.path.join(cpu_workdir, "results/process_traj.py"))
-            command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir}/results && "
+                     os.path.join(cpu_workdir, "workdir/process_traj.py"))
+            command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir}/workdir && "
                        f"python process_traj.py {max_force_threshold} {traj_process_mode}")
             ssh.exec_command(command)
-            remote_dir = os.path.join(cpu_workdir, "results/traj.db")
+            remote_dir = os.path.join(cpu_workdir, "workdir/traj.db")
             # 确保轨迹处理完毕
-            traj_done_tag = os.path.join(cpu_workdir, "results/TRAJ_DONE")
+            traj_done_tag = os.path.join(cpu_workdir, "workdir/TRAJ_DONE")
             TRAJ_DONE = False
             while not TRAJ_DONE:
                 try:
@@ -128,16 +110,20 @@ def vaspjet_monitor(cpu_config,
                 except:
                     time.sleep(60)
         else:
-            if state == "RUNNING" or state == "KILLED":
-                remote_dir = os.path.join(cpu_workdir, "results/intime_results.db")
+            if state == "KILLED" or state == "DONE":
+                remote_dir = os.path.join(cpu_workdir, "workdir/final.db")
             else:
-                remote_dir = os.path.join(cpu_workdir, "results/final.db")
+                remote_dir = None
+                print("DFT is not done yet, wait for 60s...")
+
         for i in range(10):
-            print(f"Downloading {remote_dir} to {local_path}")
             try:
-                sftp.get(remote_dir, local_path)
-                IS_DOWNLOADED = True
-                break
+                if remote_dir is not None:
+                    sftp.get(remote_dir, local_path)
+                    IS_DOWNLOADED = True
+                    break
+                else:
+                    time.sleep(10)
             except:
                 time.sleep(60)
     sftp.close()
@@ -161,30 +147,28 @@ def kill_vaspjet(cpu_config, cpu_workdir):
              os.path.join(cpu_workdir, "kill_vaspjet.py"))
     # 杀死进程并创建KILLED文件作为标记
     command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir} && python kill_vaspjet.py && "
-               f"touch {cpu_workdir}/results/KILLED")
+               f"touch {cpu_workdir}/workdir/KILLED")
     ssh.exec_command(command)
     ssh.close()
     return
 
 
 if __name__ == '__main__':
-    # db_path = "/home/cchen/Train_NN/slab/seeds_opt.db"
+    # db_path = "/home/cchen/CuY/test/0/alls_1.db"
     cpu_config = {
-        "CPU IP": "202.120.101.188",
+        "CPU IP": "172.21.41.44",
         "CPU Username": "materdesign",
         "CPU Port": 22,
         "CPU Password": "md188"
     }
-    # test = VaspjetRun(db_path,
-    #                   cpu_config,
-    #                   "/home/materdesign/cc/slab/iter1/sp",
-    #                   "/home/cchen/Train_NN/slab/template/vaspjet/pure_vasp.yml"
-    #                   )
-    # test.run_vaspjet()
-    # time.sleep(300)
-    vaspjet_monitor(cpu_config=cpu_config,
-                    cpu_workdir="/home/materdesign/cc/test-s1/iter2/opt",
-                    download_results=True,
-                    local_path="/home/cchen/test/0317/traj.db",
-                    traj_process_mode="filter",
-                    max_force_threshold=0.5)
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=cpu_config["CPU IP"],
+                port=cpu_config["CPU Port"],
+                username=cpu_config["CPU Username"],
+                password=cpu_config["CPU Password"])
+    sftp = ssh.open_sftp()
+    # sftp.put('/home/cchen/CuY/hiccup2/workdir/pes/ga/ga6/candidates_1.db', '/home/materdesign/cc/CuY/hiccup2/iter6/opt/candidates_1.db')
+    sftp.get('/home/materdesign/cc/CuY/hiccup2/iter6/merged.db',
+             '/home/cchen/CuY/hiccup2/workdir/dp/nn7/merged.db')
+

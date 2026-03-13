@@ -4,7 +4,6 @@ DFT计算
 2.提交candidates_1.db到cpu进行sp计算，等待计算完成得到sp_1.db，同时进行数据清洗
 3.提交candidates_2.db到cpu进行sp计算
 4.将sp_2.db提交进行优化计算
-5.筛选出需要进行md计算的结构，提交md计算
 """
 import os
 import logging
@@ -55,6 +54,8 @@ def dft(iter_id,
         model_path,
         log_path,
         is_last_iter=False):
+    dimension = config['SAMPLING']['USPEX']['Dimension']
+    constraint_z = config['SAMPLING']['USPEX'].get('Constraint z', 0)
     ga_dir = os.path.join(config["BASE"]["Workdir"], "pes/ga")
     dp_dir = os.path.join(config["BASE"]["Workdir"], "dp")
     cpu_config = config["CPU"]
@@ -62,7 +63,6 @@ def dft(iter_id,
     templates_path = config["BASE"]["Templates"]
     gpu = config["BASE"]["Gpu"]
     ga_dir_iter = os.path.join(ga_dir, f"ga{iter_id}")
-    MD_FLAG = postprocess_config.get("AIMD", False)
 
     # 1.将candidates.db划分为candidates_1.db, candidates_2.db
     to_be_sp_db = os.path.join(ga_dir_iter, "candidates.db")
@@ -76,10 +76,12 @@ def dft(iter_id,
         os.remove(to_be_sp2)
     energy_structure_filter(db_path=to_be_sp_db,
                             best_model_path=model_path,
+                            dimension=dimension,
                             max_filter_ratio=postprocess_config.get("Max Filter Ratio", 0.8),
-                            max_filter_num=postprocess_config.get("Max Filter Num", 100),
+                            max_filter_num=postprocess_config.get("Max Filter Num", 200),
                             similarity_threshold=0.9,
-                            output_mode="split")
+                            output_mode="split",
+                            constraint_z=constraint_z)
     count1 = connect(to_be_sp1).count()
     count2 = connect(to_be_sp2).count()
     with open(log_path, "a") as f:
@@ -88,26 +90,24 @@ def dft(iter_id,
         f.write(f"SP_2: {count2}\n")
         f.write("\n")
 
-    # 2.1 检查sp_2, opt_1, md作业的状态，并杀死未完成的作业
+    # 2.1 检查sp_2, opt_1 作业的状态，并杀死未完成的作业
     _iter_id = int(iter_id) - 1
     _ga_dir_iter = os.path.join(ga_dir, f"ga{_iter_id}")
     _candidates_1_db = os.path.join(_ga_dir_iter, "candidates_1.db")
     _candidates_2_db = os.path.join(_ga_dir_iter, "candidates_2.db")
-    _md_db = os.path.join(_ga_dir_iter, "md.db")
     _remote_dft_dir = os.path.join(cpu_config["CPU Working Directory"], f"iter{_iter_id}")
-    # sp_2, opt_1, md作业结果下载的路径
+
+    # sp_2, opt_1 作业结果下载的路径
     _sp_2_db = os.path.join(_ga_dir_iter, "sp_2.db")
     _opt_db = os.path.join(_ga_dir_iter, "opt.db")
     _opt_lm_db = os.path.join(_ga_dir_iter, "opt_lm.db")
-    _md_db = os.path.join(_ga_dir_iter, "md.db")
-    _md_lm_db = os.path.join(_ga_dir_iter, "md_lm.db")
 
     # ===========检查上一代作业的完成情况==========
     if os.path.exists(_ga_dir_iter):
         # SP_2
         if os.path.exists(_candidates_2_db):
             with open(log_path, "a") as f:
-                f.write("Checking the status of the SP_2, OPT_1, and MD jobs:\n")
+                f.write("Checking the status of the SP_2 and OPT_1 jobs:\n")
             sp2_state = "RUNNING"
             sp2_download = False
             while sp2_state == "RUNNING":
@@ -151,29 +151,6 @@ def dft(iter_id,
                 f.write(f"OPT_LM: {opt1_lm_state}, download: {opt1_lm_download}\n")
                 f.write("\n")
 
-        # MD
-        if MD_FLAG == True and os.path.exists(os.path.join(_ga_dir_iter, "to_run_md.db")):
-            md_state, md_download = vaspjet_monitor(cpu_config=cpu_config,
-                                                    cpu_workdir=os.path.join(_remote_dft_dir, "md"),
-                                                    download_results=True,
-                                                    local_path=_md_db,
-                                                    traj_process_mode="filter",
-                                                    max_force_threshold=50)
-
-            if md_state == "RUNNING":
-                kill_vaspjet(cpu_config=cpu_config,
-                             cpu_workdir=os.path.join(_remote_dft_dir, "md"))
-                time.sleep(180)
-            with open(log_path, "a") as f:
-                f.write(f"MD: {md_state}, download: {md_download}\n")
-            md_state_lm, md_download_lm = vaspjet_monitor(cpu_config=cpu_config,
-                                                          cpu_workdir=os.path.join(_remote_dft_dir, "md"),
-                                                          download_results=True,
-                                                          local_path=_md_lm_db,
-                                                          traj_process_mode="last_image")
-            with open(log_path, "a") as f:
-                f.write(f"MD_LM: {md_state_lm}, download: {md_download_lm}\n")
-                f.write("\n")
     else:
         pass
 
@@ -182,7 +159,7 @@ def dft(iter_id,
     dft_sp1 = VaspjetRun(db_path=to_be_sp1,
                          cpu_config=cpu_config,
                          cpu_workdir=os.path.join(remote_dft_dir, "sp1"),
-                         vaspjet_yml=os.path.join(templates_path, "vaspjet/pure_vasp_sp.yml"))
+                         vaspjet_yml=os.path.join(templates_path, "vaspjet/config_sp.yml"))
     dft_sp1.run_vaspjet()
 
     with open(log_path, "a") as f:
@@ -240,15 +217,10 @@ def dft(iter_id,
         f.write(f"SP1 calculation results have been successfully downloaded to {sp1_results_db} !!!\n")
         f.write("\n")
 
-    # 2.5 将sp_1.db, _sp_2.db, _opt.db, _md.db合并清洗
-    new_data_dbs = [sp1_results_db, _sp_2_db, _opt_db, _md_db]
+    # 2.5 将sp_1.db, _sp_2.db, _opt.db 合并清洗
+    new_data_dbs = [sp1_results_db, _sp_2_db, _opt_db]
     new_data_db = os.path.join(ga_dir_iter, "new_opt_data.db")
     merge_dbs(new_data_db, new_data_dbs)
-    # energy_structure_filter(db_path=new_data_db,
-    #                         best_model_path=model_path,
-    #                         max_filter_ratio=0.9,
-    #                         similarity_threshold=0.95,
-    #                         output_mode="delete")
     new_data_split_dir = os.path.join(ga_dir_iter, "new_data_split")
     os.mkdir(new_data_split_dir)
     split_db(new_data_db, new_data_split_dir)
@@ -271,7 +243,7 @@ def dft(iter_id,
         dft_sp2 = VaspjetRun(db_path=to_be_sp2,
                              cpu_config=cpu_config,
                              cpu_workdir=os.path.join(remote_dft_dir, "sp2"),
-                             vaspjet_yml=os.path.join(templates_path, "vaspjet/pure_vasp_sp.yml"))
+                             vaspjet_yml=os.path.join(templates_path, "vaspjet/config_sp.yml"))
         dft_sp2.run_vaspjet()
         with open(log_path, "a") as f:
             f.write("-Submit SP2-\n")
@@ -285,7 +257,7 @@ def dft(iter_id,
         dft_opt = VaspjetRun(db_path=to_be_sp1,
                              cpu_config=cpu_config,
                              cpu_workdir=os.path.join(remote_dft_dir, "opt"),
-                             vaspjet_yml=os.path.join(templates_path, "vaspjet/pure_vasp_opt.yml"))
+                             vaspjet_yml=os.path.join(templates_path, "vaspjet/config_opt.yml"))
         dft_opt.run_vaspjet()
         with open(log_path, "a") as f:
             f.write("-Submit OPT-\n")
@@ -294,46 +266,6 @@ def dft(iter_id,
             f.write(f"{to_be_sp1} has been submitted to the cpu for DFT calculation.\n")
             f.write(f"Waiting for the SP calculation results...\n")
             f.write("\n")
-
-        # 筛选需要进行md计算的结构
-        if MD_FLAG:
-            _opt_lm_db = os.path.join(_ga_dir_iter, "opt_lm.db")
-            _md_lm_db = os.path.join(_ga_dir_iter, "md_lm.db")
-            to_run_md = os.path.join(ga_dir_iter, "to_run_md.db")
-            if os.path.exists(to_run_md):
-                os.remove(to_run_md)
-
-            if not os.path.exists(_md_db):
-                if postprocess_config.get("MD Init Data", None):
-                    shutil.copy(postprocess_config.get("MD Init Data"), to_run_md)
-            else:
-                if os.path.exists(_opt_lm_db):
-                    if os.path.exists(_md_lm_db):
-                        merge_dbs(to_run_md, [_opt_lm_db, _md_lm_db])
-                    else:
-                        shutil.copy(_opt_lm_db, to_run_md)
-                    energy_structure_filter(db_path=to_run_md,
-                                            best_model_path=model_path,
-                                            max_filter_ratio=postprocess_config.get("MD Max Filter Ratio", 0.5),
-                                            max_filter_num=postprocess_config.get("MD Max Filter Num", 100),
-                                            similarity_threshold=0.9,
-                                            output_mode="delete")
-            # 提交md计算
-            print("to_run_md: ", to_run_md)
-            if os.path.exists(to_run_md) and connect(to_run_md).count() > 0:
-                dft_md = VaspjetRun(db_path=to_run_md,
-                                    cpu_config=cpu_config,
-                                    cpu_workdir=os.path.join(remote_dft_dir, "md"),
-                                    vaspjet_yml=os.path.join(templates_path, "vaspjet/pure_vasp_md.yml"))
-                dft_md.run_vaspjet()
-                with open(log_path, "a") as f:
-                    f.write("-Submit MD-\n")
-                    start = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    f.write(f"Submission Time: {start}\n")
-                    f.write(f"{to_run_md} has been submitted to the cpu for DFT calculation.\n")
-                    f.write(f"Waiting for the MD calculation results...\n")
-                    f.write("\n")
-    print(new_db_path)
     with open(log_path, "a") as f:
         f.write(f"New data set: {new_db_path}\n")
         f.write(f"Data volume of new database: {connect(new_db_path).count()}\n")

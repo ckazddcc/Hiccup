@@ -15,22 +15,48 @@ from ase.db import connect
 from ase.io import write
 import warnings
 import random
+from ase.atoms import Atoms
 
 
-def fp_mbtr(atoms):
-    mbtr_k2 = MBTR(
-        species=list(set(atoms.get_atomic_numbers())),
-        geometry={"function": "distance"},
-        grid={"min": 0, "max": 5, "n": 100, "sigma": 0.1},
-        weighting={"function": "inverse_square", "r_cut": 4.0, "threshold": 1e-3},
-        periodic=True,
-        normalization="l2")
+def fp_mbtr(atoms, dimension, constraint_z):
+    # atoms_c = atoms.copy()
+    periodic = True
+    normalization = 'l2_each'
+    if dimension == 2:
+        fix_index = [atom.index for atom in atoms if atom.position[2] < constraint_z]
+        atoms_c = Atoms([atom for atom in atoms.copy() if atom.index not in fix_index])
+        atoms_c.set_pbc(atoms.pbc)
+        atoms_c.set_cell(atoms.cell)
+    else:
+        atoms_c = atoms.copy()
+
+    mbtr = MBTR(
+        species=list(set(atoms_c.get_atomic_numbers())),
+        k2={
+            "geometry": {"function": "distance"},
+            "grid": {"min": 0.0, "max": 5.0, "sigma": 0.1, "n": 100},
+            "weighting": {"function": "inverse_square", "r_cut": 5.0, "scale": 0.5, "threshold": 1e-3},
+        },
+        k3={
+            "geometry": {"function": "cosine"},
+            "grid": {"min": -1.0, "max": 1.0, "sigma": 0.1, "n": 100},
+            "weighting": {"function": "exp", "r_cut": 4.0, "scale": 0.3, "threshold": 1e-3},
+        },
+        periodic=periodic,
+        sparse=False,
+        flatten=False,
+        normalization=normalization
+    )
     with warnings.catch_warnings():
         warnings.filterwarnings(action="ignore", message=".*invalid value encountered in true_divide.*",
                                 category=RuntimeWarning)
-        k2 = mbtr_k2.create(atoms)
-        k2[np.isnan(k2)] = 0
-    return k2
+        mbtr_fp = mbtr.create(system=atoms_c, n_jobs=1, only_physical_cores=False)
+    k2 = np.sum(mbtr_fp["k2"], axis=(0, 1))
+    k3 = np.sum(mbtr_fp["k3"], axis=(0, 1, 2))
+    # 把k1, k2, k3中所有的Nan值赋为0
+    k2[np.isnan(k2)] = 0
+    k3[np.isnan(k3)] = 0
+    return np.concatenate((k2, k3)).tolist()
 
 
 def split_db(db_path, fold_name):
@@ -55,7 +81,8 @@ def split_db(db_path, fold_name):
 
 
 def energy_structure_filter(db_path,
-                            best_model_path,
+                            dimension=0,
+                            constraint_z=3.0,
                             max_filter_ratio=0.8,
                             max_filter_num=100000,
                             similarity_threshold=0.95,
@@ -80,24 +107,33 @@ def energy_structure_filter(db_path,
     split_db(db_path, tmp_dir)
 
     # 计算能量和指纹
-    if best_model_path.endswith(".pb") or best_model_path.endswith("checkpoint"):
-        calculator = DP(model=best_model_path)
-    elif best_model_path.endswith(".model"):
-        calculator = MACECalculator(model_path=best_model_path, device='cuda:0', default_dtype='float64')
     filenames = os.listdir(tmp_dir)
     for filename in filenames:
         energy_info = {}
         fp_dict = {}
         db_path_i = os.path.join(tmp_dir, filename)
         db_i = connect(db_path_i)
-        # if db_i.count() > 1:
         _similarity_threshold = similarity_threshold
         for row in db_i.select():
             atoms = row.toatoms()
-            atoms.set_calculator(calculator)
-            energy = atoms.get_potential_energy()
+            data = row.data
+            if "fitness" not in data.keys():
+                if "energy" in data.keys():
+                    energy = row.data['energy']
+                else:
+                    try:
+                        energy = atoms.get_potential_energy()
+                    except:
+                        energy = 0
+                        warnings.warn(
+                            f"Failed to calculate energy for structure {row.id}; set energy=0.0",
+                            category=RuntimeWarning,
+                            stacklevel=2
+                        )
+            else:
+                energy = data["fitness"]
             energy_info[row.id] = energy
-            fp = fp_mbtr(atoms)
+            fp = fp_mbtr(atoms, dimension, constraint_z)
             fp_dict[row.id] = fp
         # 根据相似度对结构进行初筛，能量非常不稳定的10%的结构
         sorted_energy_info = sorted(energy_info.items(), key=lambda x: x[1])
@@ -197,26 +233,28 @@ def energy_structure_filter(db_path,
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    cs = [
-          "/home/cchen/CuY/CuM/test/gathered.db",
-    ]
-          # "/home/cchen/CuY/gcga/r5_0.20/O2Cu72Y8.db"]
-    # alls_db = connect("/home/cchen/CuY/test/ga/alls.db")
-    for c in cs:
-        energy_structure_filter(db_path=c,
-                            best_model_path="/home/cchen/CuY/gcga/frozen_model.pb",
+    import os
+    from pathlib import Path
+
+    # def find_db_files(root_dir):
+    #     root = Path(root_dir)
+    #     return [root for root in root.iterdir() if root.is_dir()]
+    #
+    # dirs = find_db_files("/home/cchen/CuY/hiccup2/workdir/pes/ga/ga0")
+
+    # for dir in dirs:
+    energy_structure_filter(db_path="/home/cchen/CuY/hiccup2/workdir/pes/ga/ga6/candidates.db",
                             max_filter_ratio=0.80,
-                            max_filter_num=5000,
-                            similarity_threshold=0.98,
+                            max_filter_num=120,
+                            similarity_threshold=0.95,
                             output_mode="split")
-        # db = connect(f"/home/cchen/CuY/test/ga/{c}/gathered_1.db")
-        # print(f"{c} Total number of structures: {db.count()}")
+        # db = connect(os.path.join(dir, "gathered_1.db"))
+        # print(f"{dir} Total number of structures: {db.count()}")
         # for row in db.select():
         #     atoms = row.toatoms()
         #     data = row.data
         #     kvp = row.key_value_pairs
-        #     alls_db.write(atoms, data=data, key_value_pairs=kvp)
+        #     sp_1.write(atoms, data=data, key_value_pairs=kvp)
 
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

@@ -6,7 +6,7 @@ def get_jobids(directory):
     part_files = []
     for root, dirs, files in os.walk(directory):  # 遍历指定目录及其子目录
         for dir in dirs:
-            if dir.startswith('part'):  # 判断文件是否以'part'开头
+            if dir.startswith('vaspdir'):  # 判断文件是否以'vaspdir'开头
                 part_files.append(os.path.join(root, dir))  # 获取文件的完整路径
 
     for file in part_files:
