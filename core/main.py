@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import argparse
 from main_flow import Hiccup
 from PesExploration.tools.data_filter_and_analysis import analysis
+from PesExploration.tools.fps import sample_composition
 import yaml
 
 
@@ -71,6 +72,15 @@ def main():
         default="Model"
     )
 
+    # 为 compos 命令创建子解析器
+    parser_eva.add_argument(
+        "-yml",
+        dest="yml",
+        type=str,
+        help="Path to the .yml config. Typing: str, Required: True",
+        default="./fps_config.yml"
+    )
+
     args = parser.parse_args()
     if args.command == "run":
         with open(args.yml) as file:
@@ -86,6 +96,8 @@ def main():
                  energy_filter=args.energy_filter,
                  force_filter=args.force_filter,
                  model_name=args.name)
+    elif args.command == "compos":
+        sample_composition(config_path=args.yml)
 
     else:
         print("Please specify a command to run Hiccup.")

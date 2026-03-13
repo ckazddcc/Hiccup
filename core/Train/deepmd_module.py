@@ -89,7 +89,7 @@ class DeepmdSystem:
             ms.append(ls)
 
         ms.to_deepmd_npy(output_fold, 1000000)
-        ms.to_deepmd_raw(output_fold)
+        # ms.to_deepmd_raw(output_fold)
 
     def _split_db_to_train_valid(self):
         """
@@ -127,12 +127,26 @@ class DeepmdSystem:
             with connect(train_db_path) as train_db:
                 for entry in train_entries:
                     row = db_i.get(entry)
-                    train_db.write(row.toatoms(), data=row.data, key_value_pairs=row.key_value_pairs)
+                    atoms = row.toatoms()
+                    data = row.data
+                    if "energy" not in data.keys() or "forces" not in data.keys():
+                        data['energy'] = atoms.get_potential_energy()
+                        data['forces'] = atoms.get_forces(apply_constraint=False)
+                    else:
+                        pass
+                    train_db.write(atoms, data=data, key_value_pairs=row.key_value_pairs)
 
             with connect(test_db_path) as test_db:
                 for entry in test_entries:
                     row = db_i.get(entry)
-                    test_db.write(row.toatoms(), data=row.data, key_value_pairs=row.key_value_pairs)
+                    atoms = row.toatoms()
+                    data = row.data
+                    if "energy" not in data.keys() or "forces" not in data.keys():
+                        data['energy'] = atoms.get_potential_energy()
+                        data['forces'] = atoms.get_forces(apply_constraint=False)
+                    else:
+                        pass
+                    test_db.write(atoms, data=data, key_value_pairs=row.key_value_pairs)
 
         self._db2deepmd(train_db, os.path.join(dbs_path, 'train'))
         self._db2deepmd(test_db, os.path.join(dbs_path, 'test'))
@@ -241,7 +255,10 @@ class DeepmdSystem:
         :param gpu_i: GPU编号
         """
         run_config_path = os.path.join(sub_dir, 'input.json')
-        command = self._resolve_train_command(run_config_path, self.init_model_path)
+        if self.init_model_path is not None:
+            init_model_path_i = os.path.join(sub_dir, f"init_{os.path.basename(self.init_model_path)}")
+            shutil.copy(self.init_model_path, init_model_path_i)
+        command = self._resolve_train_command(run_config_path, init_model_path_i)
         env = os.environ.copy()
         env["CUDA_VISIBLE_DEVICES"] = str(gpu_i)
         command = f'nohup ' + command + ' &'
@@ -257,6 +274,7 @@ class DeepmdSystem:
             os.environ["CUDA_VISIBLE_DEVICES"] = str(self.gpu[i])
             sub_dir = os.path.join(self.workdir, name)
             self.train_single_model(sub_dir, self.gpu[i])
+            time.sleep(60)
         # processes = []
         # for i, gpu in enumerate(self.gpu):
         #     p = multiprocessing.Process(target=self.train_single_model, args=(self.sub_dirs[i], gpu))
@@ -364,13 +382,14 @@ class DeepmdSystem:
         return best_model_path, best_model_id, models_info
 
 if __name__ == '__main__':
-    dp = DeepmdSystem(elements=["O", "Cu"],
-                      db_path="/home/cchen/cluster/hiccup/pes/ga/ga1/next_iter.db",
+    dp = DeepmdSystem(elements=["O", "Cu", "Y"],
+                      db_path="/home/cchen/CuY/hiccup2/workdir/dp/init.db",
                       train_ratio=0.9,
-                      workdir="/home/cchen/tmp/nn0",
-                      gpu=[0, 1, 2, 3],
-                      dp_input_template="/home/cchen/Hiccup/template/trainer/deepmd_input.json",
-                      init_model_path="/home/cchen/test/iter2.pb",
+                      workdir="/home/cchen/CuY/hiccup2/workdir/dp/nn8",
+                      gpu=[4, 5, 6, 7],
+                      dp_input_template="/home/cchen/CuY/hiccup2/template/trainer/deepmd_input_accurate.json",
+                      init_model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn7/002/frozen_model.pb",
+                      # init_model_path=None,
                       models_num=4)
     dp.creat_dp_input()
     dp.train_models()

@@ -9,6 +9,7 @@ from ase.constraints import FixAtoms
 from ase.neighborlist import NeighborList, natural_cutoffs
 from ase import Atoms
 from PesExploration.tools.process_layers import process_layers
+# from .tools.process_layers import process_layers
 import random
 
 
@@ -58,6 +59,7 @@ class NNDeviation:
         for f in forces:
             diff_f = f - mean_force
             f_std += (diff_f ** 2).sum(axis=1)
+
         # 统计所有原子受力的标准差
         f_std = (f_std / num) ** 0.5
         max_force_dev = f_std.max()
@@ -89,13 +91,13 @@ class NNDeviation:
             for row in db.select():
                 atoms = row.toatoms()
                 atoms.set_calculator(calc)
-                force = atoms.get_forces()
+                force = atoms.get_forces(apply_constraint=False)
                 nns_force_dict[row.id] = nns_force_dict.get(row.id, [])
                 nns_force_dict[row.id].append(force)
 
         for row in db.select():
             max_force_dev, wrong_atoms, wrong_list = self.get_max_deviation(row.id, nns_force_dict)
-            # print(f"ID: {row.id}, Max Force Deviation: {max_force_dev}")
+            print(f"ID: {row.id}, Max Force Deviation: {max_force_dev}")
             tmp_data[row.id] = {"dev": max_force_dev, "wrong_atoms": wrong_atoms, "wrong_list": wrong_list}
             if max_force_dev < self.force_err_lower:
                 accurate_ids.append(row.id)
@@ -112,7 +114,7 @@ class NNDeviation:
         print(devs_data)
         self.dev_results = devs_data
         # 前期NN模型训练不足，导致合格数据不足，需要补充数据
-        min_num = min(math.ceil(total * 0.5), 5000)
+        min_num = min(math.ceil(total * 0.5), 1)
         if len(candidates_ids) < min_num:
             supply_num = min_num - len(candidates_ids)
             # 补充failed数据
@@ -266,20 +268,16 @@ class NNDeviation:
 if __name__ == '__main__':
     start = time.time()
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    nn_dev = NNDeviation(model_dir="/home/cchen/cluster/hiccup/dp/nn1",
-                         ga_db_path="/home/cchen/cluster/hiccup/pes/ga/ga1/alls.db",
-                         force_err_lower=0.1,
+    nn_dev = NNDeviation(model_dir="/home/cchen/CuY/hiccup2/workdir/dp/nn7",
+                         ga_db_path="/home/cchen/CuY/hiccup2/workdir/pes/ga/ga7/alls.db",
+                         force_err_lower=0.05,
                          force_err_upper=0.2,
-                         type="cluster",
+                         type="slab",
                          lcs_layers_num=3,
                          lcs_radius=5.0,
                          vaccum_thickness=[10, 10, 10]
                          )
-    db = connect("/home/cchen/cluster/hiccup/pes/ga/ga1/alls.db")
-    for row in db.select():
-        atoms = row.toatoms()
-
-    # nn_dev.get_deviation()
+    nn_dev.get_deviation()
     # nn_dev.lcs_process("/home/cchen/slab/hiccup/pes/ga/ga1/candidates.db")
     print("Time:", time.time() - start)
     # nn_dev.lcs_process("/home/ubuntu/PycharmProjects/Train_NN/tmp/workdir/pes/ga/3/candidates.db")

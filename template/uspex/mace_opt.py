@@ -5,7 +5,7 @@ opt_flag = True
 opt_method = "BFGS"
 ediffg = 0.1
 nsw = 50
-constrain_z = 4
+constrain_z = 8
 gpu = sys.argv[1]
 # end of snippet
 

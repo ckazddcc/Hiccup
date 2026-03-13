@@ -52,7 +52,7 @@ def data_filter_and_analysis(workdir,
                              energy_filter=0.1,
                              force_filter=2):
     if gpu_ids is None:
-        gpu_ids = [0, 1, 2, 3, 4, 5, 6, 7]
+        raise ValueError("gpu_ids must be provided")
     try:
         multiprocessing.set_start_method('spawn', force=True)
     except RuntimeError:
@@ -305,19 +305,19 @@ def analysis(db_path,
 
 
 if __name__ == '__main__':
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
     start_time_1 = time.perf_counter()
     # analysis(db_path="/home/cchen/test/0317/traj.db",
     #          model_path="/home/cchen/test/iter2.pb",
     #          gpu_ids=[0, 1, 2, 3],
     #          energy_filter=0.5,
     #          force_filter=3)
-    # split_db(db_path="/home/cchen/test/0317/traj.db", fold_name="/home/cchen/test/0317/splited")
-    data_filter_and_analysis(workdir="/home/cchen/test/0317/splited",
-                             model_path="/home/cchen/test/iter2.pb",
-                             gpu_ids=[4, 5, 6, 7],
-                             energy_filter=0.1,
-                             force_filter=2)
+    split_db(db_path="/home/cchen/CuY/hiccup2/workdir/dp/init.db", fold_name="/home/cchen/CuY/hiccup2/workdir/dp/tmp")
+    data_filter_and_analysis(workdir="/home/cchen/CuY/hiccup2/workdir/dp/tmp",
+                             model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn7/002/frozen_model.pb",
+                             gpu_ids=[0,1,2,3],
+                             energy_filter=0.2,
+                             force_filter=1.0)
     # 记录第一个函数的结束时间
     end_time_1 = time.perf_counter()
     duration_1 = end_time_1 - start_time_1

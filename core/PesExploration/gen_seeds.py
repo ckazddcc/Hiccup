@@ -21,7 +21,7 @@ class GenSeeds:
         self.elements, self.target_composition = self.update_composition(elements, target_composition)
         # 根据原子序数重排
         self.dimension = dimension
-        self.seeds_db = connect(seeds_db)
+        self.seeds_db = seeds_db
         self.seeds_num = seeds_num
         self.vacuum_layer_thickness = vacuum_layer_thickness
 
@@ -99,9 +99,13 @@ class GenSeeds:
         """
         seeds_atoms = []
         chemical_formula = "".join([f"{ele}{num}" for ele, num in zip(self.elements, target_composition)])
+        time0 = time.time()
         while len(seeds_atoms) < 1:
+            if time.time() - time0 > 60:
+                return seeds_atoms, chemical_formula
+
             # Bulk
-            if self.dimension == 3:
+            if self.dimension == 3 or 2:
                 try:
                     syms = range(1, 231)
                     c1 = pyxtal()
@@ -113,8 +117,8 @@ class GenSeeds:
                     valid = self.seed_filter(c1)
                     if valid:
                         seeds_atoms.append(c1)
-                        uid = str(uuid.uuid4())[:16]
-                        self.seeds_db.write(c1, data={"formula": chemical_formula}, key_value_pairs={"uid": uid})
+                        # uid = str(uuid.uuid4())[:16]
+                        # self.seeds_db.write(c1, data={"formula": chemical_formula}, key_value_pairs={"uid": uid})
                 except:
                     pass
             # Cluster
@@ -130,39 +134,23 @@ class GenSeeds:
                     valid = self.seed_filter(c1)
                     if valid:
                         seeds_atoms.append(c1)
-                        uid = str(uuid.uuid4())[:16]
-                        self.seeds_db.write(c1, data={"formula": chemical_formula}, key_value_pairs={"uid": uid})
+                        # uid = str(uuid.uuid4())[:16]
+                        # self.seeds_db.write(c1, data={"formula": chemical_formula}, key_value_pairs={"uid": uid})
                 except:
                     pass
 
-        return
+        return seeds_atoms, chemical_formula
 
-    def run_with_timeout(self, target_composition):
-        timeout = 60
-        retries = 5
-        for attempt in range(retries):
-            # 创建一个进程来运行函数A
-            process = multiprocessing.Process(target=self.gen_random_seed, args=(target_composition,))
-            process.start()
-            # 等待指定的时间（timeout）
-            process.join(timeout)
-            # 如果函数A还没结束，则停止该进程并重试
-            if process.is_alive():
-                process.terminate()  # 终止进程
-                process.join()  # 确保进程终止
-            else:
-                return True
-            time.sleep(5)
-        return False
 
     def gen_seeds(self):
         start = time.time()
         futures = []
         seeds_num = int(self.seeds_num)
-        with concurrent.futures.ProcessPoolExecutor(max_workers=48) as executor:
+        seeds_collect = connect(self.seeds_db)
+        with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
             for i in range(seeds_num):
                 for c in self.target_composition:
-                    futures.append(executor.submit(self.run_with_timeout, c))
+                    futures.append(executor.submit(self.gen_random_seed, c))
             success_count = 0
             for future in tqdm(concurrent.futures.as_completed(futures),
                                total=len(futures),
@@ -170,7 +158,10 @@ class GenSeeds:
                                desc='Running···',
                                colour='green',
                                ncols=90):
-                if future.result() is True:
+                seed_list, chemical_formula = future.result()
+                if len(seed_list) > 0:
+                    for seed in seed_list:
+                        seeds_collect.write(seed, data={"formula": chemical_formula})
                     success_count += 1
                     pass
                 else:
@@ -186,15 +177,15 @@ if __name__ == '__main__':
 
     dimension = 2
     substrate_pwd = "/home/cchen/CuY/gcga/POSCAR_SUBSTRATE"
-    seeds_db_path = "/home/cchen/CuY/gcga/r7/seeds.db"
-    gpu_ids = [1, 2, 4, 5, 6, 7]
+    seeds_db_path = "/home/cchen/CuY/test/seeds.db"
+    gpu_ids = [4, 5, 6, 7]
 
     test = GenSeeds(elements=["O", "Cu", "Y"],
-                    target_composition=[[1, 70, 10], [2, 70, 10], [3, 70, 10], [4, 70, 10],
-                                        [5, 70, 10], [6, 70, 10], [7, 70, 10], [0, 70, 10]],
+                    target_composition=[[7, 34, 23], [9, 55, 0], [23, 36, 5], [0, 49, 15],
+                                        [12, 44, 8], [17, 32, 15], [19, 45, 0], [7, 41, 16]],
                     dimension=3,
                     seeds_db=seeds_db_path,
-                    seeds_num=500)
+                    seeds_num=2)
     test.gen_seeds()
 
     if dimension == 2:
