@@ -1,0 +1,90 @@
+# config.yml
+#job_settings:
+db_path: './r2_ads_rough1.db'
+work_path: './workdir'
+save_log: true
+print_log: true
+continue: false
+engine: 'asevasp' # purevasp/asevasp/hybrid
+
+
+ase:
+  optimize: 'minima' # minima/saddle/sella/vib
+  nsteps: 200
+  fmax: 0.05
+  minstep: 0.10
+  maxstep: 0.20  # only work for saddle
+  cosphi: 0.10  # only work for saddle
+  bond_dis_range: [1.15, 2.00]  # only work for saddle
+  # fs_db: './FS_test.db'  # final state db, only work for saddle
+  save_hessian: false
+
+
+mlp:
+  task: 'F' # EF/F
+  gpu_id: 0
+  batch_size: 16
+  vaild_ratio: 0.15 # 0-0.3
+  loss_energy: 'mae'
+  loss_force: 'ql2'
+  checkpoint_load_path: './mlp_direct_h512_all.pt'
+  only_vasp_ratio: 0.35 # 0-0.5
+
+
+vasp:
+  # Individual settings yml
+  # yml_path: './extra_vasp.yml'
+
+  # Gobal Setting
+  system: 'VaspJet'
+  gga: 'PE'
+  pp: 'PBE'
+  xc: 'PBE'
+  lreal: 'Auto'
+  kpts: [ 1, 1, 1, 0, 0, 0 ]
+  encut: 400
+  # ldau_luj:
+  #   Cr: {L: 2, U: 123, J: 123}
+  #   O: {L: 2, U: 123, J: 123}
+  # lmaxmin: 4
+  # ivdw: 12
+  symprec: 1.0e-4
+  ismear: 0
+  sigma: 0.05
+  ispin: 1
+  isif: 0
+  isym: 0
+  npar: 24 # best speed for HPC2 with 24/48 cores
+ 
+  # Electionic Relaxation
+  ediff: 1.0e-4
+  algo: 'Fast'
+  prec: 'Normal'
+  nelm: 60
+
+  # Ionic Relaxation
+  ediffg: -0.05
+  nsw: 200
+  ibrion: 1
+  potim: 0.25
+
+  # Input/Output
+  nwrite: 1
+  lwave: false
+  lcharg: false
+  txt: 'vaspout.txt'
+
+
+slurm:
+  slurm_time: '2-12:00:00'
+  slurm_partition: 'q2'
+  nodes: 1
+  tasks_per_node: 1
+  cpus_per_task: 24
+  mem_gb: 10
+  vasp_version: 'vasp_gam'
+  slurm_setup:
+    - 'source /home/hfwang/Applications/vasp/oneapi/setvars.sh --force'
+    - 'export PATH=/home/hfwang/Applications/vasp/vasp.6.3.2/bin:$PATH'
+    - 'ulimit -s unlimited'
+    - 'export VASP_PP_PATH=/home/hfwang/Applications/vasp/POTCAR'
