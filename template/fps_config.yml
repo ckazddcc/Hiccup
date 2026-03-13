@@ -1,0 +1,14 @@
+elements_boundary:
+  Cu:
+  - 0
+  - 20
+  Y:
+  - 0
+  - 40
+  O:
+  - 0
+  - 40
+substrate:
+  Cu: 20
+total_atoms: 48
+n_samples: 20
