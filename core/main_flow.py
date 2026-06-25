@@ -94,8 +94,8 @@ class Hiccup:
 
         # 日志文件
         self.log = os.path.join(self.workdir, "hiccup-log.txt")
-        if os.path.exists(self.log):
-            os.remove(self.log)
+        # if os.path.exists(self.log):
+        #     os.remove(self.log)
 
     @staticmethod
     def update_composition(elements, target_composition):
@@ -854,15 +854,16 @@ class Hiccup:
         # ==================================Main Loop Finish==================================
         # 最后一次训练，更新best_model
         self.update()
+
         return
 
-
 if __name__ == '__main__':
-    with open("/home/cchen/CuCl/config.yml") as file:
+    with open("/home/yliu/cchen/CuClO/config.yml") as file:
         dict_value = yaml.load(file.read(), Loader=yaml.FullLoader)
     config = dict_value
     hiccup = Hiccup(config)
     # hiccup.run_dp_GA()
     hiccup.initialize()
+    hiccup.postprocess(0)
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

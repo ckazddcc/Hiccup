@@ -8,8 +8,8 @@ import numpy as np
 from ase.constraints import FixAtoms
 from ase.neighborlist import NeighborList, natural_cutoffs
 from ase import Atoms
-from PesExploration.tools.process_layers import process_layers
-# from .tools.process_layers import process_layers
+from core.PesExploration.tools.process_layers import process_layers
+# from PesExploration.tools.process_layers import process_layers
 import random
 
 
@@ -267,9 +267,9 @@ class NNDeviation:
 
 if __name__ == '__main__':
     start = time.time()
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    nn_dev = NNDeviation(model_dir="/home/cchen/CuY/hiccup2/workdir/dp/nn7",
-                         ga_db_path="/home/cchen/CuY/hiccup2/workdir/pes/ga/ga7/alls.db",
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+    nn_dev = NNDeviation(model_dir="/home/yliu/cchen/CuClO/workdir0/dp/nn5",
+                         ga_db_path="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7/alls.db",
                          force_err_lower=0.05,
                          force_err_upper=0.2,
                          type="slab",

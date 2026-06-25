@@ -8,9 +8,9 @@ BASE:
 # CPU配置
 CPU:
   CPU IP: 202.120.101.188
-  CPU Password: md188
   CPU Port: 22
   CPU Username: materdesign
+  CPU SSH Key Env: HICCUP_CPU_SSH_KEY
   CPU Working Directory: /home/materdesign/cc/test3
 # 采样器配置
 SAMPLING:
