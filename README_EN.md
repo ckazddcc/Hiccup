@@ -93,9 +93,9 @@ BASE:
 # CPU configuration
 CPU:
   CPU IP: 202.120.101.188
+  CPU Password: xxx
   CPU Port: 22
   CPU Username: materdesign
-  CPU SSH Key Env: HICCUP_CPU_SSH_KEY
   CPU Working Directory: /home/materdesign/cc/test1
 
 # Sampler configuration
@@ -166,9 +166,9 @@ TRAINER:
 ##### CPU Configuration
 
 - `CPU IP`: string. IP address of the CPU server.
+- `CPU Password`: string. Password of the CPU server.
 - `CPU Port`: string. Port number.
 - `CPU Username`: string. Username.
-- `CPU SSH Key Env`: string. Environment variable name for SSH key.
 - `CPU Working Directory`: string. Working directory on the CPU server. It is recommended to use an empty directory.
 
 ##### Sampler Configuration

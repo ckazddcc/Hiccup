@@ -187,7 +187,8 @@ def run_md_parallel(
 
 def gather_md_traj(md_dir, model_path, gpu_id):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
-    md_traj_db_path = os.path.join(md_dir, "md_traj.db")
+    md_traj_db_path = "/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/alls.db"
+    #md_traj_db_path = os.path.join(md_dir, "md_traj.db")
     md_traj_db = connect(md_traj_db_path)
     calc = DP(model=model_path)
     _root = Path(md_dir)
@@ -210,27 +211,30 @@ if __name__ == "__main__":
     from ase.db import connect
     from ase.constraints import FixAtoms
 
-    atoms_list = []
-    db = connect("/home/cchen/CuY/hiccup2/s4_3/md/md3.db")
-    for row in db.select():
-        atoms0 = row.toatoms()
-        # fix = [atom.index for atom in atoms0 if atom.position[2] < 2.5]
-        # atoms0.set_constraint(FixAtoms(indices=fix))
-        atoms_list.append(atoms0)
-
-    dp_model = "/home/cchen/CuY/hiccup2/workdir/dp/nn8/002/frozen_model.pb"
-    results = run_md_parallel(
-                atoms_list=atoms_list,
-                dp_model_path=dp_model,
-                base_workdir="/home/cchen/CuY/hiccup3/s4_3/md/800",
-                nproc=3,            # one process per atoms seed, up to you
-                nsteps=20000,       # 20 ps at dt=1fs
-                timestep_fs=0.5,
-                dump_interval=2,
-                temperature_K=800.0,
-                cpu_only_inference=False,
-                gpu_ids=[4,5]
-            )
-
-    print("Done:", results)
+    # atoms_list = []
+    # db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/to_md.db")
+    # for row in db.select():
+    #     atoms0 = row.toatoms()
+    #     fix = [atom.index for atom in atoms0 if atom.position[2] < 2.5]
+    #     atoms0.set_constraint(FixAtoms(indices=fix))
+    #     atoms_list.append(atoms0)
+    #
+    dp_model = "/home/yliu/cchen/CuClO/workdir0/dp/nn3/003/frozen_model.pb"
+    # results = run_md_parallel(
+    #             atoms_list=atoms_list,
+    #             dp_model_path=dp_model,
+    #             type_map=['O', 'Cl', 'Cu'],
+    #             base_workdir="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/MD",
+    #             nproc=3,
+    # one process per atoms seed, up to you
+    #             nsteps=10000,       # 20 ps at dt=1fs
+    #             timestep_fs=0.5,
+    #             dump_interval=2,
+    #             temperature_K=500.0,
+    #             cpu_only_inference=False,
+    #             gpu_ids=[5,6,0]
+    #         )
+    #
+    # print("Done:", results)
+    gather_md_traj(md_dir="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/MD", model_path=dp_model, gpu_id=0)
 

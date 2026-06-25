@@ -99,6 +99,12 @@ class UspexSystem:
         else:
             self.selected_dict = {}
 
+        current_file = os.path.abspath(__file__)
+        current_dir = os.path.dirname(current_file)
+        parent_dir = os.path.dirname(current_dir)
+        # grandparent_dir = os.path.dirname(parent_dir)
+        self.potcar_dir = os.path.join(parent_dir, "data/POTCAR")
+
     @staticmethod
     def write_poscars(atoms_list, output_file):
         """
@@ -242,6 +248,17 @@ class UspexSystem:
             good_poscars[line_idx] = f"{line[0]}  {'  '.join(line[1:-1])}    {line[-1]}\n"
         return good_poscars
 
+    def generate_potcar(self, output_file='POTCAR_1'):
+        """根据元素列表生成 POTCAR 文件"""
+        # self.potcar_dir = "/home/cchen/POTCAR"
+        with open(output_file, 'w') as potcar:
+            for element in self.elements:
+                potcar_path = os.path.join(self.potcar_dir, f'POTCAR_{element}')
+                if not os.path.exists(potcar_path):
+                    raise FileNotFoundError(f"{potcar_path} 不存在！")
+                with open(potcar_path, 'r') as potcar_part:
+                    potcar.write(potcar_part.read())
+
     def create_uspex_input(self):
         """
         生成 USPEX 的输入文件和所需资源
@@ -308,13 +325,14 @@ class UspexSystem:
             self.write_poscars(selected_atoms, POSCARS_i)
 
         # 从目标目录复制POTCAR到Specific
-        potcar_1 = os.path.join(self.template_dir, "POTCAR_1")
-        if os.path.exists(potcar_1):
-            shutil.copy(os.path.join(self.template_dir, "POTCAR_1"), os.path.join(specific_dir, "POTCAR_1"))
-        else:
-            for elem in self.elements:
-                potcar_path = os.path.join(self.template_dir, f"POTCAR_{elem}")
-                shutil.copy(potcar_path, os.path.join(specific_dir, f"POTCAR_{elem}"))
+        # potcar_1 = os.path.join(self.template_dir, "POTCAR_1")
+        # self.generate_potcar(output_file=potcar_1)
+        # if os.path.exists(potcar_1):
+        #     shutil.copy(potcar_1, os.path.join(specific_dir, "POTCAR_1"))
+        # else:
+        for elem in self.elements:
+            potcar_path = os.path.join(self.potcar_dir, f"POTCAR_{elem}")
+            shutil.copy(potcar_path, os.path.join(specific_dir, f"POTCAR_{elem}"))
         shutil.copy(os.path.join(self.template_dir, "INCAR_1"), os.path.join(specific_dir, "INCAR_1"))
 
         # 产生INPUT.txt
@@ -526,22 +544,38 @@ if __name__ == '__main__':
         root = Path(root_dir)
         return [root for root in root.iterdir() if root.is_dir()]
 
-
-    alls_2 = connect("/home/cchen/CuY/hiccup2/s4_3/alls.db")
-    dirs = find_db_files("/home/cchen/CuY/hiccup2/s4_3")
-
-
+    good_db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7/to_md.db")
+    # alls_2 = connect("/home/yliu/cchen/CuClO/workdir/pes/ga/ga0/alls.db")
+    dirs = find_db_files("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7")
     for dir in dirs:
         gather_db_path = os.path.join(dir, "gathered.db")
+        gather_db = connect(gather_db_path)
+        info = []
+        for row in gather_db.select():
+            info.append([row.id, row.data["fitness"]])
+        info.sort(key=lambda x: x[1])
+        for i in info[:20]:
+            target_row = gather_db.get(i[0])
+            atoms = target_row.toatoms()
+            z_max = atoms.positions[:, 2].max()
+            if z_max > 12:
+                continue
+            else:
+                good_db.write(atoms, data=target_row.data, key_value_pairs=target_row.key_value_pairs)
+                break
+        print(good_db.count())
         # if os.path.exists(gather_db_path):
         #     continue
-        write_to_db(str(dir), 0.5)
-        print(f"{dir} has been created successfully.")
-        db = connect(gather_db_path)
-        for row in db.select():
-            atoms = row.toatoms()
-            alls_2.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
-        print(f"{gather_db_path} has been written to alls_2.db successfully.")
-        print(alls_2.count())
+        # write_to_db(str(dir), 0.5)
+        # print(f"{dir} has been created successfully.")
+        # db = connect(gather_db_path)
+        # for row in db.select():
+        #     atoms = row.toatoms()
+        #     z_max = atoms.positions[:, 2].max()
+        #     if z_max > 12:
+        #         continue
+        #     alls_2.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
+        # print(f"{gather_db_path} has been written to alls_2.db successfully.")
+        # print(alls_2.count())
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

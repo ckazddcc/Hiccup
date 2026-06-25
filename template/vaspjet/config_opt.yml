@@ -1,6 +1,6 @@
 # config.yml
 #job_settings:
-db_path: './r2_ads_rough1.db'
+db_path: './init_md.db'
 work_path: './workdir'
 save_log: true
 print_log: true

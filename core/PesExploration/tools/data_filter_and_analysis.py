@@ -304,21 +304,63 @@ def analysis(db_path,
         os.remove(os.path.join(cwd, 'warnings.log'))
 
 
+# 误差评估
+def error_eval(db_path, model_path, gpu):
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
+    dp_calculate = DP(model=model_path)
+    true_energy = []
+    true_forces = []
+    pred_energy = []
+    pred_forces = []
+    db = connect(db_path)
+    for row in db.select():
+        atoms = row.toatoms()
+        # energy = row.data['energy']
+        # forces = row.data['forces']
+        energy = atoms.get_potential_energy()
+        forces = atoms.get_forces(apply_constraint=False)
+        true_energy_i = energy / len(atoms)
+        true_forces_i = forces
+        atoms.calc = dp_calculate
+        pred_energy_i = atoms.get_potential_energy() / len(atoms)
+        pred_forces_i = atoms.get_forces(apply_constraint=False)
+        true_energy.append(true_energy_i)
+        true_forces.extend(true_forces_i.reshape(-1))
+        pred_energy.append(pred_energy_i)
+        pred_forces.extend(pred_forces_i.reshape(-1))
+
+    true_energy = np.array(true_energy)
+    true_forces = np.array(true_forces)
+    pred_energy = np.array(pred_energy)
+    pred_forces = np.array(pred_forces)
+
+    energy_rmse = np.sqrt(np.mean((true_energy - pred_energy) ** 2))
+    force_rmse = np.sqrt(np.mean((true_forces - pred_forces) ** 2))
+
+    energy_mae = np.mean(np.abs(true_energy - pred_energy))
+    force_mae = np.mean(np.abs(true_forces - pred_forces))
+
+    print(f"Energy RMSE: {energy_rmse:.4f} eV / atom")
+    print(f"Force RMSE: {force_rmse:.4f} eV / Å")
+    print(f"Energy MAE: {energy_mae:.4f} eV / atom")
+    print(f"Force MAE: {force_mae:.4f} eV / Å")
+
+    return true_energy, true_forces, pred_energy, pred_forces
+
 if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
     start_time_1 = time.perf_counter()
-    # analysis(db_path="/home/cchen/test/0317/traj.db",
-    #          model_path="/home/cchen/test/iter2.pb",
-    #          gpu_ids=[0, 1, 2, 3],
-    #          energy_filter=0.5,
-    #          force_filter=3)
-    split_db(db_path="/home/cchen/CuY/hiccup2/workdir/dp/init.db", fold_name="/home/cchen/CuY/hiccup2/workdir/dp/tmp")
-    data_filter_and_analysis(workdir="/home/cchen/CuY/hiccup2/workdir/dp/tmp",
-                             model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn7/002/frozen_model.pb",
+    split_db(db_path="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/init.db", fold_name="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/tmp")
+    data_filter_and_analysis(workdir="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/tmp",
+                             model_path="/home/yliu/cchen/CuClO/workdir0/dp/nn3/002/frozen_model.pb",
                              gpu_ids=[0,1,2,3],
                              energy_filter=0.2,
                              force_filter=1.0)
-    # 记录第一个函数的结束时间
+    # # 记录第一个函数的结束时间
     end_time_1 = time.perf_counter()
     duration_1 = end_time_1 - start_time_1
     print(f"data_filter_and_analysis 执行时间: {duration_1:.6f} 秒")
+
+    # db_path = "/home/yliu/cchen/CuClO/workdir0/dp/nn0/dbs/init.db"
+    # model_path = "/home/yliu/cchen/CuClO/workdir0/dp/nn0/000/frozen_model.pb"
+    # true_energy, true_forces, pred_energy, pred_forces = error_eval(db_path, model_path, gpu=0)

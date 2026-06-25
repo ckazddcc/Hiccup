@@ -17,12 +17,19 @@ class VaspjetRun:
 
     def run_vaspjet(self):
         # 与cpu服务器建立远程连接
+        key_env = self.cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
+        ssh_key_path = os.environ.get(key_env)
+        if not ssh_key_path:
+            raise RuntimeError(f"Environment variable {key_env} is not set.")
+
         ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.load_host_keys(os.path.expanduser("~/.ssh/known_hosts"))
         ssh.connect(hostname=self.cpu_config["CPU IP"],
                     port=self.cpu_config["CPU Port"],
                     username=self.cpu_config["CPU Username"],
-                    password=self.cpu_config["CPU Password"])
+                    key_filename=os.path.expanduser(ssh_key_path),
+                    look_for_keys=False,
+                    allow_agent=False)
         sftp = ssh.open_sftp()
         # 确保远程目录存在，如果不存在则创建
         try:
@@ -50,9 +57,9 @@ class VaspjetRun:
         sftp.put(local_db, os.path.join(self.cpu_workdir, os.path.basename(self.db_path)))
         sftp.put(local_yml, os.path.join(self.cpu_workdir, os.path.basename(self.vaspjet_yml)))
         command = """
-        source ~/.zshrc && conda activate vaspjet && cd {0} && nohup vaspjet run -yml *.yml 1>out.log 2>err.log & & echo $!
+        source ~/.bashrc && conda activate vaspjet && cd {0} && nohup vaspjet run -yml *.yml 1>out.log 2>err.log & & echo $!
         """.format(self.cpu_workdir)
-        # ssh.exec_command(command)
+        ssh.exec_command(command)
         sftp.close()
         ssh.close()
         return
@@ -70,12 +77,19 @@ def vaspjet_monitor(cpu_config,
     """
     state = "RUNNING"
     # 与cpu服务器建立远程连接
+    key_env = cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
+    ssh_key_path = os.environ.get(key_env)
+    if not ssh_key_path:
+        raise RuntimeError(f"Environment variable {key_env} is not set.")
+
     ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.load_host_keys(os.path.expanduser("~/.ssh/known_hosts"))
     ssh.connect(hostname=cpu_config["CPU IP"],
                 port=cpu_config["CPU Port"],
                 username=cpu_config["CPU Username"],
-                password=cpu_config["CPU Password"])
+                key_filename=os.path.expanduser(ssh_key_path),
+                look_for_keys=False,
+                allow_agent=False)
     sftp = ssh.open_sftp()
     command = f"ls {os.path.join(cpu_workdir, 'workdir')}"
     stdin, stdout, stderr = ssh.exec_command(command)
@@ -94,7 +108,9 @@ def vaspjet_monitor(cpu_config,
             process_traj_path = os.path.join(os.path.dirname(current_file_path), "process_traj.py")
             sftp.put(process_traj_path,
                      os.path.join(cpu_workdir, "workdir/process_traj.py"))
-            command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir}/workdir && "
+            # command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir}/workdir && "
+            #            f"python process_traj.py {max_force_threshold} {traj_process_mode}")
+            command = (f"conda activate vaspjet && cd {cpu_workdir}/workdir && "
                        f"python process_traj.py {max_force_threshold} {traj_process_mode}")
             ssh.exec_command(command)
             remote_dir = os.path.join(cpu_workdir, "workdir/traj.db")
@@ -133,12 +149,20 @@ def vaspjet_monitor(cpu_config,
 
 def kill_vaspjet(cpu_config, cpu_workdir):
     # 与cpu服务器建立远程连接
+    key_env = cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
+    ssh_key_path = os.environ.get(key_env)
+    if not ssh_key_path:
+        raise RuntimeError(f"Environment variable {key_env} is not set.")
+
     ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.load_host_keys(os.path.expanduser("~/.ssh/known_hosts"))
     ssh.connect(hostname=cpu_config["CPU IP"],
                 port=cpu_config["CPU Port"],
                 username=cpu_config["CPU Username"],
-                password=cpu_config["CPU Password"])
+                key_filename=os.path.expanduser(ssh_key_path),
+                look_for_keys=False,
+                allow_agent=False)
+
     # 将kill_vaspjet.py上传到cpu服务器
     sftp = ssh.open_sftp()
     current_file_path = os.path.abspath(__file__)
@@ -146,7 +170,7 @@ def kill_vaspjet(cpu_config, cpu_workdir):
     sftp.put(kill_vaspjet_path,
              os.path.join(cpu_workdir, "kill_vaspjet.py"))
     # 杀死进程并创建KILLED文件作为标记
-    command = (f"source ~/.zshrc && conda activate vaspjet && cd {cpu_workdir} && python kill_vaspjet.py && "
+    command = (f"conda activate vaspjet && cd {cpu_workdir} && python kill_vaspjet.py && "
                f"touch {cpu_workdir}/workdir/KILLED")
     ssh.exec_command(command)
     ssh.close()
@@ -154,21 +178,22 @@ def kill_vaspjet(cpu_config, cpu_workdir):
 
 
 if __name__ == '__main__':
-    # db_path = "/home/cchen/CuY/test/0/alls_1.db"
+    templates = "/home/cchen/Hiccup/template"
     cpu_config = {
         "CPU IP": "172.21.41.44",
         "CPU Username": "materdesign",
         "CPU Port": 22,
-        "CPU Password": "md188"
+        "CPU SSH Key Env": "HICCUP_CPU_SSH_KEY"
     }
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=cpu_config["CPU IP"],
-                port=cpu_config["CPU Port"],
-                username=cpu_config["CPU Username"],
-                password=cpu_config["CPU Password"])
-    sftp = ssh.open_sftp()
-    # sftp.put('/home/cchen/CuY/hiccup2/workdir/pes/ga/ga6/candidates_1.db', '/home/materdesign/cc/CuY/hiccup2/iter6/opt/candidates_1.db')
-    sftp.get('/home/materdesign/cc/CuY/hiccup2/iter6/merged.db',
-             '/home/cchen/CuY/hiccup2/workdir/dp/nn7/merged.db')
+
+    # dft_sp = VaspjetRun(db_path="/home/cchen/Hiccup/example/slab/init_md.db",
+    #                     cpu_config=cpu_config,
+    #                     cpu_workdir=os.path.join("/home/materdesign/cc/CuClO", "0"),
+    #                     vaspjet_yml=os.path.join(templates, "vaspjet/config_opt.yml"))
+    # dft_sp.run_vaspjet()
+
+    state, IS_DOWNLOADED = vaspjet_monitor(cpu_config,
+                    cpu_workdir="/home/materdesign/cc/CuClO/1/iter0/opt",
+                    download_results=False)
+    print(state, IS_DOWNLOADED)
 

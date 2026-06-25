@@ -236,25 +236,31 @@ if __name__ == '__main__':
     import os
     from pathlib import Path
 
-    # def find_db_files(root_dir):
-    #     root = Path(root_dir)
-    #     return [root for root in root.iterdir() if root.is_dir()]
-    #
-    # dirs = find_db_files("/home/cchen/CuY/hiccup2/workdir/pes/ga/ga0")
+    def find_db_files(root_dir):
+        root = Path(root_dir)
+        return [root for root in root.iterdir() if root.is_dir()]
 
-    # for dir in dirs:
-    energy_structure_filter(db_path="/home/cchen/CuY/hiccup2/workdir/pes/ga/ga6/candidates.db",
+    energy_structure_filter(db_path="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/candidates.db",
                             max_filter_ratio=0.80,
-                            max_filter_num=120,
+                            max_filter_num=60,
                             similarity_threshold=0.95,
                             output_mode="split")
-        # db = connect(os.path.join(dir, "gathered_1.db"))
-        # print(f"{dir} Total number of structures: {db.count()}")
-        # for row in db.select():
-        #     atoms = row.toatoms()
-        #     data = row.data
-        #     kvp = row.key_value_pairs
-        #     sp_1.write(atoms, data=data, key_value_pairs=kvp)
+
+    # dirs = find_db_files("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4")
+    # to_md_db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/to_md.db")
+    # for dir in dirs:
+    #     db = connect(os.path.join(dir, "gathered.db"))
+    #     print(f"{dir} Total number of structures: {db.count()}")
+    #     _infos = []
+    #     to_md_atoms = []
+    #     for row in db.select():
+    #         fitness = row.data['fitness']
+    #         _infos.append((row.id, fitness))
+    #     _infos.sort(key=lambda x: x[1])
+    #     stable_row = db.get(_infos[0][0])
+    #     stable_atoms = stable_row.toatoms()
+    #     to_md_atoms.append(stable_atoms)
+    #     to_md_db.write(stable_atoms, data=stable_row.data, key_value_pairs=stable_row.key_value_pairs)
 
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

@@ -1,4 +1,5 @@
-from tools.md_sample import run_many_atoms_parallel
+# from tools.md_sample import run_many_atoms_parallel
+from tools.md_sample import run_md_parallel
 from ase.db import connect
 
 class NN_md:
@@ -19,7 +20,7 @@ class NN_md:
         # 进行批量 MD 采样
         to_md_atoms = [row.toatoms() for row in connect(self.to_md_db).select()]
 
-        md_results = run_many_atoms_parallel(
+        md_results = run_md_parallel(
             atoms_list=to_md_atoms,
             dp_model_path=self.nn_model,
             base_workdir=self.md_workdir,
@@ -38,12 +39,12 @@ if __name__ == '__main__':
     import time
     start = time.time()
     nn_md = NN_md(
-        to_md_db='/home/cchen/slab/hiccup/pes/ga/ga2/MD/to_md.db',
-        nn_model='/home/cchen/CuY/hiccup/hiccup3/dp/nn4/002/frozen_model.pb',
-        gpus=[4,5,6,7],
-        md_workdir='/home/cchen/slab/hiccup/pes/ga/ga2/MD',
+        to_md_db='/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/to_md.db',
+        nn_model='/home/yliu/cchen/CuClO/workdir0/dp/nn2/002/frozen_model.pb',
+        gpus=[1,2,3,4,5,6],
+        md_workdir='/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/MD',
         nn_md_config={
-            'MD Steps': 5000,
+            'MD Steps': 10000,
             'MD Timestep': 0.5,
             'MD Dump Interval': 50,
             'MD Temperature K': 500,
