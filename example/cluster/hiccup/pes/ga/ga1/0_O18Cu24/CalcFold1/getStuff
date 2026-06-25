@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+$file   = shift;
+$string = shift;
+$column = shift;
+
+unless(defined($column)) {
+	print "usage : <file> <string> <column>\n";
+	exit;
+}
+
+open(FILE, $file) or die "Can't open $file : $!\n";
+
+while(<FILE>) {
+	if(/$string/) {
+	@a = split /\s+/;
+		print $a[$column-1] . "\n";
+	}
+}
+

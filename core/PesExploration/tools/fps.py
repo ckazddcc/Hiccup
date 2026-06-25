@@ -75,7 +75,7 @@ def sample_compositions_n(elements_boundary, total_atoms, substrate, n_samples):
         _compos = list(compos)
         for i, elem in enumerate(elements_boundary.keys()):
             _compos[i] += substrate.get(elem, 0)
-            update_compos.append(_compos)
+        update_compos.append(_compos)
             # print(compos, _compos)
 
     return update_compos

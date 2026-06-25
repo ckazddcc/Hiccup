@@ -385,7 +385,7 @@ class Hiccup:
         dft_sp = VaspjetRun(db_path=gathered_db_path,
                             cpu_config=self.cpu_config,
                             cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"], "iter0/sp"),
-                            vaspjet_yml=os.path.join(self.templates, "vaspjet/pure_vasp_sp.yml"))
+                            vaspjet_yml=os.path.join(self.templates, "vaspjet/config_sp.yml"))
         # ！！！没有开启 vasp ! ！！!
         dft_sp.run_vaspjet()
 
@@ -406,7 +406,7 @@ class Hiccup:
         dft_opt = VaspjetRun(db_path=alls_1,
                             cpu_config=self.cpu_config,
                             cpu_workdir=os.path.join(self.cpu_config["CPU Working Directory"], "iter0/opt"),
-                            vaspjet_yml=os.path.join(self.templates, "vaspjet/pure_vasp_opt.yml"))
+                            vaspjet_yml=os.path.join(self.templates, "vaspjet/config_opt.yml"))
         dft_opt.run_vaspjet()
 
         with open(self.log, "a") as f:
@@ -858,11 +858,11 @@ class Hiccup:
 
 
 if __name__ == '__main__':
-    with open("/home/cchen/CuY/hiccup3/config.yml") as file:
+    with open("/home/cchen/CuCl/config.yml") as file:
         dict_value = yaml.load(file.read(), Loader=yaml.FullLoader)
     config = dict_value
     hiccup = Hiccup(config)
-    hiccup.run_dp_GA()
-
+    # hiccup.run_dp_GA()
+    hiccup.initialize()
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

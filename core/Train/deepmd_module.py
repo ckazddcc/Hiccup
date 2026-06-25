@@ -254,6 +254,7 @@ class DeepmdSystem:
         :param sub_dir: input文件所在目录路径
         :param gpu_i: GPU编号
         """
+        init_model_path_i = None
         run_config_path = os.path.join(sub_dir, 'input.json')
         if self.init_model_path is not None:
             init_model_path_i = os.path.join(sub_dir, f"init_{os.path.basename(self.init_model_path)}")
@@ -382,14 +383,14 @@ class DeepmdSystem:
         return best_model_path, best_model_id, models_info
 
 if __name__ == '__main__':
-    dp = DeepmdSystem(elements=["O", "Cu", "Y"],
-                      db_path="/home/cchen/CuY/hiccup2/workdir/dp/init.db",
+    dp = DeepmdSystem(elements=["O", "Cl", "Cu"],
+                      db_path="/home/cchen/CuClO/dp/nn6/merged.db",
                       train_ratio=0.9,
-                      workdir="/home/cchen/CuY/hiccup2/workdir/dp/nn8",
-                      gpu=[4, 5, 6, 7],
+                      workdir="/home/cchen/CuClO/dp/nn7",
+                      gpu=[4,5,6,7],
                       dp_input_template="/home/cchen/CuY/hiccup2/template/trainer/deepmd_input_accurate.json",
-                      init_model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn7/002/frozen_model.pb",
-                      # init_model_path=None,
+                      init_model_path="/home/cchen/CuClO/dp/nn6/003/frozen_model.pb",
+                      #init_model_path=None,
                       models_num=4)
     dp.creat_dp_input()
     dp.train_models()

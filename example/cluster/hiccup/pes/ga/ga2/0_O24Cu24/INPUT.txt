@@ -1,0 +1,51 @@
+******************************************
+*      TYPE OF RUN AND SYSTEM            *
+******************************************
+USPEX : calculationMethod (USPEX, VCNEB, META)
+000   : calculationType (dimension: 0-3; molecule: 0/1; varcomp: 0/1)
+1     : optType (optimise by: 1=enthalpy, 2=volume, 3=hardness,…)
+1     : AutoFrac
+
+% numSpecies
+24  24 
+% EndNumSpecies
+
+% atomType
+O  Cu
+% EndAtomType
+******************************************
+*               Surface information      *
+******************************************
+% vacuumSize
+10
+% endVacuumSize
+
+******************************************
+*               POPULATION               *
+******************************************
+50    : populationSize 
+50    : initialPopSize 
+3   : numGenerations 
+1000     : stopCrit
+0.6   : bestFrac 
+******************************************
+*          VARIATION OPERATORS           *
+******************************************
+0.6  : fracGene 
+0.4  : fracAtomsMut 
+0.0  : fracPerm
+0.0  : fracRand
+0.0  : fracLatMut
+*****************************************
+*   DETAILS OF AB INITIO CALCULATIONS   * 
+*****************************************
+abinitioCode
+15
+ENDabinit
+
+% commandExecutable
+bash /home/cchen/Hiccup/template/uspex/run_dp.sh
+% EndExecutable
+%%%%%%%%%%%%%%%%%%
+1       : numParallelCalcs 
+0       : whichCluster 

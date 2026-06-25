@@ -1,0 +1,722 @@
+nohup: 忽略输入
+Submission dir copied to the current directory.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                    R2014a (8.3.0.532) 64-bit (glnxa64)
+                             February 11, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >>   
+Structure 1 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 2 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 3 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 4 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 5 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 6 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 7 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 8 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 9 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 10 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 11 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 12 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 13 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 14 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 15 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 16 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 17 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 18 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 19 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 20 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 21 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 22 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 23 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 24 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 25 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 26 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 27 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 28 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 29 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 30 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 31 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 32 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 33 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 34 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 35 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 36 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 37 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 38 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 39 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 40 generated randomly
+composition: 3  8;   cell size: 1*1
+ 
+Read Seeds ... 
+ 
+seed number 1 has been successfully added
+seed number 2 has been successfully added
+seed number 3 has been successfully added
+seed number 4 has been successfully added
+seed number 5 has been successfully added
+seed number 6 has been successfully added
+seed number 7 has been successfully added
+seed number 8 has been successfully added
+seed number 9 has been successfully added
+seed number 10 has been successfully added
+seed number 11 has been successfully added
+seed number 12 has been successfully added
+seed number 13 has been successfully added
+seed number 14 has been successfully added
+seed number 15 has been successfully added
+seed number 16 has been successfully added
+seed number 17 has been successfully added
+seed number 18 has been successfully added
+seed number 19 has been successfully added
+seed number 20 has been successfully added
+ 
+End of pickup Seeds
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure49 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure50 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure51 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure52 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure53 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure54 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure55 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure56 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure57 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure58 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure59 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure60 step1 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimization finished
+ 
+AntiSeedsCorrection In EA_200:CalcFitness_200 : jfchen
+Structure 1  generated by heredity
+Structure 2  generated by heredity
+Structure 3  generated by heredity
+Structure 4  generated by heredity
+Structure 5  generated by heredity
+Structure 6  generated by heredity
+Structure 7  generated by heredity
+Structure 8  generated by heredity
+Structure 9  generated by heredity
+Structure 10  generated by heredity
+Structure 11  generated by heredity
+Structure 12  generated by heredity
+Structure 13  generated by heredity
+Structure 14  generated by heredity
+Structure 15  generated by heredity
+Structure 16  generated by heredity
+Structure 17  generated by heredity
+Structure 18  generated by heredity
+Structure 19  generated by heredity
+Structure 20  generated by heredity
+Structure 21 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 22 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 23 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 24 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 25 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 26 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 27 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 28 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 29  generated by permutation
+Structure 30  generated by permutation
+Structure 31  generated by permutation
+Structure 32  generated by permutation
+Structure 33  generated by softmutation
+Structure 34  generated by softmutation
+Structure 35  generated by softmutation
+Structure 36  generated by softmutation
+Structure 37  generated by softmutation
+Structure 38  generated by softmutation
+Structure 39  generated by softmutation
+Structure 40  generated by softmutation
+Structure 41  generated by shuffling
+Structure 42  generated by shuffling
+Structure 43  generated by shuffling
+Structure 44  generated by shuffling
+ 
+Variation operators applied, applying elitist scheme
+4 structures were kept as best
+ 
+Read Seeds ... 
+ 
+ 
+End of pickup Seeds
+ 
+New generation produced
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step2 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimization finished
+ 
+AntiSeedsCorrection In EA_200:CalcFitness_200 : jfchen
+Structure 1  generated by heredity
+Structure 2  generated by heredity
+Structure 3  generated by heredity
+Structure 4  generated by heredity
+Structure 5  generated by heredity
+Structure 6  generated by heredity
+Structure 7  generated by heredity
+Structure 8  generated by heredity
+Structure 9  generated by heredity
+Structure 10  generated by heredity
+Structure 11  generated by heredity
+Structure 12  generated by heredity
+Structure 13  generated by heredity
+Structure 14  generated by heredity
+Structure 15  generated by heredity
+Structure 16  generated by heredity
+Structure 17  generated by heredity
+Structure 18  generated by heredity
+Structure 19  generated by heredity
+Structure 20  generated by heredity
+Structure 21 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 22 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 23 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 24 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 25 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 26 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 27 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 28 generated randomly
+composition: 3  8;   cell size: 1*1
+Structure 29  generated by permutation
+Structure 30  generated by permutation
+Structure 31  generated by permutation
+Structure 32  generated by permutation
+Structure 33  generated by softmutation
+Structure 34  generated by softmutation
+Structure 35  generated by softmutation
+Structure 36  generated by softmutation
+Structure 37  generated by softmutation
+Structure 38  generated by softmutation
+Structure 39  generated by softmutation
+Structure 40  generated by softmutation
+Structure 41  generated by shuffling
+Structure 42  generated by shuffling
+Structure 43  generated by shuffling
+Structure 44  generated by shuffling
+ 
+Variation operators applied, applying elitist scheme
+4 structures were kept as best
+ 
+Read Seeds ... 
+ 
+ 
+End of pickup Seeds
+ 
+New generation produced
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step2 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimization finished
+ 
+AntiSeedsCorrection In EA_200:CalcFitness_200 : jfchen
+ 
+USPEX IS DONE!
+ 

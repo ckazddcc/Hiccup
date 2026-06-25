@@ -8,7 +8,7 @@ Genetic Algorithm-Driven Neural Network Potential Trainer.
 
 ### 1. workflow流程图
 
-![workflow](./workflow.tiff)
+![workflow](./workflow.jpg)
 
 ## 安装指南
 
@@ -262,4 +262,19 @@ hiccup eva -db database.db -m model.pb -g gpu_id -e 0.1 -f 2 -n model_name
 hiccup compos -yml fps_config.yml 
 # -yml: 配置文件 fps_config.yml 路径
 ```
+
+## Licensing & Attribution
+
+### Hiccup License
+The core source code of the **Hiccup** platform is licensed under the [MIT License](LICENSE).
+
+### Third-Party Components and Pretrained Models
+Hiccup integrates foundational universal neural network potentials (uNNPs) to alleviate the active-learning cold-start problem. Please note the licensing terms for these components:
+
+* **MACE Checkpoints:** This repository includes pretrained `MACE-MP-0` checkpoints developed by the MACE authors. These checkpoints are derivative works from the [MACE project](https://github.com/ACEsuit/mace) and are distributed under the **MIT License**. 
+    * The original copyright and permission notice can be found in the dedicated directory at `path/to/your/mace/checkpoints/MACE_LICENSE`.
+    * If you use these universal models via Hiccup, please properly cite the original MACE publication:
+        > Batatia, I., Kovács, D. P., Simm, G. N. C., Ortner, C., & Csányi, G. (2022). MACE: Higher Order Equivariant Message Passing Neural Networks for Fast and Accurate Force Fields. *Advances in Neural Information Processing Systems*.
+
+We strictly adhere to and support the open-source compliance of all referenced foundational architectures.
 

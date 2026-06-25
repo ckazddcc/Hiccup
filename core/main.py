@@ -12,7 +12,7 @@ import yaml
 def main():
     parser = argparse.ArgumentParser(description="Here is Hiccup!")
     subparsers = parser.add_subparsers(dest="command", help="Commands")
-    #
+
     # 为 run 命令创建子解析器
     parser_run = subparsers.add_parser(
         "run",
@@ -73,7 +73,10 @@ def main():
     )
 
     # 为 compos 命令创建子解析器
-    parser_eva.add_argument(
+    parser_compos = subparsers.add_parser(
+        "compos",
+        help="Sample the composition with specified configurations.")
+    parser_compos.add_argument(
         "-yml",
         dest="yml",
         type=str,

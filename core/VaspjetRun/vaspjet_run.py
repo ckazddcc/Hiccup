@@ -52,7 +52,7 @@ class VaspjetRun:
         command = """
         source ~/.zshrc && conda activate vaspjet && cd {0} && nohup vaspjet run -yml *.yml 1>out.log 2>err.log & & echo $!
         """.format(self.cpu_workdir)
-        ssh.exec_command(command)
+        # ssh.exec_command(command)
         sftp.close()
         ssh.close()
         return

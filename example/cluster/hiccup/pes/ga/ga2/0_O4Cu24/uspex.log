@@ -1,0 +1,715 @@
+nohup: 忽略输入
+Submission dir copied to the current directory.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2014 The MathWorks, Inc.
+                    R2014a (8.3.0.532) 64-bit (glnxa64)
+                             February 11, 2014
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >>   
+Cluster 1 built with the symmetry D3
+Cluster 2 built with the symmetry Cv4
+Cluster 3 built with the symmetry S4
+Cluster 4 built with the symmetry D6
+Cluster 5 built with the symmetry C6
+Cluster 6 built with the symmetry S5
+Cluster 7 built with the symmetry S2
+Cluster 8 built with the symmetry O
+Cluster 9 built with the symmetry C3
+Cluster 10 built with the symmetry C4
+Cluster 11 built with the symmetry Cv3
+Cluster 12 built with the symmetry Th
+Cluster 13 built with the symmetry Ch2
+Cluster 14 built with the symmetry Cv5
+Cluster 15 built with the symmetry Ch4
+Cluster 16 built with the symmetry Cv4
+Cluster 17 built with the symmetry D4
+Cluster 18 built with the symmetry D4
+Cluster 19 built with the symmetry Dd2
+Cluster 20 built with the symmetry Dh2
+Cluster 21 built with the symmetry Oh
+Cluster 22 built with the symmetry Dh2
+Cluster 23 built with the symmetry C5
+Cluster 24 built with the symmetry Ch3
+Cluster 25 built with the symmetry Dd3
+Cluster 26 built with the symmetry Ch1
+Cluster 27 built with the symmetry D4
+Cluster 28 built with the symmetry Oh
+Cluster 29 built with the symmetry Th
+Cluster 30 built with the symmetry Oh
+Cluster 31 built with the symmetry C5
+Cluster 32 built with the symmetry Dh4
+Cluster 33 built with the symmetry Cv4
+Cluster 34 built with the symmetry S2
+Cluster 35 built with the symmetry Cv4
+Cluster 36 built with the symmetry Dd3
+Cluster 37 built with the symmetry Th
+Cluster 38 built with the symmetry Cv6
+Cluster 39 built with the symmetry Cv4
+Cluster 40 built with the symmetry Oh
+Cluster 41 built with the symmetry Cv6
+Cluster 42 built with the symmetry Td
+Cluster 43 built with the symmetry Dd2
+Cluster 44 built with the symmetry S6
+Cluster 45 built with the symmetry Dh3
+Cluster 46 built with the symmetry Dh4
+Cluster 47 built with the symmetry E
+Cluster 48 built with the symmetry T
+Cluster 49 built with the symmetry Oh
+Cluster 50 built with the symmetry D6
+ 
+Read Seeds ... 
+ 
+seed number 1 has been successfully added
+seed number 2 has been successfully added
+seed number 3 has been successfully added
+seed number 4 has been successfully added
+seed number 5 has been successfully added
+ 
+End of pickup Seeds
+Read AntiSeeds ...
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure49 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure50 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure51 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure52 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure53 step1 at CalcFold1
+The structure after relaxation cannot satisfy distance constraint, please see the Warning ...
+Structure54 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure55 step1 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimisation finished
+ 
+Structure 1 generated by heredity
+Structure 2 generated by heredity
+Structure 3 generated by heredity
+Structure 4 generated by heredity
+Structure 5 generated by heredity
+Structure 6 generated by heredity
+Structure 7 generated by heredity
+Structure 8 generated by heredity
+Structure 9 generated by heredity
+Structure 10 generated by heredity
+Structure 11 generated by heredity
+Structure 12 generated by heredity
+Structure 13 generated by heredity
+Structure 14 generated by heredity
+Structure 15 generated by heredity
+Structure 16 generated by heredity
+Structure 17 generated by heredity
+Structure 18 generated by heredity
+Structure 19 generated by heredity
+Structure 20 generated by heredity
+Structure 21 generated by heredity
+Structure 22 generated by heredity
+Structure 23 generated by heredity
+Structure 24 generated by heredity
+Structure 25 generated by heredity
+Structure 26 generated with random symmetry: Dd3
+Structure 27 generated with random symmetry: Dd2
+Structure 28 generated with random symmetry: E
+Structure 29 generated with random symmetry: Dd5
+Structure 30 generated with random symmetry: Dh3
+Structure 31 generated with random symmetry: D2
+Structure 32 generated with random symmetry: C4
+Structure 33 generated with random symmetry: T
+Structure 34  generated by mutation
+Structure 35  generated by mutation
+Structure 36  generated by mutation
+Structure 37  generated by mutation
+Structure 38  generated by mutation
+Structure 39  generated by mutation
+Structure 40  generated by mutation
+Structure 41  generated by mutation
+Structure 42  generated by mutation
+Structure 43  generated by mutation
+Structure 44  generated by mutation
+Structure 45  generated by mutation
+Structure 46  generated by mutation
+Structure 47  generated by mutation
+Structure 48  generated by mutation
+Structure 49  generated by mutation
+Structure 50  generated by mutation
+ 
+Variation operators applied, applying elitist scheme
+8 structures were kept as best
+ 
+Read Seeds ... 
+ 
+ 
+End of pickup Seeds
+ 
+New generation produced
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure49 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure50 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure51 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure52 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure53 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure54 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure55 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure56 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure57 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure58 step2 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimisation finished
+ 
+Structure 1 generated by heredity
+Structure 2 generated by heredity
+Structure 3 generated by heredity
+Structure 4 generated by heredity
+Structure 5 generated by heredity
+Structure 6 generated by heredity
+Structure 7 generated by heredity
+Structure 8 generated by heredity
+Structure 9 generated by heredity
+Structure 10 generated by heredity
+Structure 11 generated by heredity
+Structure 12 generated by heredity
+Structure 13 generated by heredity
+Structure 14 generated by heredity
+Structure 15 generated by heredity
+Structure 16 generated by heredity
+Structure 17 generated by heredity
+Structure 18 generated by heredity
+Structure 19 generated by heredity
+Structure 20 generated by heredity
+Structure 21 generated by heredity
+Structure 22 generated by heredity
+Structure 23 generated by heredity
+Structure 24 generated by heredity
+Structure 25 generated by heredity
+Structure 26 generated by heredity
+Structure 27 generated by heredity
+Structure 28 generated with random symmetry: T
+Structure 29 generated with random symmetry: Ch2
+Structure 30 generated with random symmetry: Dh4
+Structure 31 generated with random symmetry: Ch5
+Structure 32 generated with random symmetry: C5
+Structure 33  generated by mutation
+Structure 34  generated by mutation
+Structure 35  generated by mutation
+Structure 36  generated by mutation
+Structure 37  generated by mutation
+Structure 38  generated by mutation
+Structure 39  generated by mutation
+Structure 40  generated by mutation
+Structure 41  generated by mutation
+Structure 42  generated by mutation
+Structure 43  generated by mutation
+Structure 44  generated by mutation
+Structure 45  generated by mutation
+Structure 46  generated by mutation
+Structure 47  generated by mutation
+Structure 48  generated by mutation
+Structure 49  generated by mutation
+Structure 50  generated by mutation
+ 
+Variation operators applied, applying elitist scheme
+8 structures were kept as best
+ 
+Read Seeds ... 
+ 
+ 
+End of pickup Seeds
+ 
+New generation produced
+Structure1 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure2 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure3 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure4 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure5 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure6 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure7 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure8 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure9 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure10 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure11 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure12 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure13 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure14 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure15 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure16 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure17 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure18 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure19 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure20 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure21 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure22 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure23 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure24 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure25 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure26 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure27 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure28 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure29 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure30 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure31 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure32 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure33 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure34 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure35 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure36 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure37 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure38 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure39 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure40 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure41 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure42 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure43 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure44 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure45 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure46 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure47 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure48 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure49 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure50 step1 at CalcFold1
+Relaxation is done.
+ 
+Structure51 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure52 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure53 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure54 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure55 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure56 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure57 step2 at CalcFold1
+Relaxation is done.
+ 
+Structure58 step2 at CalcFold1
+Relaxation is done.
+ 
+status = Local optimisation finished
+ 
+ 
+USPEX IS DONE!
+ 

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="Hiccup",
-    version="2.0",
+    version="2.1",
     description="A neural network potential trainer driven by gene algorithm",
     url="https://gitee.com/ccccissy/Hiccup",
     author="(1)Chen.Cheng, (2)Chen.Dingming",

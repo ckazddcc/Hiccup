@@ -1,0 +1,305 @@
+*------------------------------------------------------------------------------*
+|                                                                              |
+|             _|    _|     _|_|_|   _|_|_|     _|_|_|_|   _|      _|           |
+|             _|    _|   _|         _|    _|   _|           _|  _|             |
+|             _|    _|     _|_|     _|_|_|     _|_|_|         _|               |
+|             _|    _|         _|   _|         _|           _|  _|             |
+|               _|_|     _|_|_|     _|         _|_|_|_|   _|      _|           |
+|                                                                              |
+|                          Version 9.4.4 (04/10/2015)                          |
+|                                                                              |
+|             Evolutionary Algorithm Code for Structure Prediction             |
+|                   more info at http://uspex.stonybrook.edu                   |
+|                                                                              |
+*------------------------------------------------------------------------------*
+*------------------------------------------------------------------------------*
+|                  Please cite the following suggested papers                  |
+|               when you publish the results obtained from USPEX:              |
+*------------------------------------------------------------------------------*
+*------------------------------------------------------------------------------*
+|  Oganov A.R., Glass C.W. (2006). Crystal structure prediction                |
+|  using ab initio evolutionary techniques: Principles and applications.       |
+|  J. Chem. Phys. 124, 244704                                                  |
+|                                                                              |
+|  Oganov A.R., Stokes H., Valle M. (2011)                                     |
+|  How evolutionary crystal structure prediction works - and why.              |
+|  Acc. Chem. Res. 44, 227-237                                                 |
+|                                                                              |
+|  Lyakhov A.O., Oganov A.R., Stokes H., Zhu Q. (2013)                         |
+|  New developments in evolutionary structure prediction algorithm USPEX.      |
+|  Comp. Phys. Comm., 184, 1172-1182                                           |
+*------------------------------------------------------------------------------*
+
+            Job Starts at                 28-Feb-2025 19:59:51
+                          Block for system description                          
+                        Dimensionality  :   0
+                        Molecular       :   0 (1:Yes, 0,No)
+                   Variable Composition :   0 (1:Yes, 0,No)
+                          Block for atomic description                          
+    There are 2 types of atoms in the system:     O   Cu
+    Minimum distances:                     O: 0.79  0.85  
+    Minimum distances:                    Cu: 0.85  0.92  
+
+           Good Bonds:                     O: 0.30  0.17  
+           Good Bonds:                    Cu: 0.17  0.10  
+
+            valences                        : 2.00  2.00  
+    The investigated system is:  O_24  Cu_24  
+                        Block for evolutionary algorithm                        
+                 Number of Generations  :       3
+               Initial Population Size  :      50
+               General Population Size  :      50
+                             AB INITIO CALCULATIONS                             
+*  External Pressure is : 0.0000  GPa*
+
+*  There are  1 local relaxation steps for each individual structure  *
+Step  Abinitio Code                  Execute Command            K-resolution 
+  1        NN     bash /home/cchen/Hiccup/template/uspex/run_dp.sh         0.200
+
+The calculations are performed in nonParallel mode on the local machine
+   1 parallel calculations are performed simutaneously
+
+  ID   Origin     Composition  Enthalpy(eV)  Volume(A^3)  KPOINTS  SYMMETRY
+   1   Random    [    24 24  ]   -216.144    992.539   [ 1  1  1]    0
+   2   Random    [    24 24  ]   -206.980   1464.688   [ 1  1  1]    0
+   3   Random    [    24 24  ]   -216.306   1077.801   [ 1  1  1]    0
+   4   Random    [    24 24  ]   -174.068    518.066   [ 1  1  1]    0
+   5   Random    [    24 24  ]   -210.369    893.716   [ 1  1  1]    0
+   6   Random    [    24 24  ]   -203.609    865.343   [ 1  1  1]    0
+   7   Random    [    24 24  ]   -216.090    748.223   [ 1  1  1]    0
+   8   Random    [    24 24  ]   -210.972    868.556   [ 1  1  1]    0
+   9   Random    [    24 24  ]   -214.723    811.219   [ 1  1  1]    0
+  10   Random    [    24 24  ]   -214.182    894.679   [ 1  1  1]    0
+  11   Random    [    24 24  ]   -210.587   1058.118   [ 1  1  1]    0
+  12   Random    [    24 24  ]   -214.392   1296.683   [ 1  1  1]    0
+  13   Random    [    24 24  ]   -211.111    803.325   [ 1  1  1]    0
+  14   Random    [    24 24  ]   -214.493    956.192   [ 1  1  1]    0
+  15   Random    [    24 24  ]   -211.985   1220.748   [ 1  1  1]    0
+  16   Random    [    24 24  ]   -216.375    709.494   [ 1  1  1]    0
+  17   Random    [    24 24  ]   -210.244    949.271   [ 1  1  1]    0
+  18   Random    [    24 24  ]   -219.328    932.900   [ 1  1  1]    0
+  19   Random    [    24 24  ]   -200.181    571.269   [ 1  1  1]    0
+  20   Random    [    24 24  ]   -190.663    729.055   [ 1  1  1]    0
+  21   Random    [    24 24  ]   -210.196    721.489   [ 1  1  1]    0
+  22   Random    [    24 24  ]   -212.075    778.508   [ 1  1  1]    0
+  23   Random    [    24 24  ]   -215.054    756.457   [ 1  1  1]    0
+  24   Random    [    24 24  ]   -213.920    633.587   [ 1  1  1]    0
+  25   Random    [    24 24  ]   -214.679    841.360   [ 1  1  1]    0
+  26   Random    [    24 24  ]   -201.048    884.791   [ 1  1  1]    0
+  27   Random    [    24 24  ]   -210.695    609.967   [ 1  1  1]    0
+  28   Random    [    24 24  ]   -200.955    669.653   [ 1  1  1]    0
+  29   Random    [    24 24  ]   -219.057    823.639   [ 1  1  1]    0
+  30   Random    [    24 24  ]   -212.140   1010.214   [ 1  1  1]    0
+  31   Random    [    24 24  ]   -198.413    756.562   [ 1  1  1]    0
+  32   Random    [    24 24  ]   -198.576    682.765   [ 1  1  1]    0
+  33   Random    [    24 24  ]   -215.671    822.709   [ 1  1  1]    0
+  34   Random    [    24 24  ]   -219.889    925.902   [ 1  1  1]    0
+  35   Random    [    24 24  ]   -153.902    446.784   [ 1  1  1]    0
+  36   Random    [    24 24  ]   -210.876    584.898   [ 1  1  1]    0
+  37   Random    [    24 24  ]   -207.159    836.467   [ 1  1  1]    0
+  38   Random    [    24 24  ]   -200.782    814.557   [ 1  1  1]    0
+  39   Random    [    24 24  ]   -214.991    761.788   [ 1  1  1]    0
+  40   Random    [    24 24  ]   -209.752    716.820   [ 1  1  1]    0
+  41   Random    [    24 24  ]   -211.387    792.792   [ 1  1  1]    0
+  42   Random    [    24 24  ]   -203.895    567.120   [ 1  1  1]    0
+  43   Random    [    24 24  ]   -213.066    860.057   [ 1  1  1]    0
+  44   Random    [    24 24  ]   -214.181   1085.018   [ 1  1  1]    0
+  45   Random    [    24 24  ]   -218.506    963.950   [ 1  1  1]    0
+  46   Random    [    24 24  ]   -214.296   1215.641   [ 1  1  1]    0
+  47   Random    [    24 24  ]   -221.484    889.655   [ 1  1  1]    0
+  48   Random    [    24 24  ]   -214.623    612.376   [ 1  1  1]    0
+  49   Random    [    24 24  ]   -203.682    551.749   [ 1  1  1]    0
+  50   Random    [    24 24  ]   -211.809    750.741   [ 1  1  1]    0
+  51   Seeds     [    24 24  ]   -210.580   1604.259   [ 1  1  1]    0
+  52   Seeds     [    24 24  ]   -214.716   1076.760   [ 1  1  1]    0
+  53   Seeds     [    24 24  ]   -212.869   1120.389   [ 1  1  1]    0
+  54   Seeds     [    24 24  ]   -202.863   1581.447   [ 1  1  1]    0
+                           Local optimization finished                          
+
+                             SUMMARY of Generation 1                            
+                        Correlation coefficient = 0.6423                        
+                             Quasi entropy = 0.2780                             
+                         Proceeding to Selection Process                        
+
+                               VARIATION OPERATORS                              
+The fittest 60 percent of the population used to produce next generation
+    fraction of generation produced by heredity        :     0.51
+    fraction of generation produced by random          :     0.15
+    fraction of generation produced by softmutation    :     0.34
+    fraction of generation produced by permutation     :     0.00
+    fraction of generation produced by latmutation     :     0.00
+    fraction of generation produced by rotmutation     :     0.00
+    fraction of generation produced by transmutation   :     0.00
+                           Variation operators applied                          
+              25 structures produced by heredity     
+               8 structures produced by random       
+              17 structures produced by softmutation 
+               0 structures produced by permutation  
+               0 structures produced by latmutation  
+               8 structures kept as best from the previous generation
+               0 Seeds structures are added from Seeds/POSCARS_  2 
+                   Proceeding to the new generation relaxation                  
+               1 parallel calculations are performed simutaneously
+                                  Generation 2                                  
+  ID   Origin      Composition  Enthalpy(eV)  Volume(A^3)  KPOINTS  SYMMETRY
+  55 Heredity    [    24 24  ]   -214.200    692.400   [ 1  1  1]    0
+  56 Heredity    [    24 24  ]   -218.648   1129.709   [ 1  1  1]    0
+  57 Heredity    [    24 24  ]   -215.693   1124.059   [ 1  1  1]    0
+  58 Heredity    [    24 24  ]   -214.579    924.215   [ 1  1  1]    0
+  59 Heredity    [    24 24  ]   -217.886   1111.493   [ 1  1  1]    0
+  60 Heredity    [    24 24  ]   -217.268   1153.142   [ 1  1  1]    0
+  61 Heredity    [    24 24  ]   -219.282   1017.910   [ 1  1  1]    0
+  62 Heredity    [    24 24  ]   -217.090    968.831   [ 1  1  1]    0
+  63 Heredity    [    24 24  ]   -219.725   1102.841   [ 1  1  1]    0
+  64 Heredity    [    24 24  ]   -215.432   1107.099   [ 1  1  1]    0
+  65 Heredity    [    24 24  ]   -216.520   1169.403   [ 1  1  1]    0
+  66 Heredity    [    24 24  ]   -215.657    806.957   [ 1  1  1]    0
+  67 Heredity    [    24 24  ]   -214.726    953.542   [ 1  1  1]    0
+  68 Heredity    [    24 24  ]   -214.974   1119.272   [ 1  1  1]    0
+  69 Heredity    [    24 24  ]   -217.412   1056.988   [ 1  1  1]    0
+  70 Heredity    [    24 24  ]   -217.519    846.163   [ 1  1  1]    0
+  71 Heredity    [    24 24  ]   -214.610   1107.655   [ 1  1  1]    0
+  72 Heredity    [    24 24  ]   -219.959   1088.388   [ 1  1  1]    0
+  73 Heredity    [    24 24  ]   -216.000   1088.284   [ 1  1  1]    0
+  74 Heredity    [    24 24  ]   -214.781   1034.444   [ 1  1  1]    0
+  75 Heredity    [    24 24  ]   -219.520   1175.352   [ 1  1  1]    0
+  76 Heredity    [    24 24  ]   -216.808    837.721   [ 1  1  1]    0
+  77 Heredity    [    24 24  ]   -214.554    779.655   [ 1  1  1]    0
+  78 Heredity    [    24 24  ]   -217.920    961.207   [ 1  1  1]    0
+  79 Heredity    [    24 24  ]   -216.718    879.777   [ 1  1  1]    0
+  80   Random    [    24 24  ]   -210.930   1053.332   [ 1  1  1]    0
+  81   Random    [    24 24  ]   -205.003    699.997   [ 1  1  1]    0
+  82   Random    [    24 24  ]   -215.701    966.726   [ 1  1  1]    0
+  83   Random    [    24 24  ]   -212.436   1049.118   [ 1  1  1]    0
+  84   Random    [    24 24  ]   -215.168   1397.684   [ 1  1  1]    0
+  85   Random    [    24 24  ]   -214.403   1021.563   [ 1  1  1]    0
+  86   Random    [    24 24  ]   -217.219    899.362   [ 1  1  1]    0
+  87   Random    [    24 24  ]   -211.954    860.640   [ 1  1  1]    0
+  88 softmutate  [    24 24  ]   -214.381   1342.115   [ 1  1  1]    0
+  89 softmutate  [    24 24  ]   -216.268    967.245   [ 1  1  1]    0
+  90 softmutate  [    24 24  ]   -219.311    697.456   [ 1  1  1]    0
+  91 softmutate  [    24 24  ]   -214.758   1736.700   [ 1  1  1]    0
+  92 softmutate  [    24 24  ]   -215.051    702.426   [ 1  1  1]    0
+  93 softmutate  [    24 24  ]   -219.464   1003.347   [ 1  1  1]    0
+  94 softmutate  [    24 24  ]   -216.073   1072.511   [ 1  1  1]    0
+  95 softmutate  [    24 24  ]   -220.422    863.433   [ 1  1  1]    0
+  96 softmutate  [    24 24  ]   -217.404    972.395   [ 1  1  1]    0
+  97 softmutate  [    24 24  ]   -216.517    738.515   [ 1  1  1]    0
+  98 softmutate  [    24 24  ]   -218.940   1346.970   [ 1  1  1]    0
+  99 softmutate  [    24 24  ]   -215.054    744.313   [ 1  1  1]    0
+ 100 softmutate  [    24 24  ]   -214.480   2004.239   [ 1  1  1]    0
+ 101 softmutate  [    24 24  ]   -213.508   2484.145   [ 1  1  1]    0
+ 102 softmutate  [    24 24  ]   -217.708   2032.171   [ 1  1  1]    0
+ 103 softmutate  [    24 24  ]   -216.136    729.063   [ 1  1  1]    0
+ 104 softmutate  [    24 24  ]   -219.311   1044.165   [ 1  1  1]    0
+ 105 keptBest    [    24 24  ]   -221.484    889.655   [ 1  1  1]    0
+ 106 keptBest    [    24 24  ]   -219.889    925.902   [ 1  1  1]    0
+ 107 keptBest    [    24 24  ]   -219.328    932.900   [ 1  1  1]    0
+ 108 keptBest    [    24 24  ]   -219.057    823.639   [ 1  1  1]    0
+ 109 keptBest    [    24 24  ]   -218.506    963.950   [ 1  1  1]    0
+ 110 keptBest    [    24 24  ]   -216.375    709.494   [ 1  1  1]    0
+ 111 keptBest    [    24 24  ]   -216.090    748.223   [ 1  1  1]    0
+ 112 keptBest    [    24 24  ]   -215.671    822.709   [ 1  1  1]    0
+                           Local optimization finished                          
+
+                             SUMMARY of Generation 2                            
+                        Correlation coefficient = -0.1345                       
+                             Quasi entropy = 0.2496                             
+                         Proceeding to Selection Process                        
+
+                               VARIATION OPERATORS                              
+The fittest 60 percent of the population used to produce next generation
+    fraction of generation produced by heredity        :     0.57
+    fraction of generation produced by random          :     0.09
+    fraction of generation produced by softmutation    :     0.34
+    fraction of generation produced by permutation     :     0.00
+    fraction of generation produced by latmutation     :     0.00
+    fraction of generation produced by rotmutation     :     0.00
+    fraction of generation produced by transmutation   :     0.00
+                           Variation operators applied                          
+              28 structures produced by heredity     
+               5 structures produced by random       
+              17 structures produced by softmutation 
+               0 structures produced by permutation  
+               0 structures produced by latmutation  
+               8 structures kept as best from the previous generation
+               0 Seeds structures are added from Seeds/POSCARS_  3 
+                   Proceeding to the new generation relaxation                  
+               1 parallel calculations are performed simutaneously
+                                  Generation 3                                  
+  ID   Origin      Composition  Enthalpy(eV)  Volume(A^3)  KPOINTS  SYMMETRY
+ 113 Heredity    [    24 24  ]   -217.874   1069.793   [ 1  1  1]    0
+ 114 Heredity    [    24 24  ]   -217.549    999.522   [ 1  1  1]    0
+ 115 Heredity    [    24 24  ]   -218.831   1102.426   [ 1  1  1]    0
+ 116 Heredity    [    24 24  ]   -218.998   1019.805   [ 1  1  1]    0
+ 117 Heredity    [    24 24  ]   -217.318   1103.647   [ 1  1  1]    0
+ 118 Heredity    [    24 24  ]   -217.429    919.844   [ 1  1  1]    0
+ 119 Heredity    [    24 24  ]   -218.901   1207.924   [ 1  1  1]    0
+ 120 Heredity    [    24 24  ]   -219.071   1212.085   [ 1  1  1]    0
+ 121 Heredity    [    24 24  ]   -216.393   1624.836   [ 1  1  1]    0
+ 122 Heredity    [    24 24  ]   -218.993    887.787   [ 1  1  1]    0
+ 123 Heredity    [    24 24  ]   -217.448   1000.038   [ 1  1  1]    0
+ 124 Heredity    [    24 24  ]   -218.550   1086.397   [ 1  1  1]    0
+ 125 Heredity    [    24 24  ]   -217.144   1265.499   [ 1  1  1]    0
+ 126 Heredity    [    24 24  ]   -219.341   1247.339   [ 1  1  1]    0
+ 127 Heredity    [    24 24  ]   -217.445   1339.872   [ 1  1  1]    0
+ 128 Heredity    [    24 24  ]   -218.255   1068.333   [ 1  1  1]    0
+ 129 Heredity    [    24 24  ]   -218.475   1044.398   [ 1  1  1]    0
+ 130 Heredity    [    24 24  ]   -219.885   1201.924   [ 1  1  1]    0
+ 131 Heredity    [    24 24  ]   -218.446   1575.003   [ 1  1  1]    0
+ 132 Heredity    [    24 24  ]   -218.329   1571.201   [ 1  1  1]    0
+ 133 Heredity    [    24 24  ]   -218.375    995.607   [ 1  1  1]    0
+ 134 Heredity    [    24 24  ]   -220.949    988.809   [ 1  1  1]    0
+ 135 Heredity    [    24 24  ]   -215.925   1116.714   [ 1  1  1]    0
+ 136 Heredity    [    24 24  ]   -218.005   1601.294   [ 1  1  1]    0
+ 137 Heredity    [    24 24  ]   -217.227   1058.958   [ 1  1  1]    0
+ 138 Heredity    [    24 24  ]   -218.882   1079.028   [ 1  1  1]    0
+ 139 Heredity    [    24 24  ]   -217.838   1135.806   [ 1  1  1]    0
+ 140 Heredity    [    24 24  ]   -218.724   1637.922   [ 1  1  1]    0
+ 141   Random    [    24 24  ]   -207.566   1315.305   [ 1  1  1]    0
+ 142   Random    [    24 24  ]   -203.596    664.406   [ 1  1  1]    0
+ 143   Random    [    24 24  ]   -213.613    942.175   [ 1  1  1]    0
+ 144   Random    [    24 24  ]   -209.810   1052.761   [ 1  1  1]    0
+ 145   Random    [    24 24  ]   -209.250    898.255   [ 1  1  1]    0
+ 146 softmutate  [    24 24  ]   -218.692   2038.463   [ 1  1  1]    0
+ 147 softmutate  [    24 24  ]   -218.255   1350.617   [ 1  1  1]    0
+ 148 softmutate  [    24 24  ]   -219.938   1070.353   [ 1  1  1]    0
+ 149 softmutate  [    24 24  ]   -220.431    940.996   [ 1  1  1]    0
+ 150 softmutate  [    24 24  ]   -217.490    825.909   [ 1  1  1]    0
+ 151 softmutate  [    24 24  ]   -219.450   1017.891   [ 1  1  1]    0
+ 152 softmutate  [    24 24  ]   -216.190   1491.951   [ 1  1  1]    0
+ 153 softmutate  [    24 24  ]   -219.462   1021.727   [ 1  1  1]    0
+ 154 softmutate  [    24 24  ]   -217.688   1034.114   [ 1  1  1]    0
+ 155 softmutate  [    24 24  ]   -218.649   1187.192   [ 1  1  1]    0
+ 156 softmutate  [    24 24  ]   -217.202    857.644   [ 1  1  1]    0
+ 157 softmutate  [    24 24  ]   -216.537    985.224   [ 1  1  1]    0
+ 158 softmutate  [    24 24  ]   -216.065   1710.108   [ 1  1  1]    0
+ 159 softmutate  [    24 24  ]   -218.939   1181.299   [ 1  1  1]    0
+ 160 softmutate  [    24 24  ]   -217.050   1174.604   [ 1  1  1]    0
+ 161 softmutate  [    24 24  ]   -219.430   1265.128   [ 1  1  1]    0
+ 162 softmutate  [    24 24  ]   -218.936   1155.573   [ 1  1  1]    0
+ 163 keptBest    [    24 24  ]   -221.484    889.655   [ 1  1  1]    0
+ 164 keptBest    [    24 24  ]   -220.422    863.433   [ 1  1  1]    0
+ 165 keptBest    [    24 24  ]   -219.959   1088.388   [ 1  1  1]    0
+ 166 keptBest    [    24 24  ]   -219.889    925.902   [ 1  1  1]    0
+ 167 keptBest    [    24 24  ]   -219.464   1003.347   [ 1  1  1]    0
+ 168 keptBest    [    24 24  ]   -219.328    932.900   [ 1  1  1]    0
+ 169 keptBest    [    24 24  ]   -219.057    823.639   [ 1  1  1]    0
+ 170 keptBest    [    24 24  ]   -218.940   1346.970   [ 1  1  1]    0
+                           Local optimization finished                          
+
+                             SUMMARY of Generation 3                            
+                        Correlation coefficient = 0.0958                        
+                             Quasi entropy = 0.2180                             
+Maximum Generation number achieved: 3 
+This calculation runs  170 structural relaxations
+ |       
+ |       
+ |       
+ |+  +  +
+--o--o--o
+  1  2  3
+
+The lowest target fitness is -221.4841 eV
+
+            Job Finished at                 28-Feb-2025 20:15:23
