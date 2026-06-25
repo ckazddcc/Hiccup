@@ -138,7 +138,6 @@ class GenSeeds:
                         # self.seeds_db.write(c1, data={"formula": chemical_formula}, key_value_pairs={"uid": uid})
                 except:
                     pass
-
         return seeds_atoms, chemical_formula
 
 
@@ -163,7 +162,6 @@ class GenSeeds:
                     for seed in seed_list:
                         seeds_collect.write(seed, data={"formula": chemical_formula})
                     success_count += 1
-                    pass
                 else:
                     pass
         print(f"Gen Random Seeds Success count: {success_count}")

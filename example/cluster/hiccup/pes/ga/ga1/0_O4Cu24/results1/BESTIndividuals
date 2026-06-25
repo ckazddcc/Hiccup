@@ -1,0 +1,5 @@
+Gen   ID    Origin   Composition    Enthalpy   Volume  Density   Fitness   KPOINTS  SYMM  Q_entr A_order S_order
+                                      (eV)     (A^3)  (g/cm^3)
+  1   11   Random    [     4 24  ]  -113.275   654.146   4.034   -113.275 [ 1  1  1]   0  0.232  0.015  0.003
+  2   54 Heredity    [     4 24  ]  -113.306   639.173   4.128   -113.306 [ 1  1  1]   0  0.297  0.018  0.003
+  3  162 keptBest    [     4 24  ]  -113.306   639.173   4.128   -113.306 [ 1  1  1]   0  0.297  0.018  0.003

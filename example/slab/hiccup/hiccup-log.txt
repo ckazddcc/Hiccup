@@ -1,0 +1,340 @@
+Start Time: 2025-03-03 12:49:48
+=========================================== Iteration 1 ============================================
+Batch1: O17Cu40, O18Cu40, O19Cu40, O20Cu40
+Batch2: O21Cu40
+------------------------------------------ NN_1 Training -------------------------------------------
+GPU: 0  1  2  3
+Init model: /home/cchen/Hiccup/example/slab/init_model.pb
+2025-03-03 12:50:16 NN_1 is training ...
+------------------------------------------ GA_1 Searching ------------------------------------------
+gpu: 4
+Composition: 2_O17Cu40
+2025-03-03 12:50:18 GA_1 2_O17Cu40 is running ...
+
+gpu: 5
+Composition: 2_O18Cu40
+2025-03-03 12:50:20 GA_1 2_O18Cu40 is running ...
+
+gpu: 6
+Composition: 2_O19Cu40
+2025-03-03 12:50:22 GA_1 2_O19Cu40 is running ...
+
+gpu: 7
+Composition: 2_O20Cu40
+2025-03-03 12:50:24 GA_1 2_O20Cu40 is running ...
+
+-------------------------------------- NN_1 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.1460     0.1050     0.0191     0.0093     0.0830     0.0647
+  001      0.3420     0.0991     0.0413     0.0169     0.0711     0.0556
+  002      0.2140     0.2140     0.0247     0.0293     0.1100     0.0969
+  003      0.6020     0.3910     0.0819     0.0411     0.0967     0.2630
+Best Model: /home/cchen/slab/hiccup/dp/nn1/000/frozen_model.pb
+All models have been successfully frozen !!!
+-------------------------------------------GA_1 Searching-------------------------------------------
+gpu: 0
+Composition: 2_O21Cu40
+2025-03-03 13:13:27 GA_1 2_O21Cu40 is running ...
+
+--------------------------------------------GA_1 Results--------------------------------------------
+2025-03-03 13:26:27 All GA tasks have been completed successfully !!!
+Compositions: O17Cu40 O18Cu40 O19Cu40 O20Cu40 O21Cu40
+GA state: DONE  DONE  DONE  DONE  DONE
+-------------------------------------------Postprocessing-------------------------------------------
+Started screening structures based on energy and similarity...
+Composition: 2_O17Cu40
+Gathered: 138
+Filtered: 73
+
+Composition: 2_O18Cu40
+Gathered: 139
+Filtered: 100
+
+Composition: 2_O19Cu40
+Gathered: 140
+Filtered: 105
+
+Composition: 2_O20Cu40
+Gathered: 139
+Filtered: 108
+
+Composition: 2_O21Cu40
+Gathered: 133
+Filtered: 104
+
+Start wrong atom identification of the structure based on NN_1 evaluation...
+Accurate:  25  0.05
+Candidate: 17  0.03
+Failed:    448  0.91
+
+Start local coordination structure processing...
+Local Coordination Structure Processed: 98
+--------------------------------------------DFT Labeling--------------------------------------------
+Energy and structure filtering results:
+SP_1: 36
+SP_2: 62
+
+-Submit SP1-
+Submission Time: 2025-03-03 13:32:12
+/home/cchen/slab/hiccup/pes/ga/ga1/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Clean Data-
+Cleaning the initial database while waiting for the DFT calculation...
+Initial data set cleaning is complete !!!
+Data cleaning and analysis results can be found in /home/cchen/slab/hiccup/dp/nn1/dbs.
+
+-Get SP1 Results-
+Finish Time: 2025-03-03 13:45:43
+SP1 calculation results have been successfully downloaded to /home/cchen/slab/hiccup/pes/ga/ga1/sp_1.db !!!
+
+-Submit SP2-
+Submission Time: 2025-03-03 13:46:13
+/home/cchen/slab/hiccup/pes/ga/ga1/candidates_2.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit OPT-
+Submission Time: 2025-03-03 13:46:14
+/home/cchen/slab/hiccup/pes/ga/ga1/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit MD-
+Submission Time: 2025-03-03 13:46:14
+/home/cchen/slab/hiccup/pes/ga/ga1/to_run_md.db has been submitted to the cpu for DFT calculation.
+Waiting for the MD calculation results...
+
+New data set: /home/cchen/slab/hiccup/pes/ga/ga1/next_iter.db
+Data volume of new database: 6925
+
+=========================================== Iteration 2 ============================================
+Batch1: O17Cu40, O18Cu40, O19Cu40, O20Cu40
+Batch2: O21Cu40
+------------------------------------------ NN_2 Training -------------------------------------------
+GPU: 0  1  2  3
+Init model: /home/cchen/slab/hiccup/dp/nn1/000/frozen_model.pb
+2025-03-03 13:46:41 NN_2 is training ...
+------------------------------------------ GA_2 Searching ------------------------------------------
+gpu: 4
+Composition: 2_O17Cu40
+2025-03-03 13:46:43 GA_2 2_O17Cu40 is running ...
+
+gpu: 5
+Composition: 2_O18Cu40
+2025-03-03 13:46:45 GA_2 2_O18Cu40 is running ...
+
+gpu: 6
+Composition: 2_O19Cu40
+2025-03-03 13:46:47 GA_2 2_O19Cu40 is running ...
+
+gpu: 7
+Composition: 2_O20Cu40
+2025-03-03 13:46:49 GA_2 2_O20Cu40 is running ...
+
+-------------------------------------- NN_2 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.1780     0.0724     0.0216     0.0049     0.0532     0.0602
+  001      0.1290     0.1170     0.0127     0.0100     0.0669     0.0862
+  002      0.1160     0.0937     0.0096     0.0161     0.0708     0.0495
+  003      0.1320     0.1420     0.0125     0.0089     0.0716     0.1250
+Best Model: /home/cchen/slab/hiccup/dp/nn2/000/frozen_model.pb
+All models have been successfully frozen !!!
+-------------------------------------------GA_2 Searching-------------------------------------------
+gpu: 0
+Composition: 2_O21Cu40
+2025-03-03 14:09:51 GA_2 2_O21Cu40 is running ...
+
+--------------------------------------------GA_2 Results--------------------------------------------
+2025-03-03 14:22:51 All GA tasks have been completed successfully !!!
+Compositions: O17Cu40 O18Cu40 O19Cu40 O20Cu40 O21Cu40
+GA state: DONE  DONE  DONE  DONE  DONE
+-------------------------------------------Postprocessing-------------------------------------------
+Started screening structures based on energy and similarity...
+Composition: 2_O17Cu40
+Gathered: 140
+Filtered: 75
+
+Composition: 2_O18Cu40
+Gathered: 140
+Filtered: 94
+
+Composition: 2_O19Cu40
+Gathered: 138
+Filtered: 102
+
+Composition: 2_O20Cu40
+Gathered: 139
+Filtered: 103
+
+Composition: 2_O21Cu40
+Gathered: 136
+Filtered: 107
+
+Start wrong atom identification of the structure based on NN_2 evaluation...
+Accurate:  117  0.24
+Candidate: 207  0.43
+Failed:    157  0.33
+
+Start local coordination structure processing...
+Local Coordination Structure Processed: 207
+--------------------------------------------DFT Labeling--------------------------------------------
+Energy and structure filtering results:
+SP_1: 35
+SP_2: 172
+
+Checking the status of the SP_2, OPT_1, and MD jobs:
+SP_2: DONE, download: True
+OPT: DONE, download: False
+
+OPT: DONE, download: True
+OPT_LM: DONE, download: True
+
+MD: RUNNING, download: True
+MD_LM: KILLED, download: True
+
+-Submit SP1-
+Submission Time: 2025-03-03 14:39:12
+/home/cchen/slab/hiccup/pes/ga/ga2/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Clean Data-
+Cleaning the initial database while waiting for the DFT calculation...
+Initial data set cleaning is complete !!!
+Data cleaning and analysis results can be found in /home/cchen/slab/hiccup/dp/nn2/dbs.
+
+-Get SP1 Results-
+Finish Time: 2025-03-03 14:51:34
+SP1 calculation results have been successfully downloaded to /home/cchen/slab/hiccup/pes/ga/ga2/sp_1.db !!!
+
+-Submit SP2-
+Submission Time: 2025-03-03 14:54:21
+/home/cchen/slab/hiccup/pes/ga/ga2/candidates_2.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit OPT-
+Submission Time: 2025-03-03 14:54:21
+/home/cchen/slab/hiccup/pes/ga/ga2/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit MD-
+Submission Time: 2025-03-03 14:54:27
+/home/cchen/slab/hiccup/pes/ga/ga2/to_run_md.db has been submitted to the cpu for DFT calculation.
+Waiting for the MD calculation results...
+
+New data set: /home/cchen/slab/hiccup/pes/ga/ga2/next_iter.db
+Data volume of new database: 6923
+
+=========================================== Iteration 3 ============================================
+Batch1: O17Cu40, O18Cu40, O19Cu40, O20Cu40
+Batch2: O21Cu40
+------------------------------------------ NN_3 Training -------------------------------------------
+GPU: 0  1  2  3
+Init model: /home/cchen/slab/hiccup/dp/nn2/000/frozen_model.pb
+2025-03-03 14:54:53 NN_3 is training ...
+------------------------------------------ GA_3 Searching ------------------------------------------
+gpu: 4
+Composition: 2_O17Cu40
+2025-03-03 14:54:56 GA_3 2_O17Cu40 is running ...
+
+gpu: 5
+Composition: 2_O18Cu40
+2025-03-03 14:54:58 GA_3 2_O18Cu40 is running ...
+
+gpu: 6
+Composition: 2_O19Cu40
+2025-03-03 14:54:59 GA_3 2_O19Cu40 is running ...
+
+gpu: 7
+Composition: 2_O20Cu40
+2025-03-03 14:55:01 GA_3 2_O20Cu40 is running ...
+
+-------------------------------------- NN_3 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.1680     0.1400     0.0178     0.0186     0.0905     0.0597
+  001      0.1280     0.2480     0.0162     0.0394     0.0551     0.0741
+  002      0.1550     0.0776     0.0207     0.0054     0.0625     0.0626
+  003      0.1740     0.2250     0.0180     0.0267     0.0790     0.0878
+Best Model: /home/cchen/slab/hiccup/dp/nn3/002/frozen_model.pb
+All models have been successfully frozen !!!
+-------------------------------------------GA_3 Searching-------------------------------------------
+gpu: 0
+Composition: 2_O21Cu40
+2025-03-03 15:18:04 GA_3 2_O21Cu40 is running ...
+
+--------------------------------------------GA_3 Results--------------------------------------------
+2025-03-03 15:33:04 All GA tasks have been completed successfully !!!
+Compositions: O17Cu40 O18Cu40 O19Cu40 O20Cu40 O21Cu40
+GA state: DONE  DONE  DONE  DONE  DONE
+-------------------------------------------Postprocessing-------------------------------------------
+Started screening structures based on energy and similarity...
+Composition: 2_O17Cu40
+Gathered: 152
+Filtered: 70
+
+Composition: 2_O18Cu40
+Gathered: 152
+Filtered: 90
+
+Composition: 2_O19Cu40
+Gathered: 155
+Filtered: 114
+
+Composition: 2_O20Cu40
+Gathered: 156
+Filtered: 119
+
+Composition: 2_O21Cu40
+Gathered: 155
+Filtered: 122
+
+Start wrong atom identification of the structure based on NN_3 evaluation...
+Accurate:  224  0.43
+Candidate: 224  0.43
+Failed:    67  0.13
+
+Start local coordination structure processing...
+Local Coordination Structure Processed: 224
+--------------------------------------------DFT Labeling--------------------------------------------
+Energy and structure filtering results:
+SP_1: 36
+SP_2: 188
+
+Checking the status of the SP_2, OPT_1, and MD jobs:
+SP_2: DONE, download: True
+OPT: DONE, download: False
+
+OPT: DONE, download: True
+OPT_LM: DONE, download: True
+
+MD: RUNNING, download: True
+MD_LM: KILLED, download: True
+
+-Submit SP1-
+Submission Time: 2025-03-03 15:49:51
+/home/cchen/slab/hiccup/pes/ga/ga3/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Clean Data-
+Cleaning the initial database while waiting for the DFT calculation...
+Initial data set cleaning is complete !!!
+Data cleaning and analysis results can be found in /home/cchen/slab/hiccup/dp/nn3/dbs.
+
+-Get SP1 Results-
+Finish Time: 2025-03-03 16:02:24
+SP1 calculation results have been successfully downloaded to /home/cchen/slab/hiccup/pes/ga/ga3/sp_1.db !!!
+
+New data set: /home/cchen/slab/hiccup/pes/ga/ga3/next_iter.db
+Data volume of new database: 6923
+
+GPU: 0  1  2  3
+Init model: /home/cchen/slab/hiccup/dp/nn3/002/frozen_model.pb
+2025-03-03 16:05:23 NN_Ulitimate is training ...
+-------------------------------------- NN_4 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.2760     0.0995     0.0352     0.0133     0.0806     0.0386
+  001      0.1510     0.0726     0.0146     0.0015     0.0814     0.0699
+  002      0.2120     0.0924     0.0278     0.0076     0.0715     0.0673
+  003      0.1020     0.1240     0.0134     0.0023     0.0580     0.1200
+Best Model: /home/cchen/slab/hiccup/dp/nn4/001/frozen_model.pb
+All models have been successfully frozen !!!
+End Time: 2025-03-03 16:19:54
+All tasks have been completed successfully !!!

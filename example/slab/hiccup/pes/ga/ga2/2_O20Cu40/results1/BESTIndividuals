@@ -1,0 +1,5 @@
+Gen   ID    Origin   Composition    Enthalpy   Volume  Density   Fitness   KPOINTS  SYMM  Q_entr A_order S_order
+                                      (eV)     (A^3)  (g/cm^3)
+  1   43   Seeds     [    20 40  ]  -259.383  1229.961   3.864   -259.383 [ 1  1  1]   0  0.074  0.207  9.399
+  2   89 keptBest    [    20 40  ]  -259.383  1229.961   3.864   -259.274 [ 1  1  1]   0  0.074  0.207  9.399
+  3  137 keptBest    [    20 40  ]  -259.383  1229.961   3.864   -259.219 [ 1  1  1]   0  0.074  0.207  9.399

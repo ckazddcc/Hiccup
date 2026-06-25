@@ -1,0 +1,219 @@
+Start Time: 2025-02-28 18:48:23
+=========================================== Iteration 1 ============================================
+Batch1: O4Cu24, O8Cu24, O12Cu24, O18Cu24
+Batch2: O24Cu24
+------------------------------------------ NN_1 Training -------------------------------------------
+GPU: 0  1  2  3
+Init model: /home/cchen/Hiccup/example/cluster/cluster_init_model.pb
+2025-02-28 18:48:26 NN_1 is training ...
+------------------------------------------ GA_1 Searching ------------------------------------------
+gpu: 4
+Composition: 0_O4Cu24
+2025-02-28 18:48:29 GA_1 0_O4Cu24 is running ...
+
+gpu: 5
+Composition: 0_O8Cu24
+2025-02-28 18:48:31 GA_1 0_O8Cu24 is running ...
+
+gpu: 6
+Composition: 0_O12Cu24
+2025-02-28 18:48:33 GA_1 0_O12Cu24 is running ...
+
+gpu: 7
+Composition: 0_O18Cu24
+2025-02-28 18:48:35 GA_1 0_O18Cu24 is running ...
+
+-------------------------------------- NN_1 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.2480     0.1370     0.0325     0.0162     0.0340     0.0312
+  001      0.1500     0.1110     0.0194     0.0125     0.0376     0.0294
+  002      0.1180     0.5460     0.0162     0.0687     0.0296     0.0351
+  003      0.2240     0.3560     0.0294     0.0437     0.0354     0.0222
+Best Model: /home/cchen/cluster/hiccup/dp/nn1/001/frozen_model.pb
+All models have been successfully frozen !!!
+-------------------------------------------GA_1 Searching-------------------------------------------
+gpu: 0
+Composition: 0_O24Cu24
+2025-02-28 19:07:37 GA_1 0_O24Cu24 is running ...
+
+--------------------------------------------GA_1 Results--------------------------------------------
+2025-02-28 19:24:37 All GA tasks have been completed successfully !!!
+Compositions: O4Cu24 O8Cu24 O12Cu24 O18Cu24 O24Cu24
+GA state: DONE  DONE  DONE  DONE  DONE
+-------------------------------------------Postprocessing-------------------------------------------
+Started screening structures based on energy and similarity...
+Composition: 0_O4Cu24
+Gathered: 153
+Filtered: 138
+
+Composition: 0_O8Cu24
+Gathered: 154
+Filtered: 139
+
+Composition: 0_O12Cu24
+Gathered: 154
+Filtered: 139
+
+Composition: 0_O18Cu24
+Gathered: 155
+Filtered: 140
+
+Composition: 0_O24Cu24
+Gathered: 153
+Filtered: 138
+
+Start wrong atom identification of the structure based on NN_1 evaluation...
+Accurate:  596  0.86
+Candidate: 92  0.13
+Failed:    6  0.01
+
+--------------------------------------------DFT Labeling--------------------------------------------
+Energy and structure filtering results:
+SP_1: 11
+SP_2: 87
+
+-Submit SP1-
+Submission Time: 2025-02-28 19:30:24
+/home/cchen/cluster/hiccup/pes/ga/ga1/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Clean Data-
+Cleaning the initial database while waiting for the DFT calculation...
+Initial data set cleaning is complete !!!
+Data cleaning and analysis results can be found in /home/cchen/cluster/hiccup/dp/nn1/dbs.
+
+-Get SP1 Results-
+Finish Time: 2025-02-28 19:42:23
+SP1 calculation results have been successfully downloaded to /home/cchen/cluster/hiccup/pes/ga/ga1/sp_1.db !!!
+
+-Submit SP2-
+Submission Time: 2025-02-28 19:42:29
+/home/cchen/cluster/hiccup/pes/ga/ga1/candidates_2.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit OPT-
+Submission Time: 2025-02-28 19:42:29
+/home/cchen/cluster/hiccup/pes/ga/ga1/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Submit MD-
+Submission Time: 2025-02-28 19:42:29
+/home/cchen/cluster/hiccup/pes/ga/ga1/to_run_md.db has been submitted to the cpu for DFT calculation.
+Waiting for the MD calculation results...
+
+New data set: /home/cchen/cluster/hiccup/pes/ga/ga1/next_iter.db
+Data volume of new database: 507
+
+=========================================== Iteration 2 ============================================
+Batch1: O4Cu24, O8Cu24, O12Cu24, O18Cu24
+Batch2: O24Cu24
+------------------------------------------ NN_2 Training -------------------------------------------
+GPU: 0  1  2  3
+Init model: /home/cchen/cluster/hiccup/dp/nn1/001/frozen_model.pb
+2025-02-28 19:42:32 NN_2 is training ...
+------------------------------------------ GA_2 Searching ------------------------------------------
+gpu: 4
+Composition: 0_O4Cu24
+2025-02-28 19:42:34 GA_2 0_O4Cu24 is running ...
+
+gpu: 5
+Composition: 0_O8Cu24
+2025-02-28 19:42:36 GA_2 0_O8Cu24 is running ...
+
+gpu: 6
+Composition: 0_O12Cu24
+2025-02-28 19:42:38 GA_2 0_O12Cu24 is running ...
+
+gpu: 7
+Composition: 0_O18Cu24
+2025-02-28 19:42:40 GA_2 0_O18Cu24 is running ...
+
+-------------------------------------- NN_2 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.0318     0.0192     0.0030     0.0009     0.0220     0.0173
+  001      0.0327     0.0171     0.0048     0.0013     0.0190     0.0157
+  002      0.0359     0.0109     0.0048     0.0003     0.0230     0.0104
+  003      0.0331     0.0129     0.0034     0.0013     0.0245     0.0111
+Best Model: /home/cchen/cluster/hiccup/dp/nn2/002/frozen_model.pb
+All models have been successfully frozen !!!
+-------------------------------------------GA_2 Searching-------------------------------------------
+gpu: 0
+Composition: 0_O24Cu24
+2025-02-28 19:59:42 GA_2 0_O24Cu24 is running ...
+
+--------------------------------------------GA_2 Results--------------------------------------------
+2025-02-28 20:15:42 All GA tasks have been completed successfully !!!
+Compositions: O4Cu24 O8Cu24 O12Cu24 O18Cu24 O24Cu24
+GA state: DONE  DONE  DONE  DONE  DONE
+-------------------------------------------Postprocessing-------------------------------------------
+Started screening structures based on energy and similarity...
+Composition: 0_O4Cu24
+Gathered: 154
+Filtered: 139
+
+Composition: 0_O8Cu24
+Gathered: 156
+Filtered: 141
+
+Composition: 0_O12Cu24
+Gathered: 154
+Filtered: 139
+
+Composition: 0_O18Cu24
+Gathered: 155
+Filtered: 140
+
+Composition: 0_O24Cu24
+Gathered: 154
+Filtered: 139
+
+Start wrong atom identification of the structure based on NN_2 evaluation...
+Accurate:  698  1.0
+Candidate: 0  0.0
+Failed:    0  0.0
+
+--------------------------------------------DFT Labeling--------------------------------------------
+Energy and structure filtering results:
+SP_1: 13
+SP_2: 57
+
+Checking the status of the SP_2, OPT_1, and MD jobs:
+SP_2: DONE, download: True
+OPT: DONE, download: False
+
+OPT: DONE, download: True
+OPT_LM: DONE, download: True
+
+MD: DONE, download: True
+MD_LM: DONE, download: True
+
+-Submit SP1-
+Submission Time: 2025-02-28 21:13:51
+/home/cchen/cluster/hiccup/pes/ga/ga2/candidates_1.db has been submitted to the cpu for DFT calculation.
+Waiting for the SP calculation results...
+
+-Clean Data-
+Cleaning the initial database while waiting for the DFT calculation...
+Initial data set cleaning is complete !!!
+Data cleaning and analysis results can be found in /home/cchen/cluster/hiccup/dp/nn2/dbs.
+
+-Get SP1 Results-
+Finish Time: 2025-02-28 21:31:47
+SP1 calculation results have been successfully downloaded to /home/cchen/cluster/hiccup/pes/ga/ga2/sp_1.db !!!
+
+New data set: /home/cchen/cluster/hiccup/pes/ga/ga2/next_iter.db
+Data volume of new database: 507
+
+GPU: 0  1  2  3
+Init model: /home/cchen/cluster/hiccup/dp/nn2/002/frozen_model.pb
+2025-02-28 21:32:12 NN_Ulitimate is training ...
+-------------------------------------- NN_3 Training Results ---------------------------------------
+model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
+  000      0.0147     0.0088     0.0007     0.0011     0.0127     0.0069
+  001      0.0124     0.0169     0.0006     0.0008     0.0112     0.0152
+  002      0.0202     0.0112     0.0007     0.0001     0.0189     0.0110
+  003      0.0121     0.0084     0.0008     0.0006     0.0107     0.0068
+Best Model: /home/cchen/cluster/hiccup/dp/nn3/003/frozen_model.pb
+All models have been successfully frozen !!!
+End Time: 2025-02-28 21:46:42
+All tasks have been completed successfully !!!

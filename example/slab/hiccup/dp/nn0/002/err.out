@@ -1,0 +1,92 @@
+2025-02-21 21:36:24.275023: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-02-21 21:36:24.275110: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-02-21 21:36:24.275133: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-02-21 21:36:24.289132: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/tensorflow/python/compat/v2_compat.py:108: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:root:To get the best performance, it is recommended to adjust the number of threads by setting the environment variables OMP_NUM_THREADS, TF_INTRA_OP_PARALLELISM_THREADS, and TF_INTER_OP_PARALLELISM_THREADS. See https://deepmd.rtfd.io/parallelism/ for more information.
+DEEPMD INFO    Calculate neighbor statistics... (add --skip-neighbor-stat to skip this step)
+2025-02-21 21:36:38.608547: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:88:00.0, compute capability: 8.9
+2025-02-21 21:36:38.639761: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:382] MLIR V1 optimization pass is not enabled
+2025-02-21 21:36:38.907615: I tensorflow/core/util/cuda_solvers.cc:179] Creating GpuSolver handles for stream 0x561a15b63030
+DEEPMD INFO    training data with min nbor dist: 1.5843505669600195
+DEEPMD INFO    training data with max nbor size: [27 54]
+DEEPMD INFO     _____               _____   __  __  _____           _     _  _   
+DEEPMD INFO    |  __ \             |  __ \ |  \/  ||  __ \         | |   (_)| |  
+DEEPMD INFO    | |  | |  ___   ___ | |__) || \  / || |  | | ______ | | __ _ | |_ 
+DEEPMD INFO    | |  | | / _ \ / _ \|  ___/ | |\/| || |  | ||______|| |/ /| || __|
+DEEPMD INFO    | |__| ||  __/|  __/| |     | |  | || |__| |        |   < | || |_ 
+DEEPMD INFO    |_____/  \___| \___||_|     |_|  |_||_____/         |_|\_\|_| \__|
+DEEPMD INFO    Please read and cite:
+DEEPMD INFO    Wang, Zhang, Han and E, Comput.Phys.Comm. 228, 178-184 (2018)
+DEEPMD INFO    Zeng et al, J. Chem. Phys., 159, 054801 (2023)
+DEEPMD INFO    See https://deepmd.rtfd.io/credits/ for details.
+DEEPMD INFO    installed to:         /usr/local
+DEEPMD INFO    source :              
+DEEPMD INFO    source brach:         HEAD
+DEEPMD INFO    source commit:        e08ccaf
+DEEPMD INFO    source commit at:     2024-04-06 23:39:30 +0000
+DEEPMD INFO    build float prec:     double
+DEEPMD INFO    build variant:        cuda
+DEEPMD INFO    build with tf inc:    /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/tensorflow/include/;/home/fwtop/Public/deepmd-kit/include
+DEEPMD INFO    build with tf lib:    
+DEEPMD INFO    ---Summary of the training---------------------------------------
+DEEPMD INFO    running on:           centos
+DEEPMD INFO    computing device:     gpu:0
+DEEPMD INFO    CUDA_VISIBLE_DEVICES: 2
+DEEPMD INFO    Count of visible GPU: 1
+DEEPMD INFO    num_intra_threads:    0
+DEEPMD INFO    num_inter_threads:    0
+DEEPMD INFO    -----------------------------------------------------------------
+2025-02-21 21:36:44.843293: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:88:00.0, compute capability: 8.9
+DEEPMD INFO    training without frame parameter
+DEEPMD INFO    data stating... (this step may take long time)
+DEEPMD INFO    built lr
+DEEPMD INFO    built network
+DEEPMD INFO    built training
+WARNING:root:To get the best performance, it is recommended to adjust the number of threads by setting the environment variables OMP_NUM_THREADS, TF_INTRA_OP_PARALLELISM_THREADS, and TF_INTER_OP_PARALLELISM_THREADS. See https://deepmd.rtfd.io/parallelism/ for more information.
+2025-02-21 21:36:53.197569: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:88:00.0, compute capability: 8.9
+DEEPMD INFO    initialize model from scratch
+DEEPMD INFO    start training at lr 1.00e-03 (== 1.00e-03), decay_step 2000, decay_rate 0.017951, final lr will be 3.22e-07
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/deepmd/train/trainer.py:1194: py_func (from tensorflow.python.ops.script_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+tf.py_func is deprecated in TF V2. Instead, there are two
+    options available in V2.
+    - tf.py_function takes a python function which manipulates tf eager
+    tensors instead of numpy arrays. It's easy to convert a tf eager tensor to
+    an ndarray (just call tensor.numpy()) but having access to eager tensors
+    means `tf.py_function`s can use accelerators such as GPUs as well as
+    being differentiable using a gradient tape.
+    - tf.numpy_function maintains the semantics of the deprecated tf.py_func
+    (it is not differentiable, and manipulates numpy arrays). It drops the
+    stateful argument making all functions stateful.
+    
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/deepmd/train/trainer.py:1194: py_func (from tensorflow.python.ops.script_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+tf.py_func is deprecated in TF V2. Instead, there are two
+    options available in V2.
+    - tf.py_function takes a python function which manipulates tf eager
+    tensors instead of numpy arrays. It's easy to convert a tf eager tensor to
+    an ndarray (just call tensor.numpy()) but having access to eager tensors
+    means `tf.py_function`s can use accelerators such as GPUs as well as
+    being differentiable using a gradient tape.
+    - tf.numpy_function maintains the semantics of the deprecated tf.py_func
+    (it is not differentiable, and manipulates numpy arrays). It drops the
+    stateful argument making all functions stateful.
+    
+2025-02-21 21:37:01.195937: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:88:00.0, compute capability: 8.9
+DEEPMD INFO    batch    1000 training time 26.72 s, testing time 0.05 s, total wall time 29.49 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch    2000 training time 17.58 s, testing time 0.03 s, total wall time 18.38 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch    3000 training time 16.81 s, testing time 0.03 s, total wall time 17.32 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch    4000 training time 15.11 s, testing time 0.03 s, total wall time 15.60 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch    5000 training time 15.81 s, testing time 0.04 s, total wall time 16.30 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    average training time: 0.0163 s/batch (exclude first 1000 batches)
+DEEPMD INFO    finished training
+DEEPMD INFO    wall time: 99.944 s

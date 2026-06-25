@@ -1,0 +1,23 @@
+Code for generating 2D crystals used in USPEX
+Written by H. T. Stokes, Adapted by Q Zhu
+Random_cell2d
+Space-group symmetry:   9
+Area of primitive unit cell:     73.84
+Height of layer:      2.00
+Number of types of atoms:  2
+Number of atoms of each type:   1   8
+Minimum distance between each type of atom:
+   0.792   0.854   0.854   0.917
+Print symmetry operation:  0
+cell parameters:   8.59300   8.59300   2.00000  90.00000  90.00000  90.08000
+  8 atomic parameters
+  9 atoms
+  1 1   0.50000   0.50000   0.57871 1(0,0,1)
+  2 2   0.00000   0.00000   0.22520 2(0,0,1)
+  3 2   0.26792   0.01819   0.78841 3(1,1,0) 4(-1,1,0) 5(0,0,1)
+  4 2   0.73208   0.98181   0.78841 3(-1,-1,0) 4(1,-1,0) 5(0,0,1)
+  5 2   0.98181   0.73208   0.78841 3(-1,-1,0) 4(-1,1,0) 5(0,0,1)
+  6 2   0.01819   0.26792   0.78841 3(1,1,0) 4(1,-1,0) 5(0,0,1)
+  7 2   0.33039   0.33039   0.70601 6(1,1,0) 7(0,0,1)
+  8 2   0.66961   0.66961   0.70601 6(-1,-1,0) 7(0,0,1)
+  9 2   0.50000   0.50000   0.05358 8(0,0,1)

@@ -1,0 +1,13 @@
+ispace2d_count
+17
+space2d_label
+"p1" "p2" "pm" "pg" "cm" "p2mm" "p2mg" "p2gg" "c2mm" "p4" "p4mm" "p4gm" 
+"p3" "p3m1" "p31m" "p6" "p6mm"
+ispace2d_inter_setting
+1 5 347 348 438 83 86 90 93 145 172 173 232 248 249 264 279
+ispace2d_wyckoff_pointer
+1 2 7 10 11 13 22 26 29 35 39 46 50 54 59 63 67 73
+ispace2d_wyckoff3d
+1 1 3 2 4 5 1 2 3 1 1 2 1 2 3 4 5 6 7 8 9 1 2 3 4 1 2 3 1 2 3 4 5 6 1 2 3 4 1 
+2 3 5 6 4 7 1 2 3 4 1 2 3 4 1 2 3 4 5 1 2 3 4 1 2 3 4 1 2 3 4 5 6
+end

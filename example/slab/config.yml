@@ -1,0 +1,56 @@
+BASE:
+  Compositions: [[17, 40],[18,40],[19,40],[20,40],[21,40]] # 目标组分
+  Elements: [O, Cu] # 元素
+  Gpu: [0,1,2,3,4,5,6,7] # 可用GPU编号
+  Iterations: 3 # 迭代次数
+  Templates: /home/cchen/Hiccup/template # 模板路径
+  Workdir: /home/cchen/slab/hiccup # 工作目录路径
+# CPU配置
+CPU:
+  CPU IP: 202.120.101.188
+  CPU Password: md188
+  CPU Port: 22
+  CPU Username: materdesign
+  CPU Working Directory: /home/materdesign/cc/test4
+# 采样器配置
+SAMPLING:
+  GA:
+    RANDOMSEEDS:
+      Activate: False # 是否启用随机种子生成器，若不启用必须要有随机种子文件（False）
+      Dimension: 3 # 0: cluster, 3: bulk
+      Random Seeds Num: 20 # 随机种子数(100)
+      Random Seeds Path: /home/cchen/Hiccup/example/slab/random_seeds.db # 随机种子路径
+      Init Seeds Path: /home/cchen/Hiccup/example/slab/init_seeds.db # 初始种子路径
+    USPEX:
+      Dimension: 2 # 1:cluster, 2: surface, 3: bulk
+      Generation Num: 3 # GA 代数
+      Init Pop Size: 40 # 第一代中的种群数
+      Pop Size: 40 # 每一代的种群数
+      Opt Flag: False # 是否用NN对结构优化 False/True/Auto（Auto）
+      Substrate: /home/cchen/Hiccup/example/slab/POSCAR_SUBSTRATE # 基底结构
+    POSTPROCESSING:
+      # NNs评估器：accurate, candidate, failed
+      Force Error Lower: 0.1
+      Force Error Upper: 0.2
+      # Energy&Force Filter, sp -> dft opt
+      Max Filter Ratio: 0.8
+      Max Filter Num: 50
+      # 用最优模型清洗坏点
+      Energy Filter: 0.1
+      Force Filter: 2
+      # lcs处理
+      LCS Process: True # 是否进行LCS处理
+      Type: slab # slab/cluster
+      LCS Layers Num: 3 # lcs划分层数，针对slab
+      LCS Radius: 5.0 # lcs半径，针对cluster
+      # AIMD
+      AIMD: True # 是否进行AIMD增加连续采样
+      MD Max Filter Ratio: 0.2 # 需要MD采样的比例
+      MD Max Filter Num: 10 # 需要MD采样的数量
+      MD Init Data: /home/cchen/Hiccup/example/slab/init_md.db # MD初始数据路径
+# 训练器配置
+TRAINER:
+  Deepmd:
+    Data Path: /home/cchen/Hiccup/example/slab/init_database.db # 初始数据路径
+    Initial Model: /home/cchen/Hiccup/example/slab/init_model.pb # 初始模型路径（None）
+    Train Ratio: 0.9 # 训练集比例（0.8）

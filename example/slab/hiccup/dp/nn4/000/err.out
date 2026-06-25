@@ -1,0 +1,142 @@
+2025-03-03 16:05:24.726676: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-03-03 16:05:24.726730: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-03-03 16:05:24.726747: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-03-03 16:05:24.736752: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/tensorflow/python/compat/v2_compat.py:108: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:root:To get the best performance, it is recommended to adjust the number of threads by setting the environment variables OMP_NUM_THREADS, TF_INTRA_OP_PARALLELISM_THREADS, and TF_INTER_OP_PARALLELISM_THREADS. See https://deepmd.rtfd.io/parallelism/ for more information.
+DEEPMD INFO    Calculate neighbor statistics... (add --skip-neighbor-stat to skip this step)
+2025-03-03 16:05:31.535048: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:31.548689: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:382] MLIR V1 optimization pass is not enabled
+2025-03-03 16:05:31.661935: I tensorflow/core/util/cuda_solvers.cc:179] Creating GpuSolver handles for stream 0x562da033b690
+DEEPMD INFO    training data with min nbor dist: 1.2420494085453366
+DEEPMD INFO    training data with max nbor size: [27 60]
+DEEPMD INFO     _____               _____   __  __  _____           _     _  _   
+DEEPMD INFO    |  __ \             |  __ \ |  \/  ||  __ \         | |   (_)| |  
+DEEPMD INFO    | |  | |  ___   ___ | |__) || \  / || |  | | ______ | | __ _ | |_ 
+DEEPMD INFO    | |  | | / _ \ / _ \|  ___/ | |\/| || |  | ||______|| |/ /| || __|
+DEEPMD INFO    | |__| ||  __/|  __/| |     | |  | || |__| |        |   < | || |_ 
+DEEPMD INFO    |_____/  \___| \___||_|     |_|  |_||_____/         |_|\_\|_| \__|
+DEEPMD INFO    Please read and cite:
+DEEPMD INFO    Wang, Zhang, Han and E, Comput.Phys.Comm. 228, 178-184 (2018)
+DEEPMD INFO    Zeng et al, J. Chem. Phys., 159, 054801 (2023)
+DEEPMD INFO    See https://deepmd.rtfd.io/credits/ for details.
+DEEPMD INFO    installed to:         /usr/local
+DEEPMD INFO    source :              
+DEEPMD INFO    source brach:         HEAD
+DEEPMD INFO    source commit:        e08ccaf
+DEEPMD INFO    source commit at:     2024-04-06 23:39:30 +0000
+DEEPMD INFO    build float prec:     double
+DEEPMD INFO    build variant:        cuda
+DEEPMD INFO    build with tf inc:    /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/tensorflow/include/;/home/fwtop/Public/deepmd-kit/include
+DEEPMD INFO    build with tf lib:    
+DEEPMD INFO    ---Summary of the training---------------------------------------
+DEEPMD INFO    running on:           centos
+DEEPMD INFO    computing device:     gpu:0
+DEEPMD INFO    CUDA_VISIBLE_DEVICES: 0
+DEEPMD INFO    Count of visible GPU: 1
+DEEPMD INFO    num_intra_threads:    0
+DEEPMD INFO    num_inter_threads:    0
+DEEPMD INFO    -----------------------------------------------------------------
+2025-03-03 16:05:35.876499: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+DEEPMD INFO    training without frame parameter
+2025-03-03 16:05:36.281996: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:36.326432: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:36.357826: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:36.391454: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:36.423141: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+2025-03-03 16:05:36.459223: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+DEEPMD INFO    built lr
+DEEPMD INFO    built network
+DEEPMD INFO    built training
+WARNING:root:To get the best performance, it is recommended to adjust the number of threads by setting the environment variables OMP_NUM_THREADS, TF_INTRA_OP_PARALLELISM_THREADS, and TF_INTER_OP_PARALLELISM_THREADS. See https://deepmd.rtfd.io/parallelism/ for more information.
+2025-03-03 16:05:39.635698: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+DEEPMD INFO    initialize training from the frozen model
+DEEPMD INFO    start training at lr 1.00e-03 (== 1.00e-03), decay_step 2000, decay_rate 0.668972, final lr will be 4.32e-08
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/deepmd/train/trainer.py:1194: py_func (from tensorflow.python.ops.script_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+tf.py_func is deprecated in TF V2. Instead, there are two
+    options available in V2.
+    - tf.py_function takes a python function which manipulates tf eager
+    tensors instead of numpy arrays. It's easy to convert a tf eager tensor to
+    an ndarray (just call tensor.numpy()) but having access to eager tensors
+    means `tf.py_function`s can use accelerators such as GPUs as well as
+    being differentiable using a gradient tape.
+    - tf.numpy_function maintains the semantics of the deprecated tf.py_func
+    (it is not differentiable, and manipulates numpy arrays). It drops the
+    stateful argument making all functions stateful.
+    
+WARNING:tensorflow:From /home/fwtop/Public/deepmd-kit/lib/python3.11/site-packages/deepmd/train/trainer.py:1194: py_func (from tensorflow.python.ops.script_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+tf.py_func is deprecated in TF V2. Instead, there are two
+    options available in V2.
+    - tf.py_function takes a python function which manipulates tf eager
+    tensors instead of numpy arrays. It's easy to convert a tf eager tensor to
+    an ndarray (just call tensor.numpy()) but having access to eager tensors
+    means `tf.py_function`s can use accelerators such as GPUs as well as
+    being differentiable using a gradient tape.
+    - tf.numpy_function maintains the semantics of the deprecated tf.py_func
+    (it is not differentiable, and manipulates numpy arrays). It drops the
+    stateful argument making all functions stateful.
+    
+2025-03-03 16:05:43.467507: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1886] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22283 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:84:00.0, compute capability: 8.9
+DEEPMD INFO    batch    1000 training time 16.61 s, testing time 0.04 s, total wall time 18.12 s
+DEEPMD INFO    batch    2000 training time 14.99 s, testing time 0.03 s, total wall time 15.28 s
+DEEPMD INFO    batch    3000 training time 14.79 s, testing time 0.04 s, total wall time 15.08 s
+DEEPMD INFO    batch    4000 training time 14.67 s, testing time 0.04 s, total wall time 14.97 s
+DEEPMD INFO    batch    5000 training time 14.50 s, testing time 0.03 s, total wall time 14.79 s
+DEEPMD INFO    batch    6000 training time 14.42 s, testing time 0.03 s, total wall time 14.71 s
+DEEPMD INFO    batch    7000 training time 14.08 s, testing time 0.03 s, total wall time 14.36 s
+DEEPMD INFO    batch    8000 training time 13.78 s, testing time 0.03 s, total wall time 14.06 s
+DEEPMD INFO    batch    9000 training time 14.27 s, testing time 0.03 s, total wall time 14.55 s
+DEEPMD INFO    batch   10000 training time 13.90 s, testing time 0.03 s, total wall time 14.19 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch   11000 training time 14.33 s, testing time 0.04 s, total wall time 14.93 s
+DEEPMD INFO    batch   12000 training time 14.08 s, testing time 0.03 s, total wall time 14.36 s
+DEEPMD INFO    batch   13000 training time 13.83 s, testing time 0.03 s, total wall time 14.11 s
+DEEPMD INFO    batch   14000 training time 13.78 s, testing time 0.03 s, total wall time 14.06 s
+DEEPMD INFO    batch   15000 training time 14.37 s, testing time 0.03 s, total wall time 14.65 s
+DEEPMD INFO    batch   16000 training time 13.85 s, testing time 0.03 s, total wall time 14.13 s
+DEEPMD INFO    batch   17000 training time 14.13 s, testing time 0.03 s, total wall time 14.40 s
+DEEPMD INFO    batch   18000 training time 14.26 s, testing time 0.03 s, total wall time 14.54 s
+DEEPMD INFO    batch   19000 training time 13.63 s, testing time 0.03 s, total wall time 13.90 s
+DEEPMD INFO    batch   20000 training time 13.92 s, testing time 0.03 s, total wall time 14.20 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch   21000 training time 14.25 s, testing time 0.04 s, total wall time 14.73 s
+DEEPMD INFO    batch   22000 training time 13.90 s, testing time 0.03 s, total wall time 14.19 s
+DEEPMD INFO    batch   23000 training time 13.95 s, testing time 0.03 s, total wall time 14.22 s
+DEEPMD INFO    batch   24000 training time 13.98 s, testing time 0.03 s, total wall time 14.26 s
+DEEPMD INFO    batch   25000 training time 13.84 s, testing time 0.03 s, total wall time 14.11 s
+DEEPMD INFO    batch   26000 training time 13.84 s, testing time 0.03 s, total wall time 14.12 s
+DEEPMD INFO    batch   27000 training time 13.71 s, testing time 0.03 s, total wall time 13.99 s
+DEEPMD INFO    batch   28000 training time 14.04 s, testing time 0.03 s, total wall time 14.32 s
+DEEPMD INFO    batch   29000 training time 13.92 s, testing time 0.03 s, total wall time 14.21 s
+DEEPMD INFO    batch   30000 training time 13.98 s, testing time 0.03 s, total wall time 14.25 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch   31000 training time 13.97 s, testing time 0.03 s, total wall time 14.42 s
+DEEPMD INFO    batch   32000 training time 13.67 s, testing time 0.03 s, total wall time 13.94 s
+DEEPMD INFO    batch   33000 training time 14.00 s, testing time 0.02 s, total wall time 14.27 s
+DEEPMD INFO    batch   34000 training time 13.86 s, testing time 0.03 s, total wall time 14.13 s
+DEEPMD INFO    batch   35000 training time 14.05 s, testing time 0.03 s, total wall time 14.32 s
+DEEPMD INFO    batch   36000 training time 14.20 s, testing time 0.03 s, total wall time 14.47 s
+DEEPMD INFO    batch   37000 training time 13.81 s, testing time 0.03 s, total wall time 14.08 s
+DEEPMD INFO    batch   38000 training time 13.86 s, testing time 0.03 s, total wall time 14.14 s
+DEEPMD INFO    batch   39000 training time 13.83 s, testing time 0.03 s, total wall time 14.11 s
+DEEPMD INFO    batch   40000 training time 13.75 s, testing time 0.02 s, total wall time 14.03 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    batch   41000 training time 13.92 s, testing time 0.03 s, total wall time 14.37 s
+DEEPMD INFO    batch   42000 training time 13.89 s, testing time 0.03 s, total wall time 14.17 s
+DEEPMD INFO    batch   43000 training time 13.96 s, testing time 0.03 s, total wall time 14.23 s
+DEEPMD INFO    batch   44000 training time 13.94 s, testing time 0.03 s, total wall time 14.22 s
+DEEPMD INFO    batch   45000 training time 13.84 s, testing time 0.03 s, total wall time 14.12 s
+DEEPMD INFO    batch   46000 training time 13.75 s, testing time 0.03 s, total wall time 14.02 s
+DEEPMD INFO    batch   47000 training time 14.22 s, testing time 0.03 s, total wall time 14.49 s
+DEEPMD INFO    batch   48000 training time 13.93 s, testing time 0.03 s, total wall time 14.21 s
+DEEPMD INFO    batch   49000 training time 14.04 s, testing time 0.03 s, total wall time 14.32 s
+DEEPMD INFO    batch   50000 training time 14.63 s, testing time 0.03 s, total wall time 14.97 s
+DEEPMD INFO    saved checkpoint model.ckpt
+DEEPMD INFO    average training time: 0.0140 s/batch (exclude first 1000 batches)
+DEEPMD INFO    finished training
+DEEPMD INFO    wall time: 722.439 s
