@@ -2,7 +2,7 @@
 
 Version 2.0
 
-Genetic Algorithm-Driven Neural Network Potential Trainer.
+Hiccup is an automated platform for training high-performance neural network potentials. The name “Hiccup” is inspired by the protagonist of the movie How to Train Your Dragon. It reflects our vision of transforming the expert-dependent and challenging task of training neural network potentials—analogous to “training a dragon”—into an automated and high-performance workflow.
 
 ## Introduction
 
