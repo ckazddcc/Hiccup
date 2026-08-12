@@ -2,7 +2,7 @@
 while :
 do
 {
-  cp /home/cchen/Hiccup/template/uspex/mace_opt.py .
+  cp /home/chencheng/Hiccup/template/uspex/mace_opt.py .
 	/home/cchen/apps/deepmd-kit/bin/python mace_opt.py $1
 
 	if [ -f "energy.txt" ]; then

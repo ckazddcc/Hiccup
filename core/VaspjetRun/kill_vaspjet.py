@@ -2,12 +2,13 @@ import os
 
 
 def get_jobids(directory):
+    """Collect Slurm job IDs from vaspdir subdirectories."""
     jobids = []
     part_files = []
-    for root, dirs, files in os.walk(directory):  # 遍历指定目录及其子目录
+    for root, dirs, files in os.walk(directory):  # Walk directory and subdirectories
         for dir in dirs:
-            if dir.startswith('vaspdir'):  # 判断文件是否以'vaspdir'开头
-                part_files.append(os.path.join(root, dir))  # 获取文件的完整路径
+            if dir.startswith('vaspdir'):  # Check if directory starts with 'vaspdir'
+                part_files.append(os.path.join(root, dir))  # Get full path
 
     for file in part_files:
         slum_job_info_path = os.path.join(str(file), 'slurm_job_info.txt')
@@ -21,6 +22,7 @@ def get_jobids(directory):
 
 
 def kill_job(directory):
+    """Cancel all Slurm VASP jobs found under the given directory."""
     jobids = get_jobids(directory)
     for jobid in jobids:
         os.system(f'scancel {jobid}')

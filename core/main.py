@@ -13,7 +13,7 @@ def main():
     parser = argparse.ArgumentParser(description="Here is Hiccup!")
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
-    # 为 run 命令创建子解析器
+    # Create subparser for the 'run' command
     parser_run = subparsers.add_parser(
         "run",
         help="Run the Hiccup fow with specified configurations.")
@@ -25,7 +25,7 @@ def main():
         required=True
     )
 
-    # 为 eva 命令创建子解析器
+    # Create subparser for the 'eva' command
     parser_eva = subparsers.add_parser(
         "eva",
         help="Evaluate the dp model with specified db file.")
@@ -72,7 +72,7 @@ def main():
         default="Model"
     )
 
-    # 为 compos 命令创建子解析器
+    # Create subparser for the 'compos' command
     parser_compos = subparsers.add_parser(
         "compos",
         help="Sample the composition with specified configurations.")

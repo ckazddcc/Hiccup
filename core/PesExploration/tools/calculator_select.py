@@ -1,6 +1,7 @@
 """
-给定数据库文件，评估最优dp模型和mace模型的性能
-1. 根据排序能力选择模型
+Evaluate and select the best-performing model (DP or MACE) for a given dataset.
+
+Selection is based on force RMSE against DFT reference data.
 """
 
 import os
@@ -21,6 +22,7 @@ import numpy as np
 import time
 
 def energy_rmse(y_pred, y_true):
+    """Compute the RMSE between predicted and true energies."""
     y_pred = np.asarray(y_pred, dtype=float)
     y_true = np.asarray(y_true, dtype=float)
 
@@ -30,9 +32,11 @@ def energy_rmse(y_pred, y_true):
     return np.sqrt(np.mean((y_pred - y_true) ** 2))
 
 def forces_rmse(pred_list, true_list):
-    """
-    pred_list, true_list:
-        list of arrays, each array shape (n_atoms_i, 3)
+    """Compute the overall RMSE between predicted and true forces.
+
+    Args:
+        pred_list: list of arrays, each with shape (n_atoms_i, 3).
+        true_list: list of arrays, each with shape (n_atoms_i, 3).
     """
 
     total_sq_error = 0.0
@@ -52,11 +56,26 @@ def forces_rmse(pred_list, true_list):
     return np.sqrt(total_sq_error / total_count)
 
 def calculator_select(workdir, db_path, dp_model_path, gpu_id):
-    # 设置GPU
+    """Compare DP and MACE models on a dataset and return the better one.
+
+    Randomly samples up to 5000 structures from the database, computes force
+    RMSE for both models against DFT references, and returns the model name
+    with the lower RMSE.
+
+    Args:
+        workdir: temporary working directory (created and removed internally).
+        db_path: path to the ASE database with DFT reference data.
+        dp_model_path: path to the frozen DP model file.
+        gpu_id: GPU device index for MACE inference.
+
+    Returns:
+        "DP" if the DP model has lower force RMSE, otherwise "MACE".
+    """
+    # Set GPU
     if os.path.exists(workdir):
         shutil.rmtree(workdir)
     os.makedirs(workdir)
-    # 读取数据库
+    # Read database
     db = connect(db_path)
     new_db = connect(os.path.join(workdir, "selected.db"))
     if db.count() <= 5000:
@@ -67,7 +86,7 @@ def calculator_select(workdir, db_path, dp_model_path, gpu_id):
         row = db.get(id=i)
         new_db.write(atoms=row.toatoms(), data=row.data, key_value_pairs=row.key_value_pairs)
 
-    # 获取dp和dft能量
+    # Get DP and DFT energies
     formula_dict = {}
     dp_calculator = DP(model=dp_model_path)
     dp_forces = []
@@ -83,7 +102,7 @@ def calculator_select(workdir, db_path, dp_model_path, gpu_id):
         atoms.set_calculator(dp_calculator)
         dp_forces.append(atoms.get_forces())
 
-    # 获取mace能量
+    # Get MACE energies
     mace_forces = []
     script_directory = Path(__file__).parent
     model_path = os.path.join(script_directory, "mace-mpa-0-medium-float32.model")
@@ -94,14 +113,14 @@ def calculator_select(workdir, db_path, dp_model_path, gpu_id):
         atoms.calc = mace_calculator
         mace_forces.append(atoms.get_forces())
 
-    # 计算rmse
+    # Compute RMSE
     dp_rmse_forces = forces_rmse(dp_forces, dft_forces)
     mace_rmse_forces = forces_rmse(mace_forces, dft_forces)
     print(f"dp_rmse_forces: {dp_rmse_forces}, mace_rmse_forces: {mace_rmse_forces}")
 
-    # 删除临时文件夹
+    # Remove temporary directory
     shutil.rmtree(workdir)
-    # 返回结果
+    # Return results
     if dp_rmse_forces - mace_rmse_forces <= 0:
         return "DP"
     else:
@@ -110,9 +129,9 @@ def calculator_select(workdir, db_path, dp_model_path, gpu_id):
 
 if __name__ == "__main__":
     start = time.time()
-    s = calculator_select(workdir="/home/cchen/CuY/hiccup2/workdir/dp/nn1/tmp",  # 临时文件夹
-                          db_path="/home/cchen/CuY/hiccup2/workdir/dp/nn1/merged.db",  # 数据库文件
-                          dp_model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn1/000/frozen_model.pb",
+    s = calculator_select(workdir="<YOUR_WORKDIR_PATH>",  # Temporary directory
+                          db_path="<YOUR_DB_PATH>",  # Database file
+                          dp_model_path="<YOUR_DP_MODEL_PATH>",
                           gpu_id=0)
     print(s)
     if os.path.exists(os.path.join(cwd, 'warnings.log')):

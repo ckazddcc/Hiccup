@@ -1,8 +1,0 @@
-   5   ! space group 
-73.840 ! area of primitive unit cell
- 8.593  8.593 90.080 ! vector of primitive unit cell
- 2.000 ! thickness of layer
-   2   ! number of types of atoms
-   1    8 ! number of atoms of each type
-0.792 0.854 0.854 0.917 ! minimum distance between atoms 
-0  ! symmetry operation 

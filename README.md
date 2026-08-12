@@ -87,16 +87,16 @@ BASE:
   Iterations: 3 # Number of iterations
   Stall Iterations: 3 # Number of stall generations
   Accuracy Threshold: 0.95 # Convergence threshold; ratio of accurate structures
-  Templates: /home/cchen/Train_NN/template # Template directory path
-  Workdir: /home/cchen/Train_NN/example/slab/hiccup # Working directory path
+  Templates: <YOUR_TEMPLATES_PATH> # Template directory path
+  Workdir: <YOUR_WORKDIR_PATH> # Working directory path
 
 # CPU configuration
 CPU:
-  CPU IP: 202.120.101.188
-  CPU Port: 22
-  CPU Username: materdesign
+  CPU IP: <YOUR_CPU_IP>
+  CPU Port: <YOUR_CPU_PORT>
+  CPU Username: <YOUR_CPU_USERNAME>
   CPU SSH Key Env: HICCUP_CPU_SSH_KEY
-  CPU Working Directory: /home/materdesign/cc/test1
+  CPU Working Directory: <YOUR_CPU_WORKDIR>
 
 # Sampler configuration
 SAMPLER:
@@ -105,8 +105,8 @@ SAMPLER:
       Activate: True # Whether to enable the random seed generator. If disabled, a random seed file must be provided.
       Dimension: 3 # 0: cluster, 3: bulk
       Random Seeds Num: 100 # Number of random seeds
-      #Random Seeds Path: /home/cchen/CuY/hiccup2/random_seeds.db # Random seed file path
-      #Init Seeds Path: /home/cchen/CuY/hiccup2/workdir/pes/ga/ga6/good.db # Initial seed file path
+      #Random Seeds Path: <YOUR_RANDOM_SEEDS_PATH> # Random seed file path
+      #Init Seeds Path: <YOUR_INIT_SEEDS_PATH> # Initial seed file path
     USPEX:
       Dimension: 2 # 1: cluster, 2: surface, 3: bulk
       Generation Num: 3 # Number of GA generations
@@ -114,8 +114,8 @@ SAMPLER:
       Pop Size: 10 # Population size of each generation
       Calculator: DP # Calculator: DP/MACE
       Constraint z: 2.0
-      Substrate: /home/cchen/CuY/hiccup2/template/POSCAR_SUBSTRATE # Substrate structure
-      USPEX Env: /home/cchen/.conda/envs/uspex/bin # Environment path
+      Substrate: <YOUR_SUBSTRATE_PATH> # Substrate structure
+      USPEX Env: <YOUR_USPEX_ENV_PATH> # Environment path
   NNMD:
     NN Force Accuracy: 0.15 # Force-accuracy threshold for launching NNMD
     MD Timestep: 1 # fs
@@ -126,8 +126,8 @@ SAMPLER:
 # Trainer configuration
 TRAINER:
   Deepmd:
-    Data Path: /home/cchen/Train_NN/example/slab/init_database.db # Initial dataset path
-    Initial Model: /home/cchen/Train_NN/slab/init_model.pb # Initial model path; default is None
+    Data Path: <YOUR_DATA_PATH> # Initial dataset path
+    Initial Model: <YOUR_INIT_MODEL_PATH> # Initial model path; default is None
     Train Ratio: 0.9 # Training set ratio
 
 POSTPROCESSING:
@@ -145,8 +145,8 @@ POSTPROCESSING:
 
 TRAINER:
   Deepmd:
-    Data Path: /home/cchen/Train_NN/slab/init_database.db # Initial dataset path
-    Initial Model: /home/cchen/CuY/hiccup2/workdir/dp/nn6/002/frozen_model.pb # Initial model path; default is None
+    Data Path: <YOUR_DATA_PATH> # Initial dataset path
+    Initial Model: <YOUR_INIT_MODEL_PATH> # Initial model path; default is None
     Train Ratio: 0.9 # Training set ratio
 ```
 

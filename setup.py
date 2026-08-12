@@ -7,7 +7,7 @@ setup(
     description="A neural network potential trainer driven by gene algorithm",
     url="https://gitee.com/ccccissy/Hiccup",
     author="(1)Chen.Cheng, (2)Chen.Dingming",
-    author_email="_cchen@mail.ecust.edu.cn",
+    author_email="<YOUR_EMAIL>",
     packages=find_packages(),
     entry_points={
         'console_scripts': [

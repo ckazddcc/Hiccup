@@ -1,6 +1,8 @@
 """
-mace优化器，用于优化随机种子结构。
-生成的随机种子结构.db文件统一进行优化，得到优化后的随机种子结构，同时在data中记录Energy和Force信息。
+MACE-based structure optimizer.
+
+Optimizes random seed structures using a MACE foundation model. Energies and
+forces are recorded in the output database for downstream use.
 """
 import os
 import logging
@@ -23,13 +25,14 @@ import multiprocessing as mp
 
 
 def split_list(data, n):
-    # 计算每个子列表的大小
+    """Split a list into *n* roughly equal-sized sublists."""
+    # Compute the size of each sublist
     avg_len = len(data) // n
     remainder = len(data) % n
     result = []
     start = 0
     for i in range(n):
-        # 计算每个子列表的长度，考虑余数
+        # Compute the length of each sublist, accounting for remainder
         end = start + avg_len + (1 if i < remainder else 0)
         result.append(data[start:end])
         start = end
@@ -37,6 +40,17 @@ def split_list(data, n):
 
 
 def optimizer(model_path, seeds_db_path, seeds_ids, gpu_i):
+    """Optimize a subset of seed structures on a single GPU.
+
+    Args:
+        model_path: path to the MACE model file.
+        seeds_db_path: path to the database of seed structures.
+        seeds_ids: list of row IDs to optimize.
+        gpu_i: GPU device index for this process.
+
+    Returns:
+        List of [atoms, data, key_value_pairs] for each optimized structure.
+    """
     db = connect(seeds_db_path)
     calculator = MACECalculator(model_path=model_path, device=f'cuda:{gpu_i}', default_dtype='float32')
     results = []
@@ -60,6 +74,15 @@ def optimizer(model_path, seeds_db_path, seeds_ids, gpu_i):
 
 
 def seeds_optimizer(seeds_db_path, gpus):
+    """Optimize all seed structures in parallel across multiple GPUs.
+
+    Args:
+        seeds_db_path: path to the database of seed structures.
+        gpus: list of GPU device IDs.
+
+    Returns:
+        Path to the optimized structures database.
+    """
     print("Start seeds optimizer...")
     mp.set_start_method("spawn", force=True)
     db = connect(seeds_db_path)
@@ -81,7 +104,7 @@ def seeds_optimizer(seeds_db_path, gpus):
         results = pool.starmap(optimizer,
                                [(model_path_i[i], seeds_db_path, split_ids[i], i) for i in range(len(gpus))])
 
-    # 收集优化结果
+    # Collect optimization results
     new_db_path = seeds_db_path.replace('.db', '_opt.db')
     if os.path.exists(new_db_path):
         os.remove(new_db_path)
@@ -91,7 +114,7 @@ def seeds_optimizer(seeds_db_path, gpus):
             new_db.write(atoms, data=data, key_value_pairs=kvp)
             print(data["energy"])
 
-    # 删除临时模型文件
+    # Remove temporary model files
     for i in model_path_i:
         if os.path.exists(i):
             os.remove(i)
@@ -100,7 +123,7 @@ def seeds_optimizer(seeds_db_path, gpus):
 
 
 if __name__ == "__main__":
-    seeds_db_path = "/home/cchen/CuY/test/Cu5Y/seeds.db"
+    seeds_db_path = "<YOUR_SEEDS_DB_PATH>"
     gpus = [1, 2, 3]
     start = time.time()
     seeds_optimizer(seeds_db_path, gpus)

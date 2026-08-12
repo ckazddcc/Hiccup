@@ -1,5 +1,0 @@
-Gen   ID    Origin   Composition    Enthalpy   Volume  Density   Fitness   KPOINTS  SYMM  Q_entr A_order S_order
-                                      (eV)     (A^3)  (g/cm^3)
-  1   49   Random    [     4 24  ]  -102.510   700.716   3.766   -102.510 [ 1  1  1]   0  0.176  0.033  0.009
-  2   92 softmutate  [     4 24  ]  -103.238   789.405   3.343   -103.238 [ 1  1  1]   0  0.223  0.030  0.008
-  3  155 softmutate  [     4 24  ]  -103.352   775.211   3.404   -103.352 [ 1  1  1]   0  0.225  0.030  0.008

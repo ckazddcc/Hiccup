@@ -1,9 +1,11 @@
 """
-DFT计算
-1.将candidates.db划分为candidates_1.db, candidates_2.db
-2.提交candidates_1.db到cpu进行sp计算，等待计算完成得到sp_1.db，同时进行数据清洗
-3.提交candidates_2.db到cpu进行sp计算
-4.将sp_2.db提交进行优化计算
+DFT calculation pipeline.
+
+1. Split candidates.db into candidates_1.db and candidates_2.db.
+2. Submit candidates_1.db to CPU for single-point (SP) calculation; wait
+   for completion to obtain sp_1.db while cleaning existing data.
+3. Submit candidates_2.db to CPU for SP calculation.
+4. Submit sp_2.db for structural optimization.
 """
 import os
 import logging
@@ -23,9 +25,13 @@ from PesExploration.tools.energy_structure_filter import energy_structure_filter
 
 
 def merge_dbs(out_db_path, db_list):
-    """
-    合并多个db文件
-    合并的筛选前提：文件存在，文件不为空
+    """Merge multiple database files into one.
+
+    Only non-empty, existing databases are merged.
+
+    Args:
+        out_db_path: path to the output merged database.
+        db_list: list of input database file paths.
     """
     if os.path.exists(out_db_path):
         os.remove(out_db_path)
@@ -64,10 +70,10 @@ def dft(iter_id,
     gpu = config["BASE"]["Gpu"]
     ga_dir_iter = os.path.join(ga_dir, f"ga{iter_id}")
 
-    # 1.将candidates.db划分为candidates_1.db, candidates_2.db
+    # 1. Split candidates.db into candidates_1.db and candidates_2.db
     to_be_sp_db = os.path.join(ga_dir_iter, "candidates.db")
     remote_dft_dir = os.path.join(cpu_config["CPU Working Directory"], f"iter{iter_id}")
-    # 对candidates.db中的结构进行筛选，得到candidates_1.db, candidates_2.db
+    # Filter structures in candidates.db to obtain candidates_1.db and candidates_2.db
     to_be_sp1 = os.path.join(ga_dir_iter, f"{os.path.basename(to_be_sp_db).split('.')[0]}_1.db")
     to_be_sp2 = os.path.join(ga_dir_iter, f"{os.path.basename(to_be_sp_db).split('.')[0]}_2.db")
     if os.path.exists(to_be_sp1):
@@ -90,19 +96,19 @@ def dft(iter_id,
         f.write(f"SP_2: {count2}\n")
         f.write("\n")
 
-    # 2.1 检查sp_2, opt_1 作业的状态，并杀死未完成的作业
+    # 2.1 Check status of sp_2 and opt_1 jobs from the previous iteration, kill unfinished ones
     _iter_id = int(iter_id) - 1
     _ga_dir_iter = os.path.join(ga_dir, f"ga{_iter_id}")
     _candidates_1_db = os.path.join(_ga_dir_iter, "candidates_1.db")
     _candidates_2_db = os.path.join(_ga_dir_iter, "candidates_2.db")
     _remote_dft_dir = os.path.join(cpu_config["CPU Working Directory"], f"iter{_iter_id}")
 
-    # sp_2, opt_1 作业结果下载的路径
+    # Paths for downloading sp_2 and opt_1 results
     _sp_2_db = os.path.join(_ga_dir_iter, "sp_2.db")
     _opt_db = os.path.join(_ga_dir_iter, "opt.db")
     _opt_lm_db = os.path.join(_ga_dir_iter, "opt_lm.db")
 
-    # ===========检查上一代作业的完成情况==========
+    # ========== Check completion status of previous iteration's jobs ==========
     if os.path.exists(_ga_dir_iter):
         # SP_2
         if os.path.exists(_candidates_2_db):
@@ -133,7 +139,7 @@ def dft(iter_id,
                 f.write(f"OPT: {opt1_state}, download: {opt1_download}\n")
                 f.write("\n")
 
-            # 待作业完成后，下载结果
+            # Download results after job completion
             opt1_state, opt1_download = vaspjet_monitor(cpu_config=cpu_config,
                                                         cpu_workdir=os.path.join(_remote_dft_dir, "opt"),
                                                         download_results=True,
@@ -154,8 +160,8 @@ def dft(iter_id,
     else:
         pass
 
-    # ===========提交这一代作业==========
-    # 2.2 提交candidates_1.db到cpu进行sp计算
+    # ========== Submit current iteration's jobs ==========
+    # 2.2 Submit candidates_1.db to CPU for SP calculation
     dft_sp1 = VaspjetRun(db_path=to_be_sp1,
                          cpu_config=cpu_config,
                          cpu_workdir=os.path.join(remote_dft_dir, "sp1"),
@@ -170,18 +176,18 @@ def dft(iter_id,
         f.write(f"Waiting for the SP calculation results...\n")
         f.write("\n")
 
-    # 2.3 数据回收&数据清洗
+    # 2.3 Data collection and cleaning
     with open(log_path, "a") as f:
         f.write("-Clean Data-\n")
         f.write("Cleaning the initial database while waiting for the DFT calculation...\n")
-    # 清洗初始数据集init.db
+    # Clean the initial dataset init.db
     iter_db = data_filter_and_analysis(workdir=os.path.join(dp_dir, f'nn{iter_id}/dbs'),
                                        model_path=model_path,
                                        gpu_ids=gpu,
                                        energy_filter=postprocess_config.get("Energy Filter", 0.1),
                                        force_filter=postprocess_config.get("Force Filter", 2)
                                        )
-    # 清洗后更新db_path
+    # Update db_path after cleaning
     new_db_path = iter_db
     outdir = os.path.join(dp_dir, f'nn{iter_id}/dbs/out')
     model_name = model_path.split("/")[-2]
@@ -195,7 +201,7 @@ def dft(iter_id,
             f"Data cleaning and analysis results can be found in {os.path.join(dp_dir, f'nn{iter_id}/dbs')}.\n")
         f.write("\n")
 
-    # 2.4 下载sp1计算结果
+    # 2.4 Download SP1 results
     sp1_results_db = os.path.join(ga_dir_iter, "sp_1.db")
     sp1_results = False
     while not sp1_results:
@@ -217,7 +223,7 @@ def dft(iter_id,
         f.write(f"SP1 calculation results have been successfully downloaded to {sp1_results_db} !!!\n")
         f.write("\n")
 
-    # 2.5 将sp_1.db, _sp_2.db, _opt.db 合并清洗
+    # 2.5 Merge and clean sp_1.db, _sp_2.db, _opt.db
     new_data_dbs = [sp1_results_db, _sp_2_db, _opt_db]
     new_data_db = os.path.join(ga_dir_iter, "new_opt_data.db")
     merge_dbs(new_data_db, new_data_dbs)
@@ -234,12 +240,12 @@ def dft(iter_id,
     new_iter_db = os.path.join(ga_dir_iter, "next_iter.db")
     merge_dbs(new_iter_db, [new_iter, new_db_path])
 
-    # 更新db_path
+    # Update db_path
     new_db_path = new_iter_db
     os.remove(new_data_db)
 
     if not is_last_iter:
-        # 3.提交candidates_2.db到cpu进行sp计算
+        # 3. Submit candidates_2.db to CPU for SP calculation
         dft_sp2 = VaspjetRun(db_path=to_be_sp2,
                              cpu_config=cpu_config,
                              cpu_workdir=os.path.join(remote_dft_dir, "sp2"),
@@ -253,7 +259,7 @@ def dft(iter_id,
             f.write(f"Waiting for the SP calculation results...\n")
             f.write("\n")
 
-        # 提交sp_1.db到cpu进行opt计算
+        # Submit sp_1.db to CPU for optimization calculation
         dft_opt = VaspjetRun(db_path=to_be_sp1,
                              cpu_config=cpu_config,
                              cpu_workdir=os.path.join(remote_dft_dir, "opt"),
@@ -275,15 +281,15 @@ def dft(iter_id,
 
 if __name__ == '__main__':
     import yaml
-    log = "/home/cchen/Train_NN/example/cluster/hiccup-log.txt"
+    log = "<YOUR_LOG_PATH>"
     if os.path.exists(log):
         os.remove(log)
-    with open("/home/cchen/Train_NN/example/cluster/config.yml") as file:
+    with open("<YOUR_CONFIG_PATH>") as file:
         dict_value = yaml.load(file.read(), Loader=yaml.FullLoader)
     config = dict_value
     dft(iter_id=0,
         config=config,
-        model_path="/home/cchen/Train_NN/example/cluster/cluster_init_model.pb",
+        model_path="<YOUR_MODEL_PATH>",
         log_path=log,
         is_last_iter=False)
     if os.path.exists(os.path.join(cwd, 'warnings.log')):

@@ -19,6 +19,19 @@ from ase.atoms import Atoms
 
 
 def fp_mbtr(atoms, dimension, constraint_z):
+    """Compute the MBTR fingerprint of a structure.
+
+    For 2D systems, atoms below *constraint_z* (substrate) are excluded
+    from the descriptor so that only the active region is represented.
+
+    Args:
+        atoms: ASE Atoms object.
+        dimension: 2 for slab/surface systems, otherwise full structure.
+        constraint_z: z-coordinate threshold below which atoms are excluded.
+
+    Returns:
+        1-D list concatenating k2 and k3 MBTR components.
+    """
     # atoms_c = atoms.copy()
     periodic = True
     normalization = 'l2_each'
@@ -53,17 +66,18 @@ def fp_mbtr(atoms, dimension, constraint_z):
         mbtr_fp = mbtr.create(system=atoms_c, n_jobs=1, only_physical_cores=False)
     k2 = np.sum(mbtr_fp["k2"], axis=(0, 1))
     k3 = np.sum(mbtr_fp["k3"], axis=(0, 1, 2))
-    # 把k1, k2, k3中所有的Nan值赋为0
+    # Set all NaN values in k2, k3 to 0
     k2[np.isnan(k2)] = 0
     k3[np.isnan(k3)] = 0
     return np.concatenate((k2, k3)).tolist()
 
 
 def split_db(db_path, fold_name):
-    """
-    将db文件按照化学式分类，输出多个db文件
-    :param db: 待分类的db文件
-    :param fold_name: 输出文件夹
+    """Split a database into multiple files grouped by chemical formula.
+
+    Args:
+        db_path: path to the source ASE database.
+        fold_name: output directory for the split database files.
     """
     if not os.path.exists(fold_name):
         os.mkdir(fold_name)
@@ -88,8 +102,25 @@ def energy_structure_filter(db_path,
                             similarity_threshold=0.95,
                             output_mode="delete"  # "delete" or "split"
                             ):
-    """
-    Filter structures based on energy and similarity.
+    """Filter structures by energy and structural similarity.
+
+    Structures are split by chemical formula. For each group, the top 10%
+    highest-energy structures are removed, then farthest-point sampling based
+    on MBTR fingerprints removes redundant structures until the target count
+    is reached.
+
+    Args:
+        db_path: path to the source ASE database.
+        dimension: 2 for slab/surface systems (substrate excluded from
+            fingerprint), 0 for bulk.
+        constraint_z: z-coordinate threshold for substrate exclusion.
+        max_filter_ratio: maximum fraction of structures to retain per group.
+        max_filter_num: global cap on retained structures, distributed
+            proportionally across groups.
+        similarity_threshold: initial MBTR similarity threshold for
+            deduplication (decreased iteratively if too few survive).
+        output_mode: "delete" to replace the source database, "split" to
+            keep both retained and removed sets.
     """
     gathered_db = connect(db_path)
     gathered1 = os.path.join(os.path.dirname(db_path), f"{os.path.basename(db_path)[:-3]}_1.db")
@@ -106,7 +137,7 @@ def energy_structure_filter(db_path,
         os.mkdir(tmp_dir)
     split_db(db_path, tmp_dir)
 
-    # 计算能量和指纹
+    # Compute energies and fingerprints
     filenames = os.listdir(tmp_dir)
     for filename in filenames:
         energy_info = {}
@@ -135,11 +166,11 @@ def energy_structure_filter(db_path,
             energy_info[row.id] = energy
             fp = fp_mbtr(atoms, dimension, constraint_z)
             fp_dict[row.id] = fp
-        # 根据相似度对结构进行初筛，能量非常不稳定的10%的结构
+        # Initial screening by similarity; remove top 10% highest-energy structures
         sorted_energy_info = sorted(energy_info.items(), key=lambda x: x[1])
         remove_num = math.floor(len(sorted_energy_info) * 0.1)
         remove_ids = [i[0] for i in sorted_energy_info[-remove_num:]]
-        # 筛选结构数量
+        # Determine number of structures to keep
         x = math.floor(max_filter_num * (db_i.count() / gathered_db.count()))
         filter_num = min(x, math.floor(db_i.count() * max_filter_ratio))
         filter_num = max(filter_num, 1)
@@ -203,7 +234,7 @@ def energy_structure_filter(db_path,
                 kvp = row.key_value_pairs
                 gathered_db_2.write(atoms, data=data, key_value_pairs=kvp)
 
-    # 保证1和2的数量都不为0
+    # Ensure both groups have at least one structure
     if gathered_db_1.count() == 0:
         for row in gathered_db.select():
             atoms = row.toatoms()
@@ -219,7 +250,7 @@ def energy_structure_filter(db_path,
             gathered_db_2.write(atoms, data=data, key_value_pairs=kvp)
             break
 
-    # 删除临时文件夹
+    # Remove temporary directory
     count1 = gathered_db_1.count()
     count2 = gathered_db_2.count()
     os.system(f"rm -r {tmp_dir}")
@@ -240,14 +271,14 @@ if __name__ == '__main__':
         root = Path(root_dir)
         return [root for root in root.iterdir() if root.is_dir()]
 
-    energy_structure_filter(db_path="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/candidates.db",
+    energy_structure_filter(db_path="<YOUR_CANDIDATES_DB_PATH>",
                             max_filter_ratio=0.80,
                             max_filter_num=60,
                             similarity_threshold=0.95,
                             output_mode="split")
 
-    # dirs = find_db_files("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4")
-    # to_md_db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/to_md.db")
+    # dirs = find_db_files("<YOUR_GA_DIR_PATH>")
+    # to_md_db = connect("<YOUR_TO_MD_DB_PATH>")
     # for dir in dirs:
     #     db = connect(os.path.join(dir, "gathered.db"))
     #     print(f"{dir} Total number of structures: {db.count()}")

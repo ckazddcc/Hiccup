@@ -19,7 +19,7 @@
             ],
             "resnet_dt":false,
             "axis_neuron":12,
-            "seed":1096162376
+            "seed":1666337774
         },
         "fitting_net":{
             "neuron":[
@@ -28,7 +28,7 @@
                 120
             ],
             "resnet_dt":true,
-            "seed":3849041252
+            "seed":2404681074
         }
     },
     "loss":{
@@ -47,7 +47,7 @@
     },
     "training":{
         "numb_steps":50000,
-        "seed":3485229578,
+        "seed":3030747815,
         "_comment":"frequencies counted in batch",
         "disp_file":"lcurve.out",
         "disp_freq":1000,

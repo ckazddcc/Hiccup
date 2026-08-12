@@ -11,6 +11,12 @@ import multiprocessing
 
 
 class GenSeeds:
+    """Generate random crystal seed structures using pyxtal.
+
+    Supports 3D bulk and 0D cluster generation. Structures are validated by
+    bond-length checks and optionally filtered by cell size for 2D systems.
+    """
+
     def __init__(self,
                  elements,
                  target_composition,
@@ -19,17 +25,21 @@ class GenSeeds:
                  seeds_num,
                  vacuum_layer_thickness=10):
         self.elements, self.target_composition = self.update_composition(elements, target_composition)
-        # 根据原子序数重排
         self.dimension = dimension
         self.seeds_db = seeds_db
         self.seeds_num = seeds_num
         self.vacuum_layer_thickness = vacuum_layer_thickness
 
     @staticmethod
-    # 可以用矩阵改进算法
     def update_composition(elements, target_composition):
-        """
-        根据原子序数更新目标组分的元素顺序
+        """Reorder elements by atomic number and align compositions accordingly.
+
+        Args:
+            elements: list of element symbols.
+            target_composition: list of composition lists, each parallel to *elements*.
+
+        Returns:
+            Tuple of (sorted_elements, reordered_target_composition).
         """
         ele_c = {}
         for i, ele in enumerate(elements):
@@ -47,6 +57,17 @@ class GenSeeds:
         return new_elements, new_target_composition
 
     def add_vacuum_layer(self, atoms):
+        """Add vacuum padding around a structure based on dimensionality.
+
+        Clusters get vacuum in all three directions; slabs/bulk get vacuum
+        only along z.
+
+        Args:
+            atoms: ASE Atoms object.
+
+        Returns:
+            Atoms object with adjusted cell and centered positions.
+        """
         thickness = self.vacuum_layer_thickness
 
         # cluster
@@ -72,8 +93,10 @@ class GenSeeds:
 
     @staticmethod
     def seed_filter(atoms):
-        """
-        判断传入的Atoms对象键长是否合理
+        """Check whether bond lengths in a structure are physically reasonable.
+
+        Returns False if any pair of atoms is closer than 30% of the sum of
+        their covalent radii.
         """
         IS_VALID = True
         symbols = atoms.get_chemical_symbols()
@@ -91,11 +114,19 @@ class GenSeeds:
                     break
             if not IS_VALID:
                 break
-        return IS_VALID  # 返回优化后的结构
+        return IS_VALID  # Return validity flag
 
     def gen_random_seed(self, target_composition):
-        """
-        生成单个随机种子结构
+        """Generate a single random seed structure for the given composition.
+
+        Uses pyxtal to generate a random crystal (3D) or cluster (0D), adds a
+        vacuum layer, and validates bond lengths. Retries for up to 60 seconds.
+
+        Args:
+            target_composition: list of atom counts parallel to self.elements.
+
+        Returns:
+            Tuple of (list_of_atoms, chemical_formula_string).
         """
         seeds_atoms = []
         chemical_formula = "".join([f"{ele}{num}" for ele, num in zip(self.elements, target_composition)])
@@ -142,6 +173,12 @@ class GenSeeds:
 
 
     def gen_seeds(self):
+        """Generate random seed structures in parallel and save to database.
+
+        Distributes generation across up to 16 processes. Each composition is
+        attempted *seeds_num* times. Successfully generated structures are
+        written to self.seeds_db.
+        """
         start = time.time()
         futures = []
         seeds_num = int(self.seeds_num)
@@ -174,8 +211,8 @@ if __name__ == '__main__':
     from tools.mace_optimizer import seeds_optimizer
 
     dimension = 2
-    substrate_pwd = "/home/cchen/CuY/gcga/POSCAR_SUBSTRATE"
-    seeds_db_path = "/home/cchen/CuY/test/seeds.db"
+    substrate_pwd = "<YOUR_SUBSTRATE_PATH>"
+    seeds_db_path = "<YOUR_SEEDS_DB_PATH>"
     gpu_ids = [4, 5, 6, 7]
 
     test = GenSeeds(elements=["O", "Cu", "Y"],
@@ -199,5 +236,5 @@ if __name__ == '__main__':
                 connect(seeds_db_path).delete([row.id])
     print(f"Seeds DB: {connect(seeds_db_path).count()}")
 
-    # 提交随机种子结构优化任务
+    # Submit seed structure optimization
     Rand_seeds_opt = seeds_optimizer(seeds_db_path=seeds_db_path, gpus=gpu_ids)

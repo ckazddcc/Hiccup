@@ -1,5 +1,5 @@
-# 对基底原子聚类分层
-# 根据指定层数划分基底原子
+# Cluster substrate atoms into layers along the z-axis.
+# Atoms are grouped by z-coordinate using DBSCAN (or KMeans as fallback).
 from collections import Counter
 
 from numpy import where
@@ -12,6 +12,13 @@ from sklearn.cluster import KMeans
 
 
 def show_clusters(atoms, clusters_dict, output_dir):
+    """Write each cluster of atoms to a separate CIF file.
+
+    Args:
+        atoms: full ASE Atoms object.
+        clusters_dict: dict mapping cluster label to atom index list.
+        output_dir: directory for output CIF files.
+    """
     for key, value in clusters_dict.items():
         if key != -1:
             layer_atoms = atoms[value]
@@ -26,14 +33,29 @@ def process_layers(atoms,
                    visualize=False,
                    output_dir=None,
                    substrate_path=None):
+    """Partition atoms into layers along the z-axis.
+
+    Clusters atoms by scaled z-coordinate using DBSCAN (falls back to KMeans
+    if too few clusters are found), then merges clusters into *layer_num*
+    groups. Substrate atoms (identified from *substrate_path*) are separated
+    into their own group.
+
+    Args:
+        atoms: ASE Atoms object.
+        layer_num: desired number of non-substrate layers.
+        visualize: if True, write each layer to a CIF file.
+        output_dir: directory for visualization output.
+        substrate_path: path to a reference structure for identifying
+            substrate atoms by element and count.
+
+    Returns:
+        Dict mapping layer index to list of atom indices.
     """
-    对z轴坐标聚类，对基底原子进行聚类分层
-    """
-    # 获取原子位置
+    # Get atomic positions
     positions = atoms.get_scaled_positions()
     eps = 1.0 / atoms.get_cell()[2, 2]
     min_samples = 2
-    # 去除基地原子
+    # Remove substrate atoms
     surf_idx = []
     if substrate_path:
         substrate = read(substrate_path)
@@ -44,7 +66,7 @@ def process_layers(atoms,
             elem_idx_surface = elem_idx[elem_mun[elem]:]
             surf_idx.extend([i[0] for i in elem_idx_surface])
 
-    # 重塑数据
+    # Reshape data
     z_positions = list(positions[:, 2])
     for i in surf_idx:
         z_positions[i] = 0.9
@@ -104,9 +126,9 @@ def process_layers(atoms,
 
 if __name__ == '__main__':
     # example
-    test = read("/home/cchen/Train_NN/test/CONTCAR")
+    test = read("<YOUR_CONTCAR_PATH>")
     process_layers(test,
                    layer_num=4,
                    visualize=True,
-                   output_dir="/home/cchen/Train_NN/test",
-                   substrate_path="/home/cchen/Train_NN/test/POSCAR_SUBSTRATE")
+                   output_dir="<YOUR_OUTPUT_DIR>",
+                   substrate_path="<YOUR_SUBSTRATE_PATH>")

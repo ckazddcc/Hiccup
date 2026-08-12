@@ -4,16 +4,23 @@ import yaml
 
 
 def generate_n_compositions(elements_boundary, total_atoms=48, min_others=9):
-    """
-    通用生成 N 元组分函数
-    :param n_elements: 元素种类数 (N)
-    :param total_atoms: 原子总数 (S)
-    :param min_others: 约束条件：除了当前元素外，其他元素总数至少要有几个
-                        (对应你原代码中的 total - 8 限制)
+    """Generate all valid N-element compositions for a given atom count.
+
+    Uses the stars-and-bars method to enumerate all non-negative integer
+    partitions of *total_atoms* into len(elements_boundary) parts, then
+    filters by per-element min/max bounds.
+
+    Args:
+        elements_boundary: dict mapping element symbol to [min, max] count.
+        total_atoms: total number of atoms in the composition.
+        min_others: minimum count of non-primary elements (legacy constraint).
+
+    Returns:
+        np.ndarray of shape (n_compositions, n_elements).
     """
 
-    # 使用“隔板法”思路生成所有和为 total_atoms 的非负整数序列
-    # 这里的 logic 是：在 (total + n - 1) 个位置中选 (n - 1) 个位置放隔板
+    # Use stars-and-bars method to generate all non-negative integer sequences summing to total_atoms
+    # Logic: choose (n - 1) divider positions out of (total + n - 1) positions
     def compositions_generator(n, total):
         if n == 1:
             yield (total,)
@@ -24,7 +31,7 @@ def generate_n_compositions(elements_boundary, total_atoms=48, min_others=9):
 
     all_comps = []
     for comp in compositions_generator(len(elements_boundary.keys()), total_atoms):
-        # 应用约束：任何一个元素的数量都不能超过 max_val
+        # Apply constraint: no element count may exceed its bounds
         keys = elements_boundary.keys()
         if all(elements_boundary[key][0] <= x <= elements_boundary[key][1] for key, x in zip(keys, comp)):
             all_comps.append(comp)
@@ -33,27 +40,33 @@ def generate_n_compositions(elements_boundary, total_atoms=48, min_others=9):
 
 
 def farthest_point_sampling(points, k):
-    """
-    通用 FPS 采样 (支持 N 维)
+    """Farthest-point sampling in N-dimensional space.
+
+    Args:
+        points: array of shape (n_samples, n_features).
+        k: number of points to select.
+
+    Returns:
+        np.ndarray of selected indices.
     """
     if len(points) <= k:
         return np.arange(len(points))
 
     selected = []
-    # 1. 随机选一个起点
+    # 1. Randomly select a starting point
     idx = np.random.randint(len(points))
     selected.append(idx)
 
-    # 初始化距离数组为无穷大
+    # Initialize distance array to infinity
     distances = np.full(len(points), np.inf)
 
     for _ in range(k - 1):
         last_point = points[selected[-1]]
-        # 计算当前点到所有点的欧氏距离 (N维)
+        # Compute Euclidean distance from current point to all points (N-dimensional)
         dist = np.linalg.norm(points - last_point, axis=1)
-        # 更新每个点到已选集合的最小距离
+        # Update minimum distance from each point to the selected set
         distances = np.minimum(distances, dist)
-        # 选取距离已选集合最远的点
+        # Select the point farthest from the selected set
         next_idx = np.argmax(distances)
         selected.append(next_idx)
 
@@ -61,13 +74,27 @@ def farthest_point_sampling(points, k):
 
 
 def sample_compositions_n(elements_boundary, total_atoms, substrate, n_samples):
-    # Step 1: 生成 N 维空间下的所有合法组分
+    """Sample diverse compositions via farthest-point sampling.
+
+    Generates all valid compositions, normalizes to ratio space, applies FPS
+    to select a diverse subset, then adds substrate atom counts back.
+
+    Args:
+        elements_boundary: dict mapping element symbol to [min, max] count.
+        total_atoms: total number of atoms (excluding substrate).
+        substrate: dict mapping element symbol to fixed substrate atom count.
+        n_samples: number of compositions to select.
+
+    Returns:
+        List of composition lists, each with substrate counts added.
+    """
+    # Step 1: Generate all valid compositions in N-dimensional space
     all_comps = generate_n_compositions(elements_boundary, total_atoms)
 
-    # Step 2: 归一化到比例空间 (0~1 之间)，方便 FPS 计算
+    # Step 2: Normalize to ratio space (0~1) for FPS computation
     ratios = all_comps / total_atoms
 
-    # Step 3: 执行 FPS 采样
+    # Step 3: Perform FPS sampling
     idx = farthest_point_sampling(ratios, n_samples)
 
     update_compos = []
@@ -81,6 +108,12 @@ def sample_compositions_n(elements_boundary, total_atoms, substrate, n_samples):
     return update_compos
 
 def sample_composition(config_path):
+    """Sample compositions from a YAML config file.
+
+    Args:
+        config_path: path to YAML file with keys elements_boundary,
+            total_atoms, substrate, and n_samples.
+    """
     config = yaml.safe_load(open(config_path))
     result = sample_compositions_n(elements_boundary=config["elements_boundary"],
                                    total_atoms=config["total_atoms"],
@@ -91,7 +124,7 @@ def sample_composition(config_path):
 
 
 if __name__ == '__main__':
-    sample_composition(config_path='/home/cchen/Hiccup/template/fps_config.yml')
+    sample_composition(config_path='<YOUR_FPS_CONFIG_PATH>')
 
 
 

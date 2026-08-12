@@ -57,11 +57,13 @@ def print_pretty_list(long_list, elements_per_row=15, column_width=5, prefix="")
     return '\n'.join(res_str)
 
 
-# 定义一个Job的具名元组，作为Job_tuple的类型
+# Named tuple representing a submitted job
 class Job_tuple(NamedTuple):
-    """
-    conf_id: int,
-    job: Job
+    """Container for a submitted VASP job.
+
+    Attributes:
+        conf_id: configuration index.
+        job: submitit Job object.
     """
     conf_id: int
     job: Job
@@ -97,7 +99,7 @@ class PureVaspRelax(object):
         self.save_log = job_settings.get('save_log', True)
         self.print_log = job_settings.get('print_log', False)
         self.log_file = open(os.path.join(self.work_dir, 'Jet-log.txt'), 'w')
-        # 及时存储文件
+        # Store results to disk in real time
         self.intime_db = connect(os.path.join(self.work_dir, 'intime_results.db'))
         self._job_health_code = ['COMPLETED', 'PENDING', 'RUNNING', 'REQUEUED', 'RESIZING', 'UNKNOWN']
         self._job_unfinished_code = ['PENDING', 'RUNNING', 'REQUEUED', 'RESIZING', 'UNKNOWN']
@@ -179,13 +181,13 @@ class PureVaspRelax(object):
                     # params_copy['kpts'][i] = max(1, int(round(40 / cell_length[i])))
         calc = Vasp(**params_copy)
         atoms.calc = calc
-        # 因为必须要cala.resort重置原子和力矩阵的顺序，所以这里必须要try
+        # Must try because calc.resort reorders atoms and force arrays
         try:
             atoms.get_potential_energy()
         except Exception as e:
             err_msg = str(e)
             err = True
-        # scf converaged
+        # Check SCF convergence
         file_line = []
         osz_path = os.path.join(params_copy['directory'], 'OSZICAR')
         with open(osz_path, 'r') as file:
@@ -206,7 +208,7 @@ class PureVaspRelax(object):
         with open(xml_path, 'r', encoding='ISO-8859-1') as _file:
             xml_string = _file.read()
         pattern = re.compile(re.escape('<calculation>') + r'(.*?)' + re.escape('</calculation>'), re.DOTALL)
-        # 查找所有匹配的部分
+        # Find all matching sections
         matches = pattern.findall(xml_string)
         calc_lst = ['<calculation>' + match + '</calculation>' for match in matches] if matches is not None else []
         if len(calc_lst) == 0:
@@ -220,18 +222,18 @@ class PureVaspRelax(object):
                 posroot = calcroot.find(".//varray[@name='positions']")
                 positions = []
                 for v in posroot.findall('v'):
-                    # 提取每一行的值，并去除多余的空白
+                    # Extract values from each line, stripping whitespace
                     values = v.text.strip().split()
-                    # 将每一行的值转换为浮点数，并添加到 positions_list 中
+                    # Convert to floats and append to positions list
                     positions.append([float(value) for value in values])
                 positions = atoms.get_cell().cartesian_positions(np.array(positions))
                 # force
                 forcesroot = calcroot.find(".//varray[@name='forces']")
                 _forces = []
                 for v in forcesroot.findall('v'):
-                    # 提取每一行的值，并去除多余的空白
+                    # Extract values from each line, stripping whitespace
                     values = v.text.strip().split()
-                    # 将每一行的值转换为浮点数，并添加到 forces_list 中
+                    # Convert to floats and append to forces list
                     _forces.append([float(value) for value in values])
                 # energy
                 _energy = float(calcroot.find("./energy/i[@name='e_fr_energy']").text)
@@ -511,7 +513,7 @@ if "__main__" == __name__:
     parser = argparse.ArgumentParser(description="Here is VaspJet Pure-Vasp warp!")
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
-    # 为 -run 命令创建子解析器
+    # Create subparser for the 'run' command
     parser_run = subparsers.add_parser(
         "run",
         help="Run the VASP calculation with specified configurations. 'vaspjet run --help' for more information.")

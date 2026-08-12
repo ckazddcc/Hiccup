@@ -17,10 +17,11 @@ import re
 
 
 def split_db(db_path, fold_name):
-    """
-    将db文件按照化学式分类，输出多个db文件
-    :param db: 待分类的db文件
-    :param fold_name: 输出文件夹
+    """Split a database into multiple files grouped by chemical formula.
+
+    Args:
+        db_path: path to the source ASE database.
+        fold_name: output directory for the split database files.
     """
     if not os.path.exists(fold_name):
         os.mkdir(fold_name)
@@ -38,6 +39,7 @@ def split_db(db_path, fold_name):
 
 
 def count_natom(s):
+    """Parse a chemical formula string and return the total number of atoms."""
     pattern = r"([A-Z][a-z]?)(\d*)"
     matches = re.findall(pattern, s)
     element_dict = {}
@@ -51,15 +53,32 @@ def data_filter_and_analysis(workdir,
                              gpu_ids=None,
                              energy_filter=0.1,
                              force_filter=2):
+    """Filter structures by prediction error and compute accuracy metrics.
+
+    Structures are split by chemical formula, then evaluated in parallel across
+    GPUs using a DP model. Structures whose per-atom energy error exceeds
+    *energy_filter* or whose max force error exceeds *force_filter* are moved
+    to a residue database; the rest are kept in an iteration database.
+
+    Args:
+        workdir: working directory containing per-formula .db files.
+        model_path: path to the frozen DP model.
+        gpu_ids: list of GPU device IDs for parallel inference.
+        energy_filter: per-atom energy error threshold (eV/atom).
+        force_filter: max force component error threshold (eV/Å).
+
+    Returns:
+        Path to the iteration database containing retained structures.
+    """
     if gpu_ids is None:
         raise ValueError("gpu_ids must be provided")
     try:
         multiprocessing.set_start_method('spawn', force=True)
     except RuntimeError:
-        # 如果已经设置过 start_method，忽略错误
+        # Ignore error if start_method is already set
         pass
 
-    # 主进程不占用GPU
+    # Main process does not use GPU
     os.environ.pop("CUDA_VISIBLE_DEVICES", None)
     gpu_num = len(gpu_ids)
     dbs = glob(os.path.abspath(os.path.join(workdir, "*.db")))
@@ -69,15 +88,15 @@ def data_filter_and_analysis(workdir,
     outdir = os.path.join(workdir, "out")
     os.makedirs(outdir, exist_ok=True)
 
-    # 分配GPU资源
+    # Allocate GPU resources
     db_groups = [[] for _ in gpu_ids]
-    # 将数据库文件均匀分配到gpu_num个GPU
+    # Distribute database files evenly across GPUs
     for i, d in enumerate(dbs):
         if os.path.basename(d) in ["iter.db", "init.db", "traj.db", "new_iter.db", "residue.db"]:
             continue
         db_groups[i % gpu_num].append(d)
 
-    # 使用多进程并行处理
+    # Process in parallel using multiprocessing
     with ProcessPoolExecutor(max_workers=gpu_num) as executor:
         futures = []
         for i in range(gpu_num):
@@ -95,13 +114,13 @@ def data_filter_and_analysis(workdir,
                 )
                 futures.append(future)
 
-        # 收集结果
+        # Collect results
         for future in futures:
             formula_errors = future.result()
             if formula_errors:
                 composition_error_dict.update(formula_errors)
 
-    # 保存结果
+    # Save results
     model_name = os.path.basename(os.path.dirname(model_path))
     timestamp = time.strftime('_%Y_%m_%d_%H_%M_%S')
     output_path = os.path.join(workdir, f"out/Composition_Error_of_{model_name}{timestamp}.json")
@@ -111,7 +130,26 @@ def data_filter_and_analysis(workdir,
 
 
 def process_gpu_group(db_list, model_path, gpu_id, outdir, energy_filter, force_filter, remove_db_path, iter_db_path):
-    # 每个进程独占一个GPU
+    """Process a group of databases on a single GPU.
+
+    Computes DP predictions for each structure, writes prediction files,
+    partitions structures into residue/iteration databases based on error
+    thresholds, and returns per-formula error statistics.
+
+    Args:
+        db_list: list of database file paths to process.
+        model_path: path to the frozen DP model.
+        gpu_id: GPU device index assigned to this process.
+        outdir: directory for prediction output files.
+        energy_filter: per-atom energy error threshold (eV/atom).
+        force_filter: max force component error threshold (eV/Å).
+        remove_db_path: path to the residue database (rejected structures).
+        iter_db_path: path to the iteration database (retained structures).
+
+    Returns:
+        Dict mapping chemical formula to energy/force RMSE and MAE.
+    """
+    # Each process occupies one GPU exclusively
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     calc = DP(model=model_path)
     remove_db = connect(remove_db_path)
@@ -128,7 +166,7 @@ def process_gpu_group(db_list, model_path, gpu_id, outdir, energy_filter, force_
         true_energies, pre_energies, true_forces, pre_forces = [], [], [], []
         entries = []
 
-        # 收集数据
+        # Collect data
         for i in range(db.count()):
             ati = db.get(i + 1)
             atoms = db.get_atoms(i + 1)
@@ -147,18 +185,18 @@ def process_gpu_group(db_list, model_path, gpu_id, outdir, energy_filter, force_
             true_forces.append(true_force)
             pre_forces.append(pre_force)
 
-        # 转换为NumPy数组
+        # Convert to NumPy arrays
         true_energies = np.array(true_energies)
         pre_energies = np.array(pre_energies)
         true_forces = np.array(true_forces)
         pre_forces = np.array(pre_forces)
 
-        # 计算误差
+        # Compute errors
         energy_errors = np.abs((true_energies - pre_energies) / natom)
         force_errors = np.max(np.abs(true_forces - pre_forces), axis=(1, 2))
         remove_mask = (energy_errors >= energy_filter) | (force_errors >= force_filter)
 
-        # 写入文件
+        # Write to files
         e_file = os.path.join(outdir, f"{formula}.out.e.out")
         f_file = os.path.join(outdir, f"{formula}.out.f.out")
 
@@ -170,14 +208,14 @@ def process_gpu_group(db_list, model_path, gpu_id, outdir, energy_filter, force_
             for tf, pf in zip(true_forces, pre_forces):
                 np.savetxt(ff, np.hstack([tf, pf]), fmt="%f  %f  %f  %f  %f  %f")
 
-        # 写入数据库
+        # Write to database
         remove_entries = [row for idx, row in enumerate(entries) if remove_mask[idx]]
         iter_entries = [row for idx, row in enumerate(entries) if not remove_mask[idx]]
 
         write_to_db(remove_db, remove_entries)
         write_to_db(iter_db, iter_entries)
 
-        # 计算统计指标
+        # Compute statistics
         rmse_force = np.sqrt(np.mean((true_forces - pre_forces) ** 2))
         mae_force = np.mean(np.abs(true_forces - pre_forces))
         rmse_energy = np.sqrt(np.mean(((true_energies - pre_energies) / natom) ** 2))
@@ -191,11 +229,21 @@ def process_gpu_group(db_list, model_path, gpu_id, outdir, energy_filter, force_
 
 
 def write_to_db(db, entries):
+    """Write a list of ASE database rows into the given database."""
     for row in entries:
         db.write(row.toatoms(), data=row.data, **row.key_value_pairs)
 
 
 def plt_out(outdir, model_name):
+    """Generate parity plots and error statistics for energy and forces.
+
+    Reads prediction output files from *outdir*, plots DFT vs. predicted
+    values, and saves figures plus a JSON summary of RMSE/MAE.
+
+    Args:
+        outdir: directory containing .out.e.out and .out.f.out files.
+        model_name: name label used in plot titles and output filenames.
+    """
     matplotlib.use('Agg')
     out_f = glob(os.path.join(outdir, "*.out.f.out"))
     out_e = glob(os.path.join(outdir, "*.out.e.out"))
@@ -284,6 +332,19 @@ def analysis(db_path,
              energy_filter=0.1,
              force_filter=2,
              model_name="model"):
+    """Run the full filter-and-analysis pipeline on a database.
+
+    Splits the database by chemical formula, filters structures by prediction
+    error, and generates parity plots and error statistics.
+
+    Args:
+        db_path: path to the source ASE database.
+        model_path: path to the frozen DP model.
+        gpu_ids: list of GPU device IDs for parallel inference.
+        energy_filter: per-atom energy error threshold (eV/atom).
+        force_filter: max force component error threshold (eV/Å).
+        model_name: name label used in plot titles and output filenames.
+    """
     cwd = os.getcwd()
     logging.basicConfig(filename=os.path.join(cwd, 'warnings.log'),
                         level=logging.DEBUG,
@@ -304,8 +365,20 @@ def analysis(db_path,
         os.remove(os.path.join(cwd, 'warnings.log'))
 
 
-# 误差评估
 def error_eval(db_path, model_path, gpu):
+    """Evaluate DP model prediction errors against DFT reference data.
+
+    Computes per-atom energy and force RMSE/MAE for all structures in the
+    database and prints the results.
+
+    Args:
+        db_path: path to the ASE database with DFT reference data.
+        model_path: path to the frozen DP model.
+        gpu: GPU device index for inference.
+
+    Returns:
+        Tuple of (true_energy, true_forces, pred_energy, pred_forces).
+    """
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
     dp_calculate = DP(model=model_path)
     true_energy = []
@@ -350,17 +423,17 @@ def error_eval(db_path, model_path, gpu):
 if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
     start_time_1 = time.perf_counter()
-    split_db(db_path="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/init.db", fold_name="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/tmp")
-    data_filter_and_analysis(workdir="/home/yliu/cchen/CuClO/workdir0/dp/nn3/dbs/tmp",
-                             model_path="/home/yliu/cchen/CuClO/workdir0/dp/nn3/002/frozen_model.pb",
+    split_db(db_path="<YOUR_DB_PATH>", fold_name="<YOUR_FOLD_NAME>")
+    data_filter_and_analysis(workdir="<YOUR_WORKDIR_PATH>",
+                             model_path="<YOUR_MODEL_PATH>",
                              gpu_ids=[0,1,2,3],
                              energy_filter=0.2,
                              force_filter=1.0)
-    # # 记录第一个函数的结束时间
+    # # Record end time of the first function
     end_time_1 = time.perf_counter()
     duration_1 = end_time_1 - start_time_1
-    print(f"data_filter_and_analysis 执行时间: {duration_1:.6f} 秒")
+    print(f"data_filter_and_analysis elapsed time: {duration_1:.6f} s")
 
-    # db_path = "/home/yliu/cchen/CuClO/workdir0/dp/nn0/dbs/init.db"
-    # model_path = "/home/yliu/cchen/CuClO/workdir0/dp/nn0/000/frozen_model.pb"
+    # db_path = "<YOUR_DB_PATH>"
+    # model_path = "<YOUR_MODEL_PATH>"
     # true_energy, true_forces, pred_energy, pred_forces = error_eval(db_path, model_path, gpu=0)
