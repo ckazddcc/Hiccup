@@ -4,7 +4,7 @@ Batch1: O17Cu40, O18Cu40, O19Cu40, O20Cu40
 Batch2: O21Cu40
 ------------------------------------------ NN_1 Training -------------------------------------------
 GPU: 0  1  2  3
-Init model: /home/cchen/Hiccup/example/slab/init_model.pb
+Init model: <YOUR_INIT_MODEL_PATH>
 2025-03-03 12:50:16 NN_1 is training ...
 ------------------------------------------ GA_1 Searching ------------------------------------------
 gpu: 4
@@ -29,7 +29,7 @@ model_id  rmse_val  rmse_trn  rmse_e_val  rmse_e_trn  rmse_f_val  rmse_f_trn
   001      0.3420     0.0991     0.0413     0.0169     0.0711     0.0556
   002      0.2140     0.2140     0.0247     0.0293     0.1100     0.0969
   003      0.6020     0.3910     0.0819     0.0411     0.0967     0.2630
-Best Model: /home/cchen/slab/hiccup/dp/nn1/000/frozen_model.pb
+Best Model: <YOUR_BEST_MODEL_PATH>
 All models have been successfully frozen !!!
 -------------------------------------------GA_1 Searching-------------------------------------------
 gpu: 0

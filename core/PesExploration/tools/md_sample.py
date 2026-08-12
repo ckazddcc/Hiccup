@@ -23,12 +23,20 @@ def _set_env_for_dp_md(
     blas_threads: int = 1,
     gpu_id: int = 0,
 ):
-    """
-    Use explicit assignment instead of setdefault to make behavior deterministic
-    across multiple runs / spawned workers.
+    """Set environment variables for DP-based MD runs.
+
+    Configures thread counts, GPU visibility, and logging level to ensure
+    deterministic behavior across spawned worker processes.
+
+    Args:
+        cpu_only: if True, disable GPU (CPU-only inference).
+        dp_intra: DP_INTRA_OP_PARALLELISM_THREADS.
+        dp_inter: DP_INTER_OP_PARALLELISM_THREADS.
+        blas_threads: thread count for OpenBLAS, OMP, MKL, NumExpr.
+        gpu_id: GPU device index to expose.
     """
     print(f"Setting env for DP MD with gpu_id {gpu_id}")
-    # deepmd_plugin_dir = "/home/cchen/apps/deepmd-kit/lib/deepmd_lmp"
+    # deepmd_plugin_dir = "<YOUR_DEEPMD_PLUGIN_DIR>"
     old = os.environ.get("LAMMPS_PLUGIN_PATH", "")
     print(old)
     # if old:
@@ -55,6 +63,17 @@ def _set_env_for_dp_md(
 
 @dataclass
 class SeedMDConfig:
+    """Configuration for a single MD run from a seed structure.
+
+    Attributes:
+        seed_id: unique identifier for the seed.
+        temperature_K: target temperature in Kelvin.
+        timestep_fs: MD timestep in femtoseconds.
+        nsteps: total number of MD steps.
+        friction_1_per_fs: Langevin friction coefficient in 1/fs.
+        dump_interval: trajectory write interval (steps).
+        rng_seed: optional random seed for velocity initialization.
+    """
     seed_id: int
     temperature_K: float = 300.0
     timestep_fs: float = 1.0
@@ -73,8 +92,22 @@ def run_one_seed_md(
     cpu_only_inference: bool = True,
     gpu_id: int = 0,
     ) -> Dict[str, Any]:
-    """
-    One process = one atoms seed = one LAMMPS instance.
+    """Run a Langevin MD simulation for a single seed structure.
+
+    Each call spawns its own LAMMPS instance with a DP potential, initializes
+    velocities at the target temperature, and writes a trajectory file.
+
+    Args:
+        atoms: ASE Atoms object (seed structure).
+        type_map: list of element symbols matching the DP model.
+        dp_model_path: path to the frozen DP model.
+        cfg: SeedMDConfig with MD parameters.
+        base_workdir: parent directory for this seed's output.
+        cpu_only_inference: if True, run DP inference on CPU.
+        gpu_id: GPU device index.
+
+    Returns:
+        Dict with seed_id, workdir, temperature, nsteps, and natoms.
     """
     _set_env_for_dp_md(cpu_only=cpu_only_inference, dp_intra=4, dp_inter=2, blas_threads=1, gpu_id=gpu_id)
 
@@ -91,7 +124,7 @@ def run_one_seed_md(
     ]
 
     lmpcmds = [
-        # box 定义之后再设置这些是允许的
+        # These settings are allowed after box definition
         "neighbor 2.0 bin",
         "neigh_modify every 1 delay 0 check yes",
         f"pair_style deepmd {dp_model_path}",
@@ -162,6 +195,28 @@ def run_md_parallel(
     temperature_K: float = 300.0,
     gpu_ids: List[int] = None,
 ):
+    """Run MD simulations for multiple seed structures in parallel.
+
+    Each seed gets its own process with a deterministic RNG seed. GPUs are
+    assigned round-robin from *gpu_ids*.
+
+    Args:
+        atoms_list: list of ASE Atoms objects (seed structures).
+        dp_model_path: path to the frozen DP model.
+        type_map: list of element symbols matching the DP model.
+        base_workdir: parent directory for all seed outputs.
+        nproc: number of parallel processes.
+        nsteps: total MD steps per seed.
+        timestep_fs: MD timestep in femtoseconds.
+        dump_interval: trajectory write interval (steps).
+        cpu_only_inference: if True, run DP inference on CPU.
+        base_rng_seed: base random seed (incremented per seed).
+        temperature_K: target temperature in Kelvin.
+        gpu_ids: list of GPU device IDs (cycled across seeds).
+
+    Returns:
+        List of result dicts from run_one_seed_md.
+    """
     os.makedirs(base_workdir, exist_ok=True)
 
     cfgs = []
@@ -186,8 +241,21 @@ def run_md_parallel(
     return results
 
 def gather_md_traj(md_dir, model_path, gpu_id):
+    """Collect MD trajectories into a database with energies and forces.
+
+    Reads all trajectory files under *md_dir*, recomputes energies and forces
+    with the given DP model, and writes them to a database.
+
+    Args:
+        md_dir: directory containing seed_* subdirectories with md.traj files.
+        model_path: path to the frozen DP model.
+        gpu_id: GPU device index for inference.
+
+    Returns:
+        Path to the gathered trajectory database.
+    """
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
-    md_traj_db_path = "/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/alls.db"
+    md_traj_db_path = "<YOUR_MD_TRAJ_DB_PATH>"
     #md_traj_db_path = os.path.join(md_dir, "md_traj.db")
     md_traj_db = connect(md_traj_db_path)
     calc = DP(model=model_path)
@@ -212,19 +280,19 @@ if __name__ == "__main__":
     from ase.constraints import FixAtoms
 
     # atoms_list = []
-    # db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/to_md.db")
+    # db = connect("<YOUR_TO_MD_DB_PATH>")
     # for row in db.select():
     #     atoms0 = row.toatoms()
     #     fix = [atom.index for atom in atoms0 if atom.position[2] < 2.5]
     #     atoms0.set_constraint(FixAtoms(indices=fix))
     #     atoms_list.append(atoms0)
     #
-    dp_model = "/home/yliu/cchen/CuClO/workdir0/dp/nn3/003/frozen_model.pb"
+    dp_model = "<YOUR_DP_MODEL_PATH>"
     # results = run_md_parallel(
     #             atoms_list=atoms_list,
     #             dp_model_path=dp_model,
     #             type_map=['O', 'Cl', 'Cu'],
-    #             base_workdir="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/MD",
+    #             base_workdir="<YOUR_MD_WORKDIR>",
     #             nproc=3,
     # one process per atoms seed, up to you
     #             nsteps=10000,       # 20 ps at dt=1fs
@@ -236,5 +304,5 @@ if __name__ == "__main__":
     #         )
     #
     # print("Done:", results)
-    gather_md_traj(md_dir="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga5/MD", model_path=dp_model, gpu_id=0)
+    gather_md_traj(md_dir="<YOUR_MD_DIR>", model_path=dp_model, gpu_id=0)
 

@@ -1,5 +1,8 @@
 """
-处理二维基底结构，处理真空层，将元素按照原子序数进行排列，生成新的 POSCAR_SUBSTRATE 文件
+Process 2D substrate structures.
+
+Sorts atoms by atomic number, adjusts the vacuum layer, and writes a
+POSCAR_SUBSTRATE file for downstream use.
 """
 import os
 from ase.io import read, write
@@ -8,10 +11,15 @@ from ase.data import atomic_numbers
 
 
 def process_2d_substrate(substrate_path):
+    """Process a 2D substrate and write a POSCAR_SUBSTRATE file.
+
+    Sorts atoms by atomic number, rewrites the element-order and count lines
+    in VASP POSCAR format, and saves the result as POSCAR_SUBSTRATE_new.
+
+    Args:
+        substrate_path: path to the input substrate structure file.
     """
-    处理二维基底结构，并生成 POSCAR_SUBSTRATE 文件
-    """
-    # 获取基底索引和路径
+    # Get substrate index and path
     dir_path = os.path.dirname(substrate_path)
     substrate = read(substrate_path)
     cell = substrate.get_cell()
@@ -41,4 +49,4 @@ if __name__ == '__main__':
     # cwd = os.getcwd()
     # substrate_path = os.path.join(cwd, 'POSCAR_SUBSTRATE')
     # process_2d_substrate(substrate_path)
-    process_2d_substrate("/home/ubuntu/Documents/test/test/NN/0107/POSCAR_BiVO4")
+    process_2d_substrate("<YOUR_SUBSTRATE_PATH>")

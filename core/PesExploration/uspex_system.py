@@ -25,6 +25,13 @@ from ase.constraints import FixAtoms
 
 
 class UspexSystem:
+    """Manage USPEX structure search jobs with NN-based local optimization.
+
+    Generates USPEX input files (INPUT.txt, POSCARS, POTCAR, INCAR) from
+    random seed structures, monitors job status, and collects results.
+    Supports 2D slab and 3D bulk searches with MACE or DP calculators.
+    """
+
     def __init__(self,
                  elements,
                  target_composition,
@@ -45,14 +52,10 @@ class UspexSystem:
                  nsw=200,
                  gpu=0
                  ):
-        """
-        读取随机种子数据库
-        产生Uspex运行输入文件、脚本
-        """
         self.work_dir = workdir
         if not os.path.exists(workdir):
             os.makedirs(workdir)
-        # 按照元素顺序更新元素和组成列表
+        # Sort elements and compositions by atomic number
         elem_dict = {elem: target_composition[i] for i, elem in enumerate(elements)}
         elem_sort = sorted(elem_dict.items(), key=lambda x: atomic_numbers[x[0]])
         elements = [ele for ele, _ in elem_sort]
@@ -63,18 +66,18 @@ class UspexSystem:
         self.dimension = dimension
         chemformula = "".join(f"{ele}{num}" for ele, num in zip(elements, target_composition))
         unique_mark = f"{self.dimension}_{chemformula}"
-        # 如果并行任务中设计多种基底，需要区分基底
+        # Distinguish substrates when running multiple in parallel
         if multi_substrates:
             substrate_index = os.path.basename(substrate_path).split("_")[-1]
             unique_mark += f"_{substrate_index}"
         self.unique_mark = unique_mark
-        # 创建compos工作目录
+        # Create composition working directory
         self.compos_work_dir = os.path.join(workdir, f"{unique_mark}")
         self.template_dir = uspex_templates_dir
         self.substrate_path = substrate_path
         self.model_path = model_path
         self.gpu = gpu
-        # GA设置
+        # GA parameters
         self.generation_num = generation_num
         self.pop_size = pop_size
         self.ini_pop_size = ini_pop_size
@@ -82,7 +85,7 @@ class UspexSystem:
         self.opt_method = opt_method
         self.ediffg = ediffg
         self.nsw = nsw
-        # 种子结构设置
+        # Seed structure settings
         self.random_seeds_path = random_seeds_path
         self.init_seeds_path = init_seeds_path
         self.random_seeds_db = connect(random_seeds_path)
@@ -99,18 +102,25 @@ class UspexSystem:
         else:
             self.selected_dict = {}
 
-        current_file = os.path.abspath(__file__)
-        current_dir = os.path.dirname(current_file)
-        parent_dir = os.path.dirname(current_dir)
-        # grandparent_dir = os.path.dirname(parent_dir)
-        self.potcar_dir = os.path.join(parent_dir, "data/POTCAR")
+        potcar_dir = os.environ.get("POTCAR_DIR")
+        if not potcar_dir:
+            raise EnvironmentError(
+                "Environment variable POTCAR_DIR is not set. "
+                "Please set it to the path of your POTCAR library directory, "
+                "e.g.: export POTCAR_DIR=/path/to/POTCAR_library"
+            )
+        self.potcar_dir = potcar_dir
 
     @staticmethod
     def write_poscars(atoms_list, output_file):
-        """
-        将Atoms对象转化为POSCARS格式
-        :param atoms_list: 选定的Atoms对象列表
-        :param output_file: 输出文件POSCARS路径
+        """Write a list of Atoms objects into a combined POSCARS file.
+
+        Each structure is sorted by atomic number, wrapped into the cell,
+        and labeled with an EA header for USPEX compatibility.
+
+        Args:
+            atoms_list: list of ASE Atoms objects.
+            output_file: path to the output POSCARS file.
         """
         gathered_poscars = []
         for i, atoms in enumerate(atoms_list):
@@ -122,13 +132,13 @@ class UspexSystem:
                     elif pos[k] > 1:
                         pos[k] -= 1
             atoms.set_scaled_positions(scaled_positions)
-            # 按照元素序号排序
+            # Sort by atomic number
             atoms = sort(atoms, tags=atoms.get_atomic_numbers())
             tmp_file = os.path.join(os.path.dirname(output_file), f"POSCAR_{i}")
-            # 清除原子的固定信息
+            # Clear atom constraints
             atoms_clean = atoms.copy()
             atoms_clean.set_constraint()
-            # 通过ase的write函数转化为POSCAR格式并在第一行标记EA
+            # Write POSCAR format via ASE and label EA in the first line
             write(tmp_file, atoms_clean, direct=True, vasp5=True)
             with open(tmp_file, "r") as f:
                 content = f.readlines()
@@ -140,8 +150,17 @@ class UspexSystem:
             f.writelines(gathered_poscars)
 
     def random_seeds_selection(self, num):
-        """
-        从随机种子中选取最稳定的结构作为初始种子，同时记录所选择的结构uid
+        """Select the most stable seed structures for GA initialization.
+
+        Picks structures matching the target composition, preferring those
+        with low max force and low selection count. Selection history is
+        persisted to a JSON file to avoid reusing the same seeds.
+
+        Args:
+            num: number of structures to select.
+
+        Returns:
+            List of selected ASE Atoms objects.
         """
         target_compos = Counter(dict(zip(self.elements, self.target_composition)))
         info = []
@@ -172,11 +191,11 @@ class UspexSystem:
             else:
                 selected_uids = random.sample(uidss, int(num))
         else:
-            # selected_times 筛选
+            # Filter by selection count
             info.sort(key=lambda x: x[2])
             _num = min(math.ceil(num * 2), len(info))
             selected_times = info[:_num]
-            # energy 筛选
+            # Filter by energy
             selected_times = sorted(selected_times, key=lambda x: x[1])
             selected_times_energy = selected_times[:int(num)]
             selected_uids = [uid for uid, _, _ in selected_times_energy]
@@ -190,9 +209,10 @@ class UspexSystem:
         return selected_atoms
 
     def generate_input_txt(self, bash_path):
-        """
-        生成输入文件INPUT.txt
-        适用于USPEX10.5及之前版本 新版本输入文件使用input.uspex
+        """Generate the USPEX INPUT.txt file.
+
+        Compatible with USPEX 10.5 and earlier. Newer versions use
+        input.uspex instead.
         """
         self.bash_path = str(bash_path) + f" {self.gpu}"
         atomtype_str = "  ".join(self.elements)
@@ -224,8 +244,13 @@ class UspexSystem:
                                        self.ini_pop_size, self.generation_num, self.bash_path))
 
     def renumber_EA(self, good_poscars_path):
-        """
-        对EA重新编号为123...
+        """Renumber EA labels in a POSCARS file sequentially (EA1, EA2, ...).
+
+        Args:
+            good_poscars_path: path to the POSCARS file to renumber.
+
+        Returns:
+            List of updated file lines.
         """
         with open(good_poscars_path, 'r') as f:
             good_poscars = f.readlines()
@@ -239,9 +264,9 @@ class UspexSystem:
             line[0] = 'EA%d' % (i + 1)
             good_poscars[config_num[i]] = line[0] + '  ' + ' '.join(line[1:-1]) + '    ' + line[-1] + '\n'
 
-        # 返回包含EA行在文件中第几行
+        # Find line indices of all EA entries
         config_indices = [i for i, line in enumerate(good_poscars) if line.startswith("EA")]
-        # 把EA重新编号123...
+        # Renumber EA labels sequentially
         for idx, line_idx in enumerate(config_indices, start=1):
             line = good_poscars[line_idx].split()
             line[0] = f'EA{idx}'
@@ -249,23 +274,26 @@ class UspexSystem:
         return good_poscars
 
     def generate_potcar(self, output_file='POTCAR_1'):
-        """根据元素列表生成 POTCAR 文件"""
-        # self.potcar_dir = "/home/cchen/POTCAR"
+        """Concatenate per-element POTCAR files into a single POTCAR.
+
+        Args:
+            output_file: path to the output POTCAR file.
+        """
         with open(output_file, 'w') as potcar:
             for element in self.elements:
                 potcar_path = os.path.join(self.potcar_dir, f'POTCAR_{element}')
                 if not os.path.exists(potcar_path):
-                    raise FileNotFoundError(f"{potcar_path} 不存在！")
+                    raise FileNotFoundError(f"{potcar_path} not found!")
                 with open(potcar_path, 'r') as potcar_part:
                     potcar.write(potcar_part.read())
 
     def create_uspex_input(self):
-        """
-        生成 USPEX 的输入文件和所需资源
-        1.根据元素和组成，生成一个唯一的标识符 unique_mark
-        2.如果有之前的计算结果直接调用最新的
-        2.根据initial_seed_paths判断是使用指定的初始种子，还是进行random_seeds_selection
-        3.产生各种uspex运行文件
+        """Generate all USPEX input files and resources for a structure search.
+
+        Creates the working directory, selects seed structures (from random
+        seeds or a specified database), writes POSCARS for each generation,
+        copies POTCAR/INCAR files, generates INPUT.txt, and patches the
+        local optimization script with correct model paths and constraints.
         """
         if os.path.exists(self.compos_work_dir):
             shutil.rmtree(self.compos_work_dir)
@@ -277,11 +305,11 @@ class UspexSystem:
         if not os.path.exists(specific_dir):
             os.makedirs(specific_dir)
 
-        # 如果是 2D
+        # For 2D systems, copy substrate file
         if self.dimension == 2:
             shutil.copy(self.substrate_path, os.path.join(self.compos_work_dir, "POSCAR_SUBSTRATE"))
 
-        # 生成POSCARS1：如果有指定的初始种子，直接使用，否则从随机种子中选取最稳定的结构作为初始种子
+        # Generate POSCARS_1: use specified seeds if available, otherwise select from random seeds
         selected_atoms = []
         if not self.init_seeds_path:
             if self.random_seeds_path is None:
@@ -293,9 +321,9 @@ class UspexSystem:
                 self.write_poscars(selected_atoms, POSCARS_1)
 
         elif "POSCARS" in os.path.basename(self.init_seeds_path):
-            # 重新编号
+            # Renumber EA labels
             good_poscars = self.renumber_EA(self.init_seeds_path)
-            # 写入更新后的内容到 POSCARS_1 文件
+            # Write updated content to POSCARS_1
             seeds_file = os.path.join(self.compos_work_dir, 'Seeds', 'POSCARS_1')
             with open(seeds_file, 'w') as file:
                 file.writelines(good_poscars)
@@ -314,7 +342,7 @@ class UspexSystem:
             POSCARS_1 = os.path.join(seeds_dir, 'POSCARS_1')
             self.write_poscars(selected_atoms, POSCARS_1)
 
-        # 产生POSCAR_2 3 4
+        # Generate POSCARS for subsequent generations
         for i in range(2, self.generation_num + 1):
             seeds_num = math.ceil(0.2 * self.pop_size)
             if self.random_seeds_path:
@@ -324,23 +352,17 @@ class UspexSystem:
             POSCARS_i = os.path.join(seeds_dir, f'POSCARS_{i}')
             self.write_poscars(selected_atoms, POSCARS_i)
 
-        # 从目标目录复制POTCAR到Specific
-        # potcar_1 = os.path.join(self.template_dir, "POTCAR_1")
-        # self.generate_potcar(output_file=potcar_1)
-        # if os.path.exists(potcar_1):
-        #     shutil.copy(potcar_1, os.path.join(specific_dir, "POTCAR_1"))
-        # else:
         for elem in self.elements:
             potcar_path = os.path.join(self.potcar_dir, f"POTCAR_{elem}")
             shutil.copy(potcar_path, os.path.join(specific_dir, f"POTCAR_{elem}"))
         shutil.copy(os.path.join(self.template_dir, "INCAR_1"), os.path.join(specific_dir, "INCAR_1"))
 
-        # 产生INPUT.txt
+        # Generate INPUT.txt
         calc_tag = "mace" if self.calculator == "MACE" else "dp"
         bash_path = os.path.join(self.template_dir, f"run_{calc_tag}.sh")
         self.generate_input_txt(bash_path)
 
-        # 修改run_dp/mace.sh中的.py文件路径
+        # Patch .py path in run_dp/mace.sh
         nn_inf_path = os.path.join(self.template_dir, f"{calc_tag}_opt.py")
         with open(bash_path, "r") as f:
             content = f.readlines()
@@ -350,7 +372,7 @@ class UspexSystem:
         with open(bash_path, "w") as f:
             f.writelines(content)
 
-        # 修改dp/mace_opt.py中的路径
+        # Patch paths in dp/mace_opt.py
         constraint_z = 0
         if self.dimension == 2:
             input_dir = os.path.join(self.compos_work_dir, "INPUT.txt")
@@ -363,11 +385,11 @@ class UspexSystem:
         with open(nn_inf_path, "r") as f:
             content = f.readlines()
             for i, line in enumerate(content):
-                # 修改dp_opt.py中的路径
+                # Patch model path in dp_opt.py
                 if calc_tag == "dp":
                     if "model_path =" in line and "#" not in line:
                         content[i] = f"model_path = \"{self.model_path}\"\n"
-                # 修改mace_opt.py中的路径
+                # Patch model path in mace_opt.py
                 elif calc_tag == "mace":
                     if "model_path =" in line and "#" not in line:
                         script_directory = Path(__file__).parent
@@ -386,6 +408,11 @@ class UspexSystem:
         print("USPEX input and related files have been created successfully.")
 
     def kill_uspex(self):
+        """Gracefully stop a running USPEX job.
+
+        Renames the work directory, waits for active calculations to finish,
+        removes temporary calculation folders, then restores the directory.
+        """
         name = self.compos_work_dir
         dir_name = os.path.dirname(self.compos_work_dir)
         new_name = os.path.join(dir_name, os.path.basename(name + "_"))
@@ -406,8 +433,13 @@ class UspexSystem:
         os.rename(new_name, name)
 
     def uspex_monitor(self):
-        """
-        监控USPEX的运行状态
+        """Monitor USPEX job status.
+
+        Checks for done/failed marker files. If the log file has not been
+        updated for 30 minutes, marks the job as failed and kills it.
+
+        Returns:
+            "RUNNING", "DONE", or "FAILED".
         """
         STATE = "RUNNING"
         done_flag = os.path.join(self.compos_work_dir, "USPEX_IS_DONE")
@@ -422,13 +454,13 @@ class UspexSystem:
             output_file_path = os.path.join(self.compos_work_dir, f"uspex.log")
             if not os.path.exists(output_file_path):
                 time.sleep(60)
-            # 获取文件的最后修改时间
+            # Get last modified time of the log file
             last_modified_time = os.path.getmtime(output_file_path)
-            # 将最后修改时间转换为 datetime 对象
+            # Convert to datetime
             last_modified_datetime = datetime.fromtimestamp(last_modified_time)
-            # 获取当前时间
+            # Get current time
             current_time = datetime.now()
-            # 检查文件是否超过10分钟没有更新
+            # Check if log has been stale for over 30 minutes
             time_difference = current_time - last_modified_datetime
             if time_difference > timedelta(minutes=30):
                 with open(fail_falg, "w") as f:
@@ -440,15 +472,23 @@ class UspexSystem:
                 return STATE
 
 
-# 对individuals文件进行处理，1）去重，写入gathered.db 2）根据能量和力的阈值进行筛选，写入filtered.db
+# Process Individuals file: deduplicate structures and write to gathered.db
 def pick_individuals(individuals_path):
-    """
-    从.individuals文件中提取出去重后的结构
+    """Extract deduplicated structures from a USPEX Individuals file.
+
+    Parses the Individuals file, deduplicates by volume/density/fitness,
+    and returns unique structure IDs with their fitness values.
+
+    Args:
+        individuals_path: path to the USPEX Individuals file.
+
+    Returns:
+        List of (structure_id, fitness) tuples.
     """
     ids = []
     fits = []
     with open(individuals_path) as fp:
-        # 跳过前两行
+        # Skip first two header lines
         fp.readline()
         fp.readline()
         while True:
@@ -467,23 +507,35 @@ def pick_individuals(individuals_path):
                 fit = 0
             ids.append(idx)
             fits.append(str(volume) + "_" + str(density) + "_" + str(fit))
-    # 去重
+    # Deduplicate
     unique_fits = set(fits)
-    # 返回unique_fits的索引在原its中的位置
+    # Map unique fits back to original indices
     unique_ids = [(ids[fits.index(u)], float(u.split("_")[2])) for u in unique_fits]
-    # 将字符串转化为整数
+    # Convert to integers
     unique_ids = [(int(ii[0]), ii[1]) for ii in unique_ids]
     return unique_ids
 
 
 def write_to_db(work_dir, constraint_z=0):
-    """
-    将简单去重后的结构写入gathered.db文件
+    """Collect USPEX results into a gathered.db database.
+
+    Reads the latest results directory, deduplicates structures, converts
+    POSCARS to ASE Atoms, applies substrate constraints if needed, and
+    writes them to gathered.db. Structures with abnormal fixed-atom counts
+    are filtered out.
+
+    Args:
+        work_dir: USPEX working directory containing results* subdirectories.
+        constraint_z: z-coordinate threshold for fixing substrate atoms;
+            0 means no constraint.
+
+    Returns:
+        Path to the gathered database, or False if no results found.
     """
     subdirectories = []
     fix_num = []
     for root, dirs, files in os.walk(work_dir):
-        # 获取子目录名，只返回当前目录的子目录，避免递归深度遍历
+        # Get subdirectory names (non-recursive)
         subdirectories.extend(dirs)
         break
     subdirectories = [int(i[7:]) for i in subdirectories if i.startswith("results")]
@@ -493,7 +545,7 @@ def write_to_db(work_dir, constraint_z=0):
     results_id = max(subdirectories)
     results_path = os.path.join(work_dir, f"results{results_id}")
     alls_db_path = os.path.join(work_dir, "gathered.db")
-    # 若gathered.db文件存在则删除，否则生成一个空的gathered.db文件
+    # Remove existing gathered.db or create empty one
     if os.path.exists(alls_db_path):
         os.remove(alls_db_path)
     else:
@@ -515,7 +567,7 @@ def write_to_db(work_dir, constraint_z=0):
                 with open(poscar_dir, 'w') as poscar_file:
                     poscar_file.writelines(poscar_content)
                 atoms = read(poscar_dir)
-                # 添加原子的固定信息
+                # Apply atom constraints
                 if constraint_z > 0:
                     fix_indexs = [atom.index for atom in atoms if atom.position[2] < constraint_z]
                     fix_num.append(len(fix_indexs))
@@ -526,7 +578,7 @@ def write_to_db(work_dir, constraint_z=0):
                 print(f"{i} Error")
                 continue
 
-    # 防止有不合理结构存在
+    # Filter out unreasonable structures
     if constraint_z != 0:
         counter = Counter(fix_num)
         most_common_fix_num = counter.most_common(1)[0][0]
@@ -540,42 +592,18 @@ def write_to_db(work_dir, constraint_z=0):
 
 
 if __name__ == '__main__':
-    def find_db_files(root_dir):
-        root = Path(root_dir)
-        return [root for root in root.iterdir() if root.is_dir()]
+    uspex = UspexSystem(elements=["O", "Cu"],
+                        target_composition=[10, 10],  
+                        dimension=0,
+                        workdir="<YOUR_WORKDIR_PATH>",
+                        uspex_templates_dir="<YOUR_USPEX_TEMPLATES_DIR>",
+                        generation_num=2,
+                        pop_size=10,
+                        ini_pop_size=5,
+                        model_path="<YOUR_MODEL_PATH>",
+                        calculator="MACE"
+                        )
+    uspex.create_uspex_input()
 
-    good_db = connect("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7/to_md.db")
-    # alls_2 = connect("/home/yliu/cchen/CuClO/workdir/pes/ga/ga0/alls.db")
-    dirs = find_db_files("/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7")
-    for dir in dirs:
-        gather_db_path = os.path.join(dir, "gathered.db")
-        gather_db = connect(gather_db_path)
-        info = []
-        for row in gather_db.select():
-            info.append([row.id, row.data["fitness"]])
-        info.sort(key=lambda x: x[1])
-        for i in info[:20]:
-            target_row = gather_db.get(i[0])
-            atoms = target_row.toatoms()
-            z_max = atoms.positions[:, 2].max()
-            if z_max > 12:
-                continue
-            else:
-                good_db.write(atoms, data=target_row.data, key_value_pairs=target_row.key_value_pairs)
-                break
-        print(good_db.count())
-        # if os.path.exists(gather_db_path):
-        #     continue
-        # write_to_db(str(dir), 0.5)
-        # print(f"{dir} has been created successfully.")
-        # db = connect(gather_db_path)
-        # for row in db.select():
-        #     atoms = row.toatoms()
-        #     z_max = atoms.positions[:, 2].max()
-        #     if z_max > 12:
-        #         continue
-        #     alls_2.write(atoms, data=row.data, key_value_pairs=row.key_value_pairs)
-        # print(f"{gather_db_path} has been written to alls_2.db successfully.")
-        # print(alls_2.count())
     if os.path.exists(os.path.join(cwd, 'warnings.log')):
         os.remove(os.path.join(cwd, 'warnings.log'))

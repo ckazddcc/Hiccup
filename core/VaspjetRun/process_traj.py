@@ -5,6 +5,21 @@ import sys
 
 
 def gather_traj(root_dir, db_path, process="filter", max_force_threshold=5.0):
+    """Collect trajectory files into a database.
+
+    Walks *root_dir* for .traj files, processes them according to *process*
+    mode, and writes energies and forces to a database.
+
+    Args:
+        root_dir: directory to search for .traj files.
+        db_path: path to the output database.
+        process: processing mode - "filter" (select by force/energy
+            criteria), "all" (keep all frames), or "last_image" (last frame only).
+        max_force_threshold: maximum force magnitude for filtering (eV/Å).
+
+    Returns:
+        Path to the trajectory database.
+    """
     if os.path.exists(db_path):
         os.remove(db_path)
     db_traj = connect(db_path)
@@ -12,7 +27,7 @@ def gather_traj(root_dir, db_path, process="filter", max_force_threshold=5.0):
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.endswith('.traj'):
-                traj_file_path = os.path.join(root, file)  # 获取完整路径
+                traj_file_path = os.path.join(root, file)  # Get full path
                 try:
                     atomss = read(traj_file_path, index=':')
                 except:
@@ -52,6 +67,20 @@ def gather_traj(root_dir, db_path, process="filter", max_force_threshold=5.0):
 
 
 def process_traj_filter(traj_atoms, max_force_threshold, delta_energy_threshold=0.1):
+    """Filter trajectory frames by force and energy criteria.
+
+    Keeps frames with max force between 0.5 and *max_force_threshold*, and
+    low-force frames only if their energy differs from the last kept frame
+    by at least *delta_energy_threshold*. The final frame is always included.
+
+    Args:
+        traj_atoms: list of ASE Atoms objects from a trajectory.
+        max_force_threshold: upper force magnitude cutoff (eV/Å).
+        delta_energy_threshold: minimum energy difference for deduplication (eV).
+
+    Returns:
+        List of selected Atoms objects.
+    """
     selected_traj_atoms = []
     energy = 0
     for a in traj_atoms:
@@ -80,12 +109,12 @@ def process_traj_filter(traj_atoms, max_force_threshold, delta_energy_threshold=
 
 
 if __name__ == '__main__':
-    # 传入参数为最大力阈值
+    # First argument is the max force threshold
     max_force = float(sys.argv[1])
     process_mode = str(sys.argv[2])
-    # python process_traj.py 20 filter (20为最大力阈值，filter为处理模式)
+    # Usage: python process_traj.py 20 filter  (20 = max force threshold, filter = process mode)
     gather_traj('./', './traj.db', process=process_mode, max_force_threshold=max_force)
-    # gather_traj('/home/cchen/Train_NN/example/cluster/hiccup1/pes/ga/ga2',
-    #             '/home/cchen/Train_NN/example/cluster/hiccup1/pes/ga/ga2/tmp/traj.db',
+    # gather_traj('<YOUR_GA_DIR_PATH>',
+    #             '<YOUR_TRAJ_DB_PATH>',
     #             process="filter")
 

@@ -5,6 +5,11 @@ from ase.db import connect
 
 
 class VaspjetRun:
+    """Submit VASP calculations to a remote CPU server via SSH.
+
+    Uploads database and config files, then launches VaspJet remotely.
+    """
+
     def __init__(self,
                  db_path,
                  cpu_config,
@@ -16,7 +21,8 @@ class VaspjetRun:
         self.cpu_workdir = cpu_workdir
 
     def run_vaspjet(self):
-        # 与cpu服务器建立远程连接
+        """Upload files and launch VaspJet on the remote CPU server."""
+        # Establish SSH connection to the CPU server
         key_env = self.cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
         ssh_key_path = os.environ.get(key_env)
         if not ssh_key_path:
@@ -31,7 +37,7 @@ class VaspjetRun:
                     look_for_keys=False,
                     allow_agent=False)
         sftp = ssh.open_sftp()
-        # 确保远程目录存在，如果不存在则创建
+        # Ensure remote directories exist, create if missing
         try:
             sftp.mkdir(os.path.dirname(self.cpu_workdir))
         except IOError:
@@ -41,7 +47,7 @@ class VaspjetRun:
         except IOError:
             pass
 
-        # 上传模型文件，数据文件，配置文件
+        # Upload model, data, and config files
         script_dir = os.path.dirname(os.path.abspath(__file__))
         local_db = self.db_path
         local_yml = self.vaspjet_yml
@@ -72,11 +78,23 @@ def vaspjet_monitor(cpu_config,
                     traj_process_mode=None,  # "filter"/"last_image"/None
                     max_force_threshold=50):
     """
-    监控vaspjet任务的运行情况
-    :return: 任务状态: "RUNNING", "DONE", "KILLED"
+    Monitor VaspJet job status on the remote CPU server.
+
+    Args:
+        cpu_config: dict with CPU connection parameters.
+        cpu_workdir: remote working directory path.
+        download_results: if True, download result files when the job is done.
+        local_path: local path to save downloaded results.
+        traj_process_mode: trajectory processing mode - "filter",
+            "last_image", or None.
+        max_force_threshold: max force cutoff for trajectory filtering.
+
+    Returns:
+        Tuple of (state, is_downloaded) where state is "RUNNING",
+        "DONE", or "KILLED".
     """
     state = "RUNNING"
-    # 与cpu服务器建立远程连接
+    # Establish SSH connection to the CPU server
     key_env = cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
     ssh_key_path = os.environ.get(key_env)
     if not ssh_key_path:
@@ -100,7 +118,7 @@ def vaspjet_monitor(cpu_config,
         if "final.db" in files:
             state = "DONE"
 
-    # 下载结果文件
+    # Download result files
     IS_DOWNLOADED = False
     if download_results:
         if traj_process_mode:
@@ -114,7 +132,7 @@ def vaspjet_monitor(cpu_config,
                        f"python process_traj.py {max_force_threshold} {traj_process_mode}")
             ssh.exec_command(command)
             remote_dir = os.path.join(cpu_workdir, "workdir/traj.db")
-            # 确保轨迹处理完毕
+            # Wait for trajectory processing to complete
             traj_done_tag = os.path.join(cpu_workdir, "workdir/TRAJ_DONE")
             TRAJ_DONE = False
             while not TRAJ_DONE:
@@ -148,7 +166,12 @@ def vaspjet_monitor(cpu_config,
 
 
 def kill_vaspjet(cpu_config, cpu_workdir):
-    # 与cpu服务器建立远程连接
+    """Kill running VaspJet jobs on the remote CPU server.
+
+    Uploads kill_vaspjet.py, executes it remotely, and creates a KILLED
+    marker file.
+    """
+    # Establish SSH connection to the CPU server
     key_env = cpu_config.get("CPU SSH Key Env", "HICCUP_CPU_SSH_KEY")
     ssh_key_path = os.environ.get(key_env)
     if not ssh_key_path:
@@ -163,13 +186,13 @@ def kill_vaspjet(cpu_config, cpu_workdir):
                 look_for_keys=False,
                 allow_agent=False)
 
-    # 将kill_vaspjet.py上传到cpu服务器
+    # Upload kill_vaspjet.py to the CPU server
     sftp = ssh.open_sftp()
     current_file_path = os.path.abspath(__file__)
     kill_vaspjet_path = os.path.join(os.path.dirname(current_file_path), "kill_vaspjet.py")
     sftp.put(kill_vaspjet_path,
              os.path.join(cpu_workdir, "kill_vaspjet.py"))
-    # 杀死进程并创建KILLED文件作为标记
+    # Kill processes and create KILLED marker file
     command = (f"conda activate vaspjet && cd {cpu_workdir} && python kill_vaspjet.py && "
                f"touch {cpu_workdir}/workdir/KILLED")
     ssh.exec_command(command)
@@ -178,22 +201,22 @@ def kill_vaspjet(cpu_config, cpu_workdir):
 
 
 if __name__ == '__main__':
-    templates = "/home/cchen/Hiccup/template"
+    templates = "<YOUR_TEMPLATES_PATH>"
     cpu_config = {
-        "CPU IP": "172.21.41.44",
-        "CPU Username": "materdesign",
-        "CPU Port": 22,
+        "CPU IP": "<YOUR_CPU_IP>",
+        "CPU Username": "<YOUR_CPU_USERNAME>",
+        "CPU Port": "<YOUR_CPU_PORT>",
         "CPU SSH Key Env": "HICCUP_CPU_SSH_KEY"
     }
 
-    # dft_sp = VaspjetRun(db_path="/home/cchen/Hiccup/example/slab/init_md.db",
+    # dft_sp = VaspjetRun(db_path="<YOUR_DB_PATH>",
     #                     cpu_config=cpu_config,
-    #                     cpu_workdir=os.path.join("/home/materdesign/cc/CuClO", "0"),
+    #                     cpu_workdir=os.path.join("<YOUR_CPU_WORKDIR>", "0"),
     #                     vaspjet_yml=os.path.join(templates, "vaspjet/config_opt.yml"))
     # dft_sp.run_vaspjet()
 
     state, IS_DOWNLOADED = vaspjet_monitor(cpu_config,
-                    cpu_workdir="/home/materdesign/cc/CuClO/1/iter0/opt",
+                    cpu_workdir="<YOUR_CPU_WORKDIR>",
                     download_results=False)
     print(state, IS_DOWNLOADED)
 

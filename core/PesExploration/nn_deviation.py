@@ -14,6 +14,13 @@ import random
 
 
 class NNDeviation:
+    """Evaluate model deviation across an ensemble of DP models.
+
+    Classifies structures into accurate, candidate, and failed sets based on
+    force standard deviation. Supports local structure extraction (LCS) for
+    slab and cluster geometries to reduce DFT cost.
+    """
+
     def __init__(self,
                  model_dir,
                  ga_db_path,
@@ -43,6 +50,7 @@ class NNDeviation:
             self.vaccum_thickness = vaccum_thickness
 
     def get_calculators(self):
+        """Load all DP calculators from frozen_model.pb files in model_dir."""
         calculators = []
         pbs = os.path.join(self.model_dir, "*/frozen_model.pb")
         mdoel_paths = glob.glob(pbs)
@@ -52,6 +60,15 @@ class NNDeviation:
         return calculators
 
     def get_max_deviation(self, id, nns_force_dict):
+        """Compute max force standard deviation across the model ensemble.
+
+        Args:
+            id: structure row ID in the database.
+            nns_force_dict: dict mapping row ID to list of force arrays.
+
+        Returns:
+            Tuple of (max_force_dev, wrong_atom_indices, wrong_atom_deviations).
+        """
         forces = nns_force_dict[id]
         mean_force = sum(forces) / len(forces)
         num = len(forces[0])
@@ -60,7 +77,7 @@ class NNDeviation:
             diff_f = f - mean_force
             f_std += (diff_f ** 2).sum(axis=1)
 
-        # 统计所有原子受力的标准差
+        # Compute force standard deviation for all atoms
         f_std = (f_std / num) ** 0.5
         max_force_dev = f_std.max()
         f_std = f_std.tolist()
@@ -69,8 +86,13 @@ class NNDeviation:
         return max_force_dev, wrong_atoms, wrong_list
 
     def get_deviation(self):
-        """
-        判断wrong_atoms, 并将数据分为accurate, candidates, failed
+        """Classify structures by model deviation into three databases.
+
+        Structures with max force deviation below force_err_lower are marked
+        accurate; between lower and upper thresholds are candidates; above the
+        upper threshold are failed. If too few candidates are found, the
+        threshold is relaxed by promoting the lowest-deviation failed or
+        accurate structures.
         """
         if os.path.exists(self.candidates_path):
             os.remove(self.candidates_path)
@@ -113,11 +135,11 @@ class NNDeviation:
                      "Failed": [len(failed_ids), round(len(failed_ids) / total, 2)]}
         print(devs_data)
         self.dev_results = devs_data
-        # 前期NN模型训练不足，导致合格数据不足，需要补充数据
+        # Early-stage NN may produce too few candidates; supplement with additional data
         min_num = min(math.ceil(total * 0.5), 1)
         if len(candidates_ids) < min_num:
             supply_num = min_num - len(candidates_ids)
-            # 补充failed数据
+            # Supplement with failed data
             if supply_num >= len(failed_ids):
                 candidates_ids.extend(failed_ids)
             else:
@@ -147,6 +169,16 @@ class NNDeviation:
 
     @staticmethod
     def adjust_vacuum_layer(atoms, vacuum_thickness):
+        """Adjust the cell to add vacuum padding along specified axes.
+
+        Args:
+            atoms: ASE Atoms object.
+            vacuum_thickness: list of vacuum thicknesses for [x, y, z];
+                0 means no change for that axis.
+
+        Returns:
+            Atoms object with adjusted cell and centered positions.
+        """
         atoms.center()
         positions = atoms.get_positions()
         cell = atoms.get_cell()
@@ -160,6 +192,17 @@ class NNDeviation:
 
     @staticmethod
     def remove_atoms(atoms, remove_index):
+        """Remove atoms at the given indices and shrink the cell accordingly.
+
+        The cell height (z) is reduced by the z-span of the removed atoms.
+
+        Args:
+            atoms: ASE Atoms object.
+            remove_index: list of atom indices to remove.
+
+        Returns:
+            New Atoms object with specified atoms removed.
+        """
         if len(remove_index) > 0:
             atoms.center()
             positions = atoms.get_positions()
@@ -174,6 +217,14 @@ class NNDeviation:
 
     @staticmethod
     def get_coordination_num_list(atoms):
+        """Compute the coordination number for each atom using natural cutoffs.
+
+        Args:
+            atoms: ASE Atoms object.
+
+        Returns:
+            List of coordination numbers, one per atom.
+        """
         coordination_num_list = []
         nc = np.array(natural_cutoffs(atoms))
         nl = NeighborList(nc, bothways=True)
@@ -184,8 +235,18 @@ class NNDeviation:
         return coordination_num_list
 
     def lcs_layer(self, atoms, wrong_atoms, layer_num=3):
-        """
-        LCS for slab
+        """Local structure extraction for slab systems.
+
+        Identifies the lowest layer containing a high-deviation atom, removes
+        layers below it, and fixes the layer just below the wrong-atom layer.
+
+        Args:
+            atoms: ASE Atoms object.
+            wrong_atoms: list of atom indices with high force deviation.
+            layer_num: number of layers for process_layers clustering.
+
+        Returns:
+            Modified Atoms object with constraints and removed substrate.
         """
         cluster_dicts = process_layers(atoms, layer_num=layer_num, substrate_path=None)
         wrong_atoms_z_pos = [(w, atoms[w].position[2]) for w in wrong_atoms]
@@ -211,8 +272,19 @@ class NNDeviation:
         return atoms
 
     def lcs_cluster(self, atoms, wrong_atoms, radius=5.0):
-        """
-        LCS for large NP
+        """Local structure extraction for cluster/nanoparticle systems.
+
+        Extracts spherical regions of *radius* around each high-deviation
+        atom, fixes boundary atoms (those whose coordination number decreases
+        after extraction), and adjusts the vacuum layer.
+
+        Args:
+            atoms: ASE Atoms object.
+            wrong_atoms: list of atom indices with high force deviation.
+            radius: cutoff radius for local environment extraction.
+
+        Returns:
+            List of extracted Atoms objects with boundary constraints.
         """
         atoms_list = []
         cn_list = self.get_coordination_num_list(atoms)
@@ -223,7 +295,7 @@ class NNDeviation:
                 selected_index = [i for i, dis in enumerate(distances) if dis <= radius]
                 selected_index.sort()
                 ats = Atoms(atoms[selected_index])
-                # 固定边界原子，判断方法优化
+                # Fix boundary atoms (detection method can be improved)
                 new_cn_list = self.get_coordination_num_list(ats)
                 bondary_atoms = [i for i, id in enumerate(selected_index) if (new_cn_list[i] - cn_list[id]) < 1]
                 f = FixAtoms(indices=[atom.index for atom in atoms if atom.index in bondary_atoms])
@@ -236,6 +308,17 @@ class NNDeviation:
         return atoms_list
 
     def lcs_process(self, db_path):
+        """Apply local structure extraction to all structures in a database.
+
+        Processes each structure with lcs_layer (slab) or lcs_cluster (cluster),
+        writes results to a new database, and replaces the original.
+
+        Args:
+            db_path: path to the candidate database to process.
+
+        Returns:
+            Number of structures in the processed database.
+        """
         db = connect(db_path)
         new_db_name = db_path[:-3] + "_lcs.db"
         new_db = connect(new_db_name)
@@ -268,8 +351,8 @@ class NNDeviation:
 if __name__ == '__main__':
     start = time.time()
     os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-    nn_dev = NNDeviation(model_dir="/home/yliu/cchen/CuClO/workdir0/dp/nn5",
-                         ga_db_path="/home/yliu/cchen/CuClO/workdir0/pes/ga/ga7/alls.db",
+    nn_dev = NNDeviation(model_dir="<YOUR_MODEL_DIR>",
+                         ga_db_path="<YOUR_GA_DB_PATH>",
                          force_err_lower=0.05,
                          force_err_upper=0.2,
                          type="slab",
@@ -278,11 +361,11 @@ if __name__ == '__main__':
                          vaccum_thickness=[10, 10, 10]
                          )
     nn_dev.get_deviation()
-    # nn_dev.lcs_process("/home/cchen/slab/hiccup/pes/ga/ga1/candidates.db")
+    # nn_dev.lcs_process("<YOUR_CANDIDATES_DB_PATH>")
     print("Time:", time.time() - start)
-    # nn_dev.lcs_process("/home/ubuntu/PycharmProjects/Train_NN/tmp/workdir/pes/ga/3/candidates.db")
-    # 可视化lcs结构
-    # t = connect("/home/ubuntu/PycharmProjects/Train_NN/tmp/workdir/pes/ga/3/candidates_lcs.db")
+    # nn_dev.lcs_process("<YOUR_CANDIDATES_DB_PATH>")
+    # Visualize LCS structures
+    # t = connect("<YOUR_CANDIDATES_LCS_DB_PATH>")
     # for row in t.select():
     #     a = row.toatoms()
-    #     write(f"/home/ubuntu/PycharmProjects/Train_NN/tmp/workdir/pes/ga/3/0/{row.id}.cif", a)
+    #     write(f"<YOUR_OUTPUT_DIR>/{row.id}.cif", a)

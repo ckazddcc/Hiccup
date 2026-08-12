@@ -20,15 +20,31 @@ from datetime import datetime, timedelta
 
 
 class DeepmdSystem:
+    """Manage DeepMD model training pipelines.
+
+    Handles dataset preparation (splitting, format conversion), input file
+    generation, training, freezing, and best-model selection across multiple
+    model replicas with different random seeds.
+    """
+
+    # Mapping from backend name to CLI alias
+    _BACKEND_FLAGS = {
+        "tensorflow": "--tf",
+        "pytorch": "--pt",
+        "paddle": "--pd",
+        "jax": "--jax",
+    }
+
     def __init__(self,
                  elements,
                  db_path,
                  train_ratio,
-                 workdir,  # pes/dp/nn0
+                 workdir,  # e.g. pes/dp/nn0
                  gpu,
                  dp_input_template,
                  init_model_path=None,
-                 models_num=4
+                 models_num=4,
+                 backend="tensorflow"
                  ):
 
         self.elements = elements
@@ -44,23 +60,32 @@ class DeepmdSystem:
         self.sub_dirs = [os.path.join(self.workdir, f"{i:03d}") for i in range(self.models_num)]
         self.init_model_path = init_model_path
         self.best_model = init_model_path
+        self.backend = backend
 
     @staticmethod
-    def run_dp(cmd):
-        """
-        运行dp命令
+    def run_dp(cmd, backend="tensorflow"):
+        """Execute a dp CLI command via the DeepMD Python entry point.
+
+        Args:
+            cmd: dp command string (e.g. "dp train input.json").
+            backend: DeepMD backend ("tensorflow", "pytorch", "paddle", "jax").
         """
         cmds = cmd.split()
         if cmds[0] == "dp":
             cmds = cmds[1:]
         else:
             raise RuntimeError("The command is not dp")
+        flag = DeepmdSystem._BACKEND_FLAGS.get(backend, "--tf")
+        cmds = [flag] + cmds
         dpmain(cmds)
 
     @staticmethod
     def _split_db(db, fold_name):
-        """
-        将db文件按照化学式分类，输出多个db文件
+        """Split a database into multiple files grouped by chemical formula.
+
+        Args:
+            db: open ASE database connection.
+            fold_name: output directory for the split database files.
         """
         N2db = {}
         for row in db.select():
@@ -75,8 +100,11 @@ class DeepmdSystem:
 
     @staticmethod
     def _db2deepmd(db, output_fold):
-        """
-        将ase.db文件转换为deepmd的输入文件
+        """Convert an ASE database to DeepMD npy format.
+
+        Args:
+            db: open ASE database connection with energy/forces data.
+            output_fold: output directory for DeepMD data files.
         """
         ms = MultiSystems()
         for row in db.select():
@@ -92,8 +120,11 @@ class DeepmdSystem:
         # ms.to_deepmd_raw(output_fold)
 
     def _split_db_to_train_valid(self):
-        """
-        给定数据集db，处理为训练集和测试集
+        """Split the dataset into training and validation sets.
+
+        Structures are grouped by chemical formula, randomly shuffled, and
+        divided according to train_ratio. The resulting sets are converted
+        to DeepMD npy format.
         """
         work_dir = self.workdir
         train_ratio = self.train_ratio
@@ -117,9 +148,9 @@ class DeepmdSystem:
             db_i = connect(db_i_path)
             entries = list(range(1, db_i.count() + 1))
 
-            # 随机打乱顺序
+            # Shuffle entries randomly
             random.shuffle(entries)
-            # 划分训练集和测试集
+            # Split into training and validation sets
             train_size = int(len(entries) * train_ratio)
             train_entries = entries[:train_size]
             test_entries = entries[train_size:]
@@ -152,25 +183,36 @@ class DeepmdSystem:
         self._db2deepmd(test_db, os.path.join(dbs_path, 'test'))
 
     def _setup_directory(self, num_splits=4):
+        """Create numbered subdirectories (000, 001, ...) under the workdir.
+
+        Args:
+            num_splits: number of subdirectories to create.
         """
-        在工作目录下创建000,001,002,003子文件夹
-        """
-        # 检查工作目录是否存在，不存在则新建
+        # Create workdir if it does not exist
         if not os.path.exists(self.workdir):
             os.makedirs(self.workdir)
-        # 在工作目录下创建四个子目录：000, 001, 002, 003
+        # Create subdirectories: 000, 001, 002, ...
         sub_dirs = [os.path.join(self.workdir, f"{i:03d}") for i in range(num_splits)]
         for sub_dir in sub_dirs:
             os.makedirs(sub_dir, exist_ok=True)
         return
 
     @staticmethod
-    def _resolve_train_command(run_config_path, init_model_path=None):
-        """
-        开启训练
+    def _resolve_train_command(run_config_path, init_model_path=None, backend="tensorflow"):
+        """Build the dp train command string.
+
+        Args:
+            run_config_path: path to the input.json file.
+            init_model_path: optional path to a frozen model (.pb) or
+                checkpoint (.ckpt) for transfer learning.
+            backend: DeepMD backend ("tensorflow", "pytorch", "paddle", "jax").
+
+        Returns:
+            Command string for dp train.
         """
         output_dir = Path(run_config_path).parent
-        command = f'dp train {run_config_path}'
+        flag = DeepmdSystem._BACKEND_FLAGS.get(backend, "--tf")
+        command = f'dp {flag} train {run_config_path}'
         if init_model_path is not None:
             init_model_path = Path(init_model_path)
             if init_model_path.name.endswith(".pb"):
@@ -183,13 +225,30 @@ class DeepmdSystem:
         return command
 
     @staticmethod
-    def _resolve_freeze_command(frozen_name):
-        command = "dp freeze -o {} 2>&1 >> ./frozen_err.out".format(frozen_name)
+    def _resolve_freeze_command(frozen_name, backend="tensorflow"):
+        """Build the dp freeze command string.
+
+        Args:
+            frozen_name: output filename for the frozen model.
+            backend: DeepMD backend ("tensorflow", "pytorch", "paddle", "jax").
+
+        Returns:
+            Command string for dp freeze.
+        """
+        flag = DeepmdSystem._BACKEND_FLAGS.get(backend, "--tf")
+        command = "dp {0} freeze -o {1} 2>&1 >> ./frozen_err.out".format(flag, frozen_name)
         return command
 
     def _set_dp_calc(self, model_path):
-        """
-        设置指定模型为计算器
+        """Initialize a DP calculator from a model file.
+
+        If the model format is incompatible, attempts automatic conversion.
+
+        Args:
+            model_path: path to the frozen DP model.
+
+        Returns:
+            DP calculator instance.
         """
         try:
             calc = DP(model=model_path)
@@ -199,13 +258,16 @@ class DeepmdSystem:
             model_path_old = os.path.join(base_dir, new_file_name)
             os.rename(model_path, model_path_old)
             print(model_path)
-            self.run_dp(f"dp convert-from -i {model_path_old} -o {model_path}")
+            # convert-from is only supported by the TensorFlow backend
+            self.run_dp(f"dp convert-from -i {model_path_old} -o {model_path}", backend="tensorflow")
             calc = DP(model=model_path)
         return calc
 
     def creat_dp_input(self):
-        """
-        在准备好数据集的工作目录下，根据模板生成对应的input文件
+        """Generate DeepMD input.json files for all model replicas.
+
+        Prepares the dataset (split, convert to npy), then writes an input.json
+        with randomized seeds into each subdirectory.
         """
         dbs_path = os.path.join(self.workdir, 'dbs')
         if not os.path.exists(dbs_path):
@@ -228,7 +290,7 @@ class DeepmdSystem:
                 dp_input['model']["type_embedding"]['seed'] = random.randrange(sys.maxsize) % (2 ** 32)
             dp_input['model']['fitting_net']['seed'] = random.randrange(sys.maxsize) % (2 ** 32)
             dp_input['training']['seed'] = random.randrange(sys.maxsize) % (2 ** 32)
-            # 将相对路径转换为绝对路径
+            # Convert relative paths to absolute paths
             deeps_train = [os.path.abspath(p) for p in glob(os.path.join(workdir, f'dbs/train/*')) if os.path.isdir(p)]
             deeps_test = [os.path.abspath(p) for p in glob(os.path.join(workdir, f'dbs/test/*')) if os.path.isdir(p)]
             dp_input['training']['training_data']['systems'] = deeps_train
@@ -249,17 +311,18 @@ class DeepmdSystem:
             print(f"Input data of model {i:03d} has been successfully processed！")
 
     def train_single_model(self, sub_dir, gpu_i):
-        """
-        训练单个模型
-        :param sub_dir: input文件所在目录路径
-        :param gpu_i: GPU编号
+        """Train a single model replica.
+
+        Args:
+            sub_dir: directory containing input.json.
+            gpu_i: GPU device index for this training run.
         """
         run_config_path = os.path.join(sub_dir, 'input.json')
         init_model_path_i = None
         if self.init_model_path is not None:
             init_model_path_i = os.path.join(sub_dir, f"init_{os.path.basename(self.init_model_path)}")
             shutil.copy(self.init_model_path, init_model_path_i)
-        command = self._resolve_train_command(run_config_path, init_model_path_i)
+        command = self._resolve_train_command(run_config_path, init_model_path_i, backend=self.backend)
         env = os.environ.copy()
         env["CUDA_VISIBLE_DEVICES"] = str(gpu_i)
         command = f'nohup ' + command + ' &'
@@ -267,9 +330,7 @@ class DeepmdSystem:
         print(command)
 
     def train_models(self):
-        """
-        训练多个模型
-        """
+        """Train all model replicas sequentially with a 60s gap between launches."""
         for i in range(self.models_num):
             name = f"{i:03d}"
             os.environ["CUDA_VISIBLE_DEVICES"] = str(self.gpu[i])
@@ -285,8 +346,14 @@ class DeepmdSystem:
         #     p.join()
 
     def monitor_training(self):
-        """
-        监看训练进度
+        """Monitor training progress for all model replicas.
+
+        Checks the learning curve file to determine finished steps. Marks a
+        model as done if training is complete, or as "Error" if the log file
+        has been stale for over 30 minutes.
+
+        Returns:
+            List of status values (True, False, or "Error") per model.
         """
         train_state = [False for _ in self.sub_dirs]
         for i, sub in enumerate(self.sub_dirs):
@@ -311,13 +378,13 @@ class DeepmdSystem:
                     train_state[i] = True
                 else:
                     output_file_path = os.path.join(sub, 'lcurve.out')
-                    # 获取文件的最后修改时间
+                    # Get last modified time of the log file
                     last_modified_time = os.path.getmtime(output_file_path)
-                    # 将最后修改时间转换为 datetime 对象
+                    # Convert to datetime
                     last_modified_datetime = datetime.fromtimestamp(last_modified_time)
-                    # 获取当前时间
+                    # Get current time
                     current_time = datetime.now()
-                    # 检查文件是否超过20分钟没有更新
+                    # Check if log has been stale for over 30 minutes
                     time_difference = current_time - last_modified_datetime
                     if time_difference > timedelta(minutes=30):
                         train_state[i] = "Error"
@@ -326,19 +393,24 @@ class DeepmdSystem:
         return train_state
 
     def freeze_models(self):
-        """
-        冻结模型，在checkpoint所在目录下执行freeze命令
+        """Freeze all trained models into frozen_model.pb files.
+
+        Runs dp freeze in each subdirectory. Retries once after 30 seconds
+        if the frozen model is not generated on the first attempt.
+
+        Returns:
+            List of boolean status values per model.
         """
         frozen_state = [False for _ in self.sub_dirs]
         for i, path in enumerate(self.sub_dirs):
-            command = self._resolve_freeze_command("frozen_model.pb")
+            command = self._resolve_freeze_command("frozen_model.pb", backend=self.backend)
             command = f'CUDA_VISIBLE_DEVICES={self.gpu[i]} nohup ' + command + ' &'
             subprocess.run(command, cwd=path, shell=True)
-            # 若没有生成frozen_model.pb文件，则等待30秒后再次执行freeze命令
+            # If frozen_model.pb was not generated, retry after 30 seconds
             if not os.path.exists(os.path.join(path, "frozen_model.pb")):
                 time.sleep(30)
                 subprocess.run(command, cwd=path, shell=True)
-                # 再次检查是否生成frozen_model.pb文件
+                # Check again whether frozen_model.pb was generated
                 if os.path.exists(os.path.join(path, "frozen_model.pb")):
                     frozen_state[i] = True
             else:
@@ -346,8 +418,13 @@ class DeepmdSystem:
         return frozen_state
 
     def get_best_model(self):
-        """
-        对比得出最优模型，返回最优模型路径和名称。
+        """Select the best model based on validation loss.
+
+        Compares the L2 validation loss across all trained models and returns
+        the one with the lowest weighted loss (10% validation + 90% training).
+
+        Returns:
+            Tuple of (best_model_path, best_model_id, models_info_dict).
         """
         models = [m for m in os.listdir(self.workdir) if '00' in m and os.path.isdir(os.path.join(self.workdir, m))]
         best_model_path = ''
@@ -383,15 +460,15 @@ class DeepmdSystem:
         return best_model_path, best_model_id, models_info
 
 if __name__ == '__main__':
-    dp = DeepmdSystem(elements=["O", "Cl", "Cu"],
-                      db_path="/home/yliu/cchen/CuClO/workdir/dp/merged.db",
+    dp = DeepmdSystem(elements=["O", "Cu"],
+                      db_path="<YOUR_DB_PATH>",
                       train_ratio=0.9,
-                      workdir="/home/yliu/cchen/CuClO/workdir/dp/nn0",
-                      gpu=[4, 5, 6, 7],
-                      dp_input_template="/home/yliu/cchen/CuClO/template/trainer/deepmd_input.json",
-                      #init_model_path="/home/cchen/CuY/hiccup2/workdir/dp/nn7/002/frozen_model.pb",
-                      init_model_path=None,
-                      models_num=4)
+                      workdir="<YOUR_WORKDIR_PATH>",
+                      gpu=[1],
+                      dp_input_template="<YOUR_DP_INPUT_TEMPLATE>",
+                      init_model_path="<YOUR_INIT_MODEL_PATH>",
+                      #init_model_path=None,
+                      models_num=1)
     dp.creat_dp_input()
     dp.train_models()
     train_state = dp.monitor_training()

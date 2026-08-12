@@ -3,6 +3,12 @@ from tools.md_sample import run_md_parallel
 from ase.db import connect
 
 class NN_md:
+    """Run MD sampling using a DP model in parallel.
+
+    Reads structures from a database, launches Langevin MD for each structure
+    using run_md_parallel, and collects trajectory results.
+    """
+
     def __init__(self,
                  to_md_db,
                  nn_model,
@@ -17,7 +23,12 @@ class NN_md:
         self.nn_md_config = nn_md_config
 
     def run(self):
-        # 进行批量 MD 采样
+        """Run parallel MD sampling on all structures in the database.
+
+        Reads structures from to_md_db, launches MD with parameters from
+        nn_md_config, and prints summary results.
+        """
+        # Run batch MD sampling
         to_md_atoms = [row.toatoms() for row in connect(self.to_md_db).select()]
 
         md_results = run_md_parallel(
@@ -39,10 +50,10 @@ if __name__ == '__main__':
     import time
     start = time.time()
     nn_md = NN_md(
-        to_md_db='/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/to_md.db',
-        nn_model='/home/yliu/cchen/CuClO/workdir0/dp/nn2/002/frozen_model.pb',
+        to_md_db='<YOUR_TO_MD_DB_PATH>',
+        nn_model='<YOUR_NN_MODEL_PATH>',
         gpus=[1,2,3,4,5,6],
-        md_workdir='/home/yliu/cchen/CuClO/workdir0/pes/ga/ga4/MD',
+        md_workdir='<YOUR_MD_WORKDIR>',
         nn_md_config={
             'MD Steps': 10000,
             'MD Timestep': 0.5,
