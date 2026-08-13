@@ -62,8 +62,11 @@ class VaspjetRun:
             f.writelines(content)
         sftp.put(local_db, os.path.join(self.cpu_workdir, os.path.basename(self.db_path)))
         sftp.put(local_yml, os.path.join(self.cpu_workdir, os.path.basename(self.vaspjet_yml)))
+        # Upload pure_vasp.py to the CPU server
+        pure_vasp_path = os.path.join(script_dir, "pure_vasp.py")
+        sftp.put(pure_vasp_path, os.path.join(self.cpu_workdir, "pure_vasp.py"))
         command = """
-        source ~/.bashrc && conda activate vaspjet && cd {0} && nohup vaspjet run -yml *.yml 1>out.log 2>err.log & & echo $!
+        source ~/.bashrc && conda activate vaspjet && cd {0} && nohup python pure_vasp.py run -yml *.yml 1>out.log 2>err.log & & echo $!
         """.format(self.cpu_workdir)
         ssh.exec_command(command)
         sftp.close()
@@ -201,7 +204,7 @@ def kill_vaspjet(cpu_config, cpu_workdir):
 
 
 if __name__ == '__main__':
-    templates = "<YOUR_TEMPLATES_PATH>"
+    templates = "<YOUR_TEMPLATE_PATH>"
     cpu_config = {
         "CPU IP": "<YOUR_CPU_IP>",
         "CPU Username": "<YOUR_CPU_USERNAME>",
@@ -211,12 +214,12 @@ if __name__ == '__main__':
 
     # dft_sp = VaspjetRun(db_path="<YOUR_DB_PATH>",
     #                     cpu_config=cpu_config,
-    #                     cpu_workdir=os.path.join("<YOUR_CPU_WORKDIR>", "0"),
+    #                     cpu_workdir="<YOUR_CPU_WORKING_DIRECTORY>",
     #                     vaspjet_yml=os.path.join(templates, "vaspjet/config_opt.yml"))
     # dft_sp.run_vaspjet()
 
     state, IS_DOWNLOADED = vaspjet_monitor(cpu_config,
-                    cpu_workdir="<YOUR_CPU_WORKDIR>",
+                    cpu_workdir="<YOUR_CPU_WORKING_DIRECTORY>",
                     download_results=False)
     print(state, IS_DOWNLOADED)
 

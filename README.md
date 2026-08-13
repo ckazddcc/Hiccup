@@ -1,6 +1,6 @@
 # Hiccup
 
-Version 2.0
+Version 2.1
 
 Hiccup is an automated platform for training high-performance neural network potentials. The name “Hiccup” is inspired by the protagonist of the movie How to Train Your Dragon. It reflects our vision of transforming the expert-dependent and challenging task of training neural network potentials—analogous to “training a dragon”—into an automated and high-performance workflow.
 
@@ -10,255 +10,169 @@ Hiccup is an automated platform for training high-performance neural network pot
 
 ![workflow](./workflow.jpg)
 
-## Installation
+## Quickstart
+
+Hiccup runs across two machines: a **GPU server** (NN training, GA search) and a **CPU server** (VASP DFT calculations via VaspJet). Both must be configured before use.
+
+### Step 1: Install Hiccup (GPU Server)
 
 ```bash
-git clone https://gitee.com/ccccissy/Hiccup.git
+conda create -n hiccup python=3.11 -y
+conda activate hiccup
+git clone https://github.com/ckazddcc/Hiccup.git
+cd Hiccup
+pip install -r requirements.txt
 pip install .
+```
+
+Hiccup uses USPEX (v9.4.4) for genetic algorithm structure search, which requires a **Python 2** environment. Install USPEX following its official documentation and ensure it is runnable. Record the Python 2 environment path (e.g., `/path/to/uspex-env/bin`) — you will need it in `config.yml` under `USPEX Env`.
+
+### Step 2: Configure SSH Key (GPU → CPU)
+
+Hiccup connects to the CPU server via SSH key authentication (no password). On the GPU server:
+
+```bash
+ssh-keygen -t ed25519
+ssh-copy-id -i ~/.ssh/id_ed25519.pub your_username@cpu_server_ip
+chmod 600 ~/.ssh/id_ed25519
+export HICCUP_CPU_SSH_KEY=~/.ssh/id_ed25519
+```
+
+> The environment variable name is read from `CPU SSH Key Env` in `config.yml` (default: `HICCUP_CPU_SSH_KEY`). The private key must have `600` permissions.
+
+### Step 3: Set Up VaspJet (CPU Server)
+
+Hiccup uploads `.db` files and `pure_vasp.py` to the CPU server, then remotely invokes `python pure_vasp.py run -yml config.yml` via the `vaspjet` conda environment. Set up this environment:
+
+```bash
+conda create -n vaspjet python=3.11 -y
+pip install -r requirements_vaspjet.txt
+```
+
+**Configure VASP**: VaspJet submits each structure as a SLURM job, running VASP via `mpirun -np {cpus} {vasp_version}`. The VASP executable, MPI, and POTCAR library must be available on the **compute nodes**. Edit the `slurm_setup` commands in `template/vaspjet/config_*.yml` to load them:
+
+```yaml
+slurm:
+  slurm_partition: '<YOUR_PARTITION>'     # [REQUIRED] SLURM partition
+  cpus_per_task: 24                        # [REQUIRED] CPU cores per job
+  vasp_version: 'vasp_gam'
+  slurm_setup:
+    - 'source /path/to/vasp/oneapi/setvars.sh --force'
+    - 'export PATH=/path/to/vasp/bin:$PATH'
+    - 'export VASP_PP_PATH=/path/to/POTCAR/library'   # [REQUIRED]
+```
+
+### Step 4: Configure and Run
+
+Copy the example config and update the required fields:
+
+```bash
+cp example/slab/config.yml ./config.yml
+```
+
+Key fields to set in `config.yml`:
+
+```yaml
+BASE:
+  Templates: /path/to/Hiccup/template     # [REQUIRED] Template directory
+  Workdir: /path/to/workdir               # [REQUIRED] Working directory
+  Gpu: [0,1,2,3]                          # [REQUIRED] GPU IDs (4 recommended)
+CPU:
+  CPU IP: '<YOUR_CPU_IP>'                 # [REQUIRED]
+  CPU Username: '<YOUR_USERNAME>'         # [REQUIRED]
+  CPU SSH Key Env: HICCUP_CPU_SSH_KEY
+  CPU Working Directory: /path/on/cpu     # [REQUIRED]
+```
+
+```bash
+conda activate hiccup
+hiccup -h               # Verify installation
+hiccup run -yml config.yml
 ```
 
 ## Usage
 
-### 1. Input Files
+### 1. `template` Directory
 
-#### 1.1 `template` Directory
+- **`trainer/`**: DeePMD training input files. `deepmd_input.json` for iterative training, `deepmd_input_accurate.json` for final high-accuracy training.
+- **`uspex/`**: VASP input files (`INCAR_1`, `KPOINTS`, `POTCAR`) required by USPEX (parameters do not affect Hiccup's workflow). `dp_opt.py` / `mace_opt.py` are NN/MACE calculator scripts; `run_dp.sh` / `run_mace.sh` are the corresponding runner scripts called by USPEX. `TEMP_INPUT_0/2/3.txt` are USPEX templates for cluster/surface/bulk searches.
+- **`vaspjet/`**: VaspJet YAML configs for single-point (`config_sp.yml`), optimization (`config_opt.yml`), and molecular dynamics (`config_md.yml`) calculations.
 
-##### (1) Directory Structure
+### 2. `config.yml` Configuration File
 
-```text
--trainer
-  --deepmd_input.json
-  --deepmd_input_accurate.json
--uspex
-  --INCAR_1
-  --KPOINTS
-  --POTCAR_A
-  --POTCAR_B
-  --run_dp.sh
-  --run_mace.sh
-  --dp_opt.py
-  --mace_opt.py
-  --TEMP_INPUT_0.txt
-  --TEMP_INPUT_2.txt
-  --TEMP_INPUT_3.txt
--vaspjet
-  --pure_vasp_sp.yml
-  --pure_vasp_opt.yml
-  --pure_vasp_md.yml
-```
-
-##### (2) Description
-
-**`trainer` directory:**
-
-This directory contains two DeePMD input files.
-
-- `deepmd_input.json`: input file for DeePMD training during the iterative workflow.
-- `deepmd_input_accurate.json`: input file for the final high-accuracy DeePMD training.
-
-**`uspex` directory:**
-
-This directory contains the basic input files required for VASP calculations, such as `INCAR_1`, `KPOINTS`, and `POTCAR`. Although USPEX is not driven by VASP in this workflow, these basic input files are still required. Otherwise, USPEX may report an error. The parameters in these files do not affect the calculations in this workflow.
-
-- `dp_opt.py`: uses the trained neural network potential as the calculator and outputs energy and force information. It can be modified as needed.
-- `mace_opt.py`: uses the general-purpose MACE potential as the calculator and outputs energy and force information. It can be modified as needed.
-- `run_dp.sh`: script used by USPEX to call the neural network potential as the calculator. A Python 3 environment is required to execute `dp_opt.py`.
-- `run_mace.sh`: script used by USPEX to call MACE as the calculator. A Python 3 environment is required to execute `mace_opt.py`.
-- `TEMP_INPUT_0.txt`: USPEX input template for `dimension = 0`, corresponding to cluster structure search.
-- `TEMP_INPUT_2.txt`: USPEX input template for `dimension = 2`, corresponding to surface structure search.
-- `TEMP_INPUT_3.txt`: USPEX input template for `dimension = 3`, corresponding to bulk structure search.
-
-**`vaspjet` directory:**
-
-- `pure_vasp_sp.yml`: VapsJet configuration file for single-point energy calculations.
-- `pure_vasp_opt.yml`: VapsJet configuration file for structure optimization calculations.
-- `pure_vasp_md.yml`: VapsJet configuration file for molecular dynamics calculations.
-
-#### 1.2 `config.yml` Configuration File
-
-##### (1) File Structure
+The complete configuration file contains the following sections. Fields marked `[REQUIRED]` must be set by the user.
 
 ```yaml
-# Basic configuration
 BASE:
-  Compositions: [[17, 40],[18,40],[19,40],[20,40],[21,40]] # Target compositions
-  Elements: [O, Cu] # Element list
-  Gpu: [0,1,2,3,4,5,6,7] # Available GPU IDs
-  Iterations: 3 # Number of iterations
-  Stall Iterations: 3 # Number of stall generations
-  Accuracy Threshold: 0.95 # Convergence threshold; ratio of accurate structures
-  Templates: <YOUR_TEMPLATES_PATH> # Template directory path
-  Workdir: <YOUR_WORKDIR_PATH> # Working directory path
+  Compositions: [[17, 40],[18,40]]         # Target compositions
+  Elements: [O, Cu]                         # Element list
+  Gpu: [0,1,2,3]                            # [REQUIRED] Available GPU IDs (4 recommended)
+  Iterations: 3                             # Number of iterations
+  Stall Iterations: 3                       # Stall generations before early stop
+  Accuracy Threshold: 0.95                  # Convergence threshold
+  Templates: /path/to/Hiccup/template       # [REQUIRED] Template directory
+  Workdir: /path/to/workdir                 # [REQUIRED] Working directory
 
-# CPU configuration
 CPU:
-  CPU IP: <YOUR_CPU_IP>
-  CPU Port: <YOUR_CPU_PORT>
-  CPU Username: <YOUR_CPU_USERNAME>
-  CPU SSH Key Env: HICCUP_CPU_SSH_KEY
-  CPU Working Directory: <YOUR_CPU_WORKDIR>
+  CPU IP: '<YOUR_CPU_IP>'                   # [REQUIRED]
+  CPU Port: 22                              # [REQUIRED] SSH port
+  CPU Username: '<YOUR_USERNAME>'           # [REQUIRED]
+  CPU SSH Key Env: HICCUP_CPU_SSH_KEY       # Env var for SSH key path
+  CPU Working Directory: /path/on/cpu       # [REQUIRED]
 
-# Sampler configuration
 SAMPLER:
   GA:
     RANDOMSEEDS:
-      Activate: True # Whether to enable the random seed generator. If disabled, a random seed file must be provided.
-      Dimension: 3 # 0: cluster, 3: bulk
-      Random Seeds Num: 100 # Number of random seeds
-      #Random Seeds Path: <YOUR_RANDOM_SEEDS_PATH> # Random seed file path
-      #Init Seeds Path: <YOUR_INIT_SEEDS_PATH> # Initial seed file path
+      Activate: True                        # Enable random seed generator
+      Dimension: 3                          # 0: cluster, 3: bulk
+      Random Seeds Num: 100                 # Seeds per composition
     USPEX:
-      Dimension: 2 # 1: cluster, 2: surface, 3: bulk
-      Generation Num: 3 # Number of GA generations
-      Init Pop Size: 10 # Population size of the first generation
-      Pop Size: 10 # Population size of each generation
-      Calculator: DP # Calculator: DP/MACE
-      Constraint z: 2.0
-      Substrate: <YOUR_SUBSTRATE_PATH> # Substrate structure
-      USPEX Env: <YOUR_USPEX_ENV_PATH> # Environment path
+      Dimension: 2                          # 1: cluster, 2: surface, 3: bulk
+      Generation Num: 3                     # GA generations
+      Init Pop Size: 10                     # First generation population
+      Pop Size: 10                          # Subsequent generation population
+      Calculator: DP                        # DP / MACE
+      USPEX Env: /path/to/uspex-env/bin     # USPEX Python 2 env
   NNMD:
-    NN Force Accuracy: 0.15 # Force-accuracy threshold for launching NNMD
-    MD Timestep: 1 # fs
+    NN Force Accuracy: 0.15                 # Threshold for launching NNMD
+    MD Timestep: 1                          # fs
     MD Steps: 10000
-    MD Dump Interval: 100
     MD Temperature K: 500
 
-# Trainer configuration
 TRAINER:
   Deepmd:
-    Data Path: <YOUR_DATA_PATH> # Initial dataset path
-    Initial Model: <YOUR_INIT_MODEL_PATH> # Initial model path; default is None
-    Train Ratio: 0.9 # Training set ratio
+    Data Path: /path/to/init_database.db    # Initial dataset (ASE .db)
+    Initial Model: /path/to/init_model.pb   # Initial model (optional)
+    Train Ratio: 0.9
 
 POSTPROCESSING:
-  # NNP evaluator: accurate, candidate, failed
-  Force Deviation Lower: 0.05 # Default: Auto
-  Force Deviation Upper: 0.2 # Default: Auto
-
-  # Energy and force filter: SP -> DFT optimization
+  Force Deviation Lower: 0.05               # Auto: best model validation error
+  Force Deviation Upper: 0.2                # Auto: above + 1.5
   Max Filter Ratio: 0.8
-  Max Filter Num: 100
-
-  # Use the best model to clean bad data points
+  Max Filter Num: 100                       # Recommended: compositions x 10
   Energy Filter: 0.1
   Force Filter: 2
-
-TRAINER:
-  Deepmd:
-    Data Path: <YOUR_DATA_PATH> # Initial dataset path
-    Initial Model: <YOUR_INIT_MODEL_PATH> # Initial model path; default is None
-    Train Ratio: 0.9 # Training set ratio
 ```
 
-##### (2) Detailed Description
+**Parameter Details:**
 
-##### Basic Configuration
+- **BASE**: `Compositions` — list of `[atom_count, total_atoms]` pairs. `Elements` — element list, order must match compositions. `Gpu` — GPU IDs, 4 recommended. `Iterations` — total iterations excluding the final one. `Stall Iterations` — early stop after N generations without improvement. `Accuracy Threshold` — ratio of accurate structures for convergence.
+- **CPU**: SSH connection to the CPU server. `CPU Working Directory` should be an empty directory.
+- **SAMPLER > RANDOMSEEDS**: `Dimension` — 0 for cluster, 3 for bulk. `Random Seeds Num` — structures per composition (not total). If `Activate: False`, provide `Random Seeds Path` to a pre-generated ASE `.db` file with unique `uid` in `key_value_pairs`.
+- **SAMPLER > USPEX**: `Dimension` — 1/2/3 for cluster/surface/bulk. `Substrate` — required for surface searches. `Calculator` — `DP` or `MACE`.
+- **SAMPLER > NNMD**: `NN Force Accuracy` — threshold based on current best model's validation error. Defaults: Timestep 1 fs, Steps 10000, Dump 100, Temperature 500 K.
+- **TRAINER**: `Data Path` — ASE `.db` file with energy/force in `row.data`. `Train Ratio` — train/test split ratio.
+- **POSTPROCESSING**: Structures are classified as `accurate`/`candidate`/`failed` by force deviation. `Force Deviation Lower/Upper` — bounds for classification (`Auto` uses best model's validation error). `Max Filter Ratio/Num` — limits for DFT labeling batch selection. `Energy/Force Filter` — thresholds for cleaning bad data points.
 
-- `Compositions`: list of target compositions.
-- `Elements`: list of elements. The element order must be consistent with the order in the composition list.
-- `Gpu`: list of available GPU IDs. At least four GPUs are required.
-- `Iterations`: integer. Total number of iterations, excluding the final iteration.
-- `Stall Iterations`: number of stall generations.
-- `Accuracy Threshold`: convergence threshold, defined as the ratio of accurate structures.
-- `Templates`: string. Path to the template directory.
-- `Workdir`: string. Working directory.
-
-##### CPU Configuration
-
-- `CPU IP`: string. IP address of the CPU server.
-- `CPU Port`: string. Port number.
-- `CPU Username`: string. Username.
-- `CPU SSH Key Env`: string. Environment variable name for SSH key.
-- `CPU Working Directory`: string. Working directory on the CPU server. It is recommended to use an empty directory.
-
-##### Sampler Configuration
-
-**Random seed generator configuration:**
-
-- `Activate`: boolean. Whether to enable the random seed generator.
-- `Dimension`: integer. The random seed generator uses PyXtal to generate random structures. `0` corresponds to cluster systems, and `3` corresponds to bulk systems.
-- `Random Seeds Num`: integer. Number of random structures generated for each composition. This is not the total number of random seed structures. The default value is `100`.
-- `Random Seeds Path`: string. Path to the random seed structure file. If the random seed generator is disabled, this file must be provided. The file should be an ASE database file. Each `atoms` object must contain a unique `uid` in `key_value_pairs`, for example `key_value_pairs={'uid': 'unique_uid'}`.
-- `Init Seeds Path`: string. Path to the initial seed structure file.
-
-**USPEX configuration:**
-
-- `Dimension`: integer. Search type in USPEX. `1`: cluster, `2`: surface, `3`: bulk.
-- `Generation Num`: integer. Number of generations in the genetic algorithm.
-- `Init Pop Size`: integer. Population size of the first generation. By default, it is the same as `Pop Size`.
-- `Pop Size`: integer. Population size of each generation.
-- `Calculator`: string. Calculator selection. Supported values are `DP` and `MACE`. The default is `MACE`.
-- `USPEX Env`: string. Path to the USPEX Python 2 environment.
-- `Substrate`: string. Path to the substrate file. This is required for surface structure searches.
-
-**NNMD configuration:**
-
-- `NN Force Accuracy`: force-accuracy threshold for starting NNMD. It is determined based on the force error of the current best NNP model on the validation set. The default value is `0.15`.
-- `MD Timestep`: float. MD time step. The default value is `1 fs`.
-- `MD Steps`: integer. Number of MD steps. The default value is `10000`.
-- `MD Dump Interval`: integer. MD output interval. The default value is `100`.
-- `MD Temperature K`: float. MD temperature. The default value is `500 K`.
-
-##### Post-processing Configuration
-
-Four models are used to evaluate structures. According to the per-atom force evaluation results, structures generated by GA search are divided into three categories: `accurate`, `candidate`, and `failed`.
-
-- `Force Deviation Lower`: float. Lower bound of the maximum force deviation. In `Auto` mode, it is set to the force error of the current best NNP model on the validation set.
-- `Force Deviation Upper`: float. Upper bound of the maximum force deviation. In `Auto` mode, it is set to the force error of the current best NNP model on the validation set plus `1.5`.
-
-**Structure similarity evaluation and filtering parameters:**
-
-These parameters are used to evaluate whether structures are representative. All structures awaiting DFT labeling are divided into high-priority and low-priority structures, and calculations are then performed in batches.
-
-- `Max Filter Ratio`: float. Upper limit of the ratio of selected structures to all structures. The default value is `0.8`.
-- `Max Filter Num`: integer. Upper limit of the total number of selected structures. The recommended value is `number of target compositions × 10`.
-
-**Data cleaning parameters:**
-
-These parameters are used to clean bad data points with the best model.
-
-- `Energy Filter`: float. Upper limit of the energy deviation between predicted values and DFT-calculated values. This value can be increased appropriately when the model quality is poor. The default value is `0.1`.
-- `Force Filter`: float. Upper limit of the force deviation between predicted values and DFT-calculated values. This value can be increased appropriately when the model quality is poor. The default value is `2`.
-
-**LCS processing parameters:**
-
-- `LCS Process`: boolean. Whether to perform LCS processing. The default value is `False`.
-- `Type`: string. Type of structures to be processed, such as `slab` or `cluster`.
-- `LCS Layers Num`: integer. Number of substrate layers divided by LCS for slab systems.
-- `LCS Radius`: float. Cutting radius used in LCS processing for cluster systems.
-
-##### Trainer Configuration
-
-Currently, only DeePMD is supported.
-
-- `Data Path`: string. Path to the initial dataset. The initial dataset should be provided as an ASE database file. The `row.data` field must contain energy and force information.
-- `Initial Model`: string. Path to the initial model. The default value is `None`.
-- `Train Ratio`: float. Ratio of the training set to the test set. The default value is `0.8`.
-
-### 2. Command-line Usage
-
-##### (1) Run a Hiccup Task
+### 3. Command-line Usage
 
 ```bash
+# Run a Hiccup workflow
 hiccup run -yml config.yml
-# -yml: path to the *.yml configuration file
-```
 
-##### (2) Evaluate Model Performance
-
-```bash
+# Evaluate model performance
 hiccup eva -db database.db -m model.pb -g gpu_id -e 0.1 -f 2 -n model_name
-# -db: path to the *.db database file
-# -m: path to the model file to be evaluated
-# -g: GPU ID
-# -e: upper limit of the energy error; default value is 0.1
-# -f: upper limit of the force error; default value is 2
-# -n: model name; default name is "Model"
-```
 
-##### (3) Automatically Generate Target Compositions with FPS
-
-```bash
+# Generate target compositions with FPS
 hiccup compos -yml fps_config.yml
-# -yml: path to the fps_config.yml configuration file
 ```
