@@ -1,5 +1,5 @@
 import sys
-model_path = "/home/chencheng/Hiccup/core/PesExploration/tools/mace-mpa-0-medium-float32.model"
+model_path = '<MACE_MODEL_PATH>'
 dimension = 0
 opt_flag = True
 opt_method = "BFGS"
@@ -63,7 +63,7 @@ if opt_flag:
             energy = atoms.get_potential_energy()
     else:
         if dimension == 2:
-            # 固定z轴平均值以下原子
+            # Fix atoms below the average z position
             positions_z = atoms.get_scaled_positions()[2]
             cell = atoms.get_cell()[2][2]
             fix_z = (constrain_z + 1) / cell

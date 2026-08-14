@@ -59,4 +59,11 @@ nohup.out
 .env.*
 !.env.example
 
+# Hiccup runtime outputs (logs, databases, models, trajectories)
+example/**/hiccup/
+*.db
+*.pb
+*.traj
+hiccup-log.txt
+
 

@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import logging
 
 cwd = os.getcwd()
@@ -362,13 +363,16 @@ class UspexSystem:
         bash_path = os.path.join(self.template_dir, f"run_{calc_tag}.sh")
         self.generate_input_txt(bash_path)
 
-        # Patch .py path in run_dp/mace.sh
+        # Patch .py path and python interpreter in run_dp/mace.sh
         nn_inf_path = os.path.join(self.template_dir, f"{calc_tag}_opt.py")
+        python_path = sys.executable
         with open(bash_path, "r") as f:
             content = f.readlines()
             for i, line in enumerate(content):
                 if "cp" in line:
                     content[i] = f"  cp {nn_inf_path} .\n"
+                if "<YOUR_PYTHON_PATH>" in line:
+                    content[i] = line.replace("<YOUR_PYTHON_PATH>", python_path)
         with open(bash_path, "w") as f:
             f.writelines(content)
 
