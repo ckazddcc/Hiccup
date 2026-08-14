@@ -1,8 +1,8 @@
 while :
 do
 {
-  cp /home/cchen/Hiccup/template/uspex/dp_opt.py .
-	/home/cchen/apps/deepmd-kit/bin/python dp_opt.py $1
+  cp <YOUR_TEMPLATE_DIR>/uspex/dp_opt.py .
+	<YOUR_PYTHON_PATH> dp_opt.py $1
 
 	if [ -f "energy.txt" ]; then
 		break

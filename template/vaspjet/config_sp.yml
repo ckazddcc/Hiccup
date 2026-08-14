@@ -1,11 +1,11 @@
 # config.yml
 #job_settings:
-db_path: './r2_ads_rough1.db'
-work_path: './workdir'
+db_path: <YOUR_DB_PATH>
+work_path: <YOUR_WORK_PATH>
 save_log: true
 print_log: true
 continue: false
-engine: 'asevasp' # purevasp/asevasp/hybrid
+engine: 'purevasp' # purevasp/asevasp/hybrid
 
 
 ase:
@@ -27,7 +27,6 @@ mlp:
   vaild_ratio: 0.15 # 0-0.3
   loss_energy: 'mae'
   loss_force: 'ql2'
-  checkpoint_load_path: './mlp_direct_h512_all.pt'
   only_vasp_ratio: 0.35 # 0-0.5
 
 
@@ -84,7 +83,7 @@ slurm:
   mem_gb: 10
   vasp_version: 'vasp_gam'
   slurm_setup:
-    - 'source /home/hfwang/Applications/vasp/oneapi/setvars.sh --force'
-    - 'export PATH=/home/hfwang/Applications/vasp/vasp.6.3.2/bin:$PATH'
+    - 'source /path/to/vasp/oneapi/setvars.sh --force'
+    - 'export PATH=/path/to/vasp/bin:$PATH'
     - 'ulimit -s unlimited'
-    - 'export VASP_PP_PATH=/home/hfwang/Applications/vasp/POTCAR'
+    - 'export VASP_PP_PATH=/path/to/POTCAR/library'

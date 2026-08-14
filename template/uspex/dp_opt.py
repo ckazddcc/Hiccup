@@ -1,5 +1,5 @@
 import sys
-model_path = "/home/cchen/cluster/iter2.pb"
+model_path = '<DEEPMD_MODEL_PATH>'
 dimension = 0
 opt_flag = True
 opt_method = "BFGS"
@@ -62,7 +62,7 @@ if opt_flag:
             energy = atoms.get_potential_energy()
     else:
         if dimension == 2:
-            # 固定z轴平均值以下原子
+            # Fix atoms below the average z position
             cell = atoms.get_cell()[2][2]
             fix_z = (constrain_z + 1) / cell
             fix_indexs = [atom.index for atom in atoms if atom.scaled_position[2] < fix_z]

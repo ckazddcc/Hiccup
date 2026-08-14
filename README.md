@@ -1,6 +1,6 @@
 # Hiccup
 
-Version 2.1
+Version 1.0
 
 Hiccup is an automated platform for training high-performance neural network potentials. The name “Hiccup” is inspired by the protagonist of the movie How to Train Your Dragon. It reflects our vision of transforming the expert-dependent and challenging task of training neural network potentials—analogous to “training a dragon”—into an automated and high-performance workflow.
 
@@ -25,6 +25,14 @@ pip install -r requirements.txt
 pip install .
 ```
 
+To verify the installation and detect dependency or environment incompatibilities, run the basic test suite from the repository root:
+
+```bash
+pytest test/test_basic.py
+```
+
+The tests check core Python dependencies, CUDA/GPU availability, DeepMD-kit and LAMMPS integration, configuration files, templates, composition generation, and CLI argument parsing. Because the TensorFlow, PyTorch, DeepMD-kit, and NumPy stack can be sensitive to version combinations, rerun this suite after changing any pinned dependency.
+
 Hiccup uses USPEX (v9.4.4) for genetic algorithm structure search, which requires a **Python 2** environment. Install USPEX following its official documentation and ensure it is runnable. Record the Python 2 environment path (e.g., `/path/to/uspex-env/bin`) — you will need it in `config.yml` under `USPEX Env`.
 
 ### Step 2: Configure SSH Key (GPU → CPU)
@@ -46,7 +54,7 @@ Hiccup uploads `.db` files and `pure_vasp.py` to the CPU server, then remotely i
 
 ```bash
 conda create -n vaspjet python=3.11 -y
-pip install -r requirements_vaspjet.txt
+pip install -r vaspjet_requirements.txt
 ```
 
 **Configure VASP**: VaspJet submits each structure as a SLURM job, running VASP via `mpirun -np {cpus} {vasp_version}`. The VASP executable, MPI, and POTCAR library must be available on the **compute nodes**. Edit the `slurm_setup` commands in `template/vaspjet/config_*.yml` to load them:
@@ -67,7 +75,7 @@ slurm:
 Copy the example config and update the required fields:
 
 ```bash
-cp example/slab/config.yml ./config.yml
+cp example/cluster/config.yml ./config.yml
 ```
 
 Key fields to set in `config.yml`:
@@ -86,7 +94,6 @@ CPU:
 
 ```bash
 conda activate hiccup
-hiccup -h               # Verify installation
 hiccup run -yml config.yml
 ```
 
@@ -115,7 +122,7 @@ BASE:
 
 CPU:
   CPU IP: '<YOUR_CPU_IP>'                   # [REQUIRED]
-  CPU Port: 22                              # [REQUIRED] SSH port
+  CPU Port: '<YOUR_CPU_PORT>'                              # [REQUIRED] SSH port
   CPU Username: '<YOUR_USERNAME>'           # [REQUIRED]
   CPU SSH Key Env: HICCUP_CPU_SSH_KEY       # Env var for SSH key path
   CPU Working Directory: /path/on/cpu       # [REQUIRED]

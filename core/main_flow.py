@@ -786,7 +786,7 @@ class Hiccup:
             if self.best_model_info is not None:
                 if (self.best_model_info[4] <= self.nnmd_config.get('NN Force Accuracy', 0.15)
                         and self.best_model_info[5] <= self.nnmd_config.get('NN Force Accuracy', 0.15)):
-                    # 最终要汇入 alls_db_path
+                    # Will be merged into alls_db_path
                     md_dir = os.path.join(ga_dir_iter, "MD")
                     if not os.path.exists(md_dir):
                         os.makedirs(md_dir)
