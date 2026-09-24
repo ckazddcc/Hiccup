@@ -10,6 +10,24 @@ Hiccup is an automated platform for training high-performance neural network pot
 
 ![workflow](./workflow.jpg)
 
+## Prerequisites
+
+Hiccup requires access to two Linux machines: a **GPU server** for neural-network training and genetic-algorithm searches, and a **CPU server** for VASP calculations through VaspJet. Before following the quick-start guide, ensure that the following software and resources are available:
+
+- **GPU server**
+  - Conda and Python 3.11.
+  - A CUDA-capable NVIDIA GPU with a compatible CUDA runtime and driver.
+  - DeepMD-kit with its LAMMPS integration enabled; both `dp` and the LAMMPS executable must be available in the Hiccup environment.
+  - USPEX v9.4.4 and a separate Python 2 environment required by USPEX.
+- **CPU server / compute cluster**
+  - Conda and Python 3.11 for the VaspJet environment.
+  - A licensed and working VASP installation.
+  - MPI and a SLURM workload manager.
+- **Connectivity**
+  - SSH access from the GPU server to the CPU server using key-based authentication.
+
+Installation and environment-specific configuration of DeepMD-kit, LAMMPS, VASP, USPEX, CUDA, MPI, and SLURM should be completed according to their official documentation before installing Hiccup.
+
 ## Quickstart
 
 Hiccup runs across two machines: a **GPU server** (NN training, GA search) and a **CPU server** (VASP DFT calculations via VaspJet). Both must be configured before use.
